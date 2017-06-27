@@ -7,7 +7,7 @@ export default class Client {
         this.workflow = new Workflow();
     }
 
-    start(flow, data) {
+    start(flow, data) {        
         return this.workflow.start(flow, data);
     }
 

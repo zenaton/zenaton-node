@@ -1,8 +1,9 @@
 import Client from './Client';
 import { Workflow } from './Worker';
 
-const client = new Client('app', 'token', 'environ');
-const OnBoardingWorkflow = new Workflow({
+const client = new Client('PFTLSCKGRZ', 'sySpdVnTYcR0ECffwWRKHPe63YxU9wzC9jQxsUuQJkIlHITcRe5VzFVoQdwa', 'production');
+const onBoardingWorkflow = new Workflow({
+    name: 'OnBoardingWorkflow',
     properties() {
         return {
             engaged: false,
@@ -19,7 +20,6 @@ const OnBoardingWorkflow = new Workflow({
         }
     },
     onEvent(event) {
-        // event = {name: '', data: {}}
         if (event.name === 'EngagedEvent') {
             this.engaged = true;
         }
@@ -29,10 +29,7 @@ const OnBoardingWorkflow = new Workflow({
     }
 });
 
-const w = client.start(OnBoardingWorkflow, {
+const w = client.start(onBoardingWorkflow, {
     engaged: false,
     email: 'tj@learnboost.com'
 });
-
-
-console.log(w);
