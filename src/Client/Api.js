@@ -3,11 +3,11 @@
   * , set's to null by default.
 */
 import { get, post, put } from '../Common/Services/index';
-import { ExternalTaskyException } from '../Common/index';
+import { ExternalZenatonException } from '../Common/index';
 
 let instance = null;
 
-const TASKY_URL = 'http://website.dev/api';
+const ZENATON_URL = 'http://website.dev/api';
 const APP_ENV = 'app_env';
 const APP_ID = 'app_id';
 const API_TOKEN = 'api_token';
@@ -17,6 +17,7 @@ const VERSION = 'version';
 const DATA = 'data';
 const CUSTOM_ID = 'custom_id';
 const STATE = 'state';
+const PROGRAMMING_LANGUAGE = 'programming_language';
 
 export default class Api {
     constructor() {
@@ -41,18 +42,22 @@ export default class Api {
         body[NAME] = name;
         body[DATA] = JSON.stringify(data);
         body[CUSTOM_ID] = customId;
+        body[PROGRAMMING_LANGUAGE] = 'Javascript';
+
         return new Promise((resolve, reject) => {
             post(this.getStartWorkflowURL(), body)
                 .then((response) => {
                      resolve(response)
                 })
-                .catch((error) => { reject(error) } )
+                .catch((error) => {
+                    reject(error)
+                })
         })
 
     }
 
     getStartWorkflowURL() {
-        return this.addIdentification(`${TASKY_URL}/instances`);
+        return this.addIdentification(`${ZENATON_URL}/instances`);
     }
 
     addIdentification(url, params = '') {

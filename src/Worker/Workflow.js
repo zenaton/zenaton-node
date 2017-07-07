@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ExternalTaskyException, objectsHaveSameKeys } from '../Common/index';
+import { ExternalZenatonException, objectsHaveSameKeys } from '../Common/index';
 
 let instance = null;
 
@@ -25,7 +25,7 @@ export default class Workflow {
         const actualProperties = this.properties();
 
         if ( ! ( objectsHaveSameKeys(actualProperties, properties) ) ) {
-            throw new ExternalTaskyException('The data sent must match the properties of the Workflow Object')
+            throw new ExternalZenatonException('The data sent must match the properties of the Workflow Object')
         }
 
         this.workflow.properties = () => properties;
@@ -43,7 +43,9 @@ export default class Workflow {
         return this.workflow.name;
     }
     id() {
-        return this.workflow.id();
+        if (typeof this.workflow.id === 'function') {
+            return this.workflow.id();
+        }
     }
 
 

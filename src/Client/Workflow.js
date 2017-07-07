@@ -1,5 +1,5 @@
 import Api from './Api';
-import { ExternalTaskyException } from '../Common/index';
+import { ExternalZenatonException } from '../Common/index';
 import { Workflow as W } from '../Worker/index';
 
 const SIZE_OF_VARCHAR = 191;
@@ -18,11 +18,11 @@ export default class Workflow {
         let customId;
 
         if ( !(flow instanceof W) ) {
-            throw new ExternalTaskyException('First Argument must be an instance of Workflow ');
+            throw new ExternalZenatonException('First Argument must be an instance of Workflow ');
         }
 
         if (! flow.name()) {
-            throw new ExternalTaskyException('You need to set a Name argument to your workflow ');
+            throw new ExternalZenatonException('You need to set a Name argument to your workflow ');
         }
 
         this.workflowName = flow.name();
@@ -34,23 +34,26 @@ export default class Workflow {
             customId = flow.id();
 
             if (customId.length >= SIZE_OF_VARCHAR) {
-                throw new ExternalTaskyException('The ID provided must not exceed 191 characters');
+                throw new ExternalZenatonException('The ID provided must not exceed 191 characters');
             }
         }
 
         this.api.startWorkflow(this.workflowName, properties, (customId) || null)
             .then((response) => {
+                if (response.error) {
+                    throw new ExternalZenatonException(response.error);
+                }
                 this.id = response.custom_id
             })
             .catch((error) => {
-                throw new ExternalTaskyException(error);
+                throw new ExternalZenatonException(error);
             });
 
         return this;
     }
 
     sendEvent() {
-        
+
     }
 
     kill() {

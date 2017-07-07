@@ -1,13 +1,13 @@
 import Api from './Api';
 import Workflow from './Workflow';
 
-export default class Client {
+class Client {
     constructor(appId, apiToken, appEnv) {
         new Api().init(appId, apiToken, appEnv);
         this.workflow = new Workflow();
     }
 
-    start(flow, data) {        
+    start(flow, data) {
         return this.workflow.start(flow, data);
     }
 
@@ -21,3 +21,5 @@ export default class Client {
         return this.workflow.setInstance(customId, this.className);
     }
 }
+
+module.exports = Client;

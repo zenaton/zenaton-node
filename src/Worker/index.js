@@ -1,6 +1,6 @@
 import Workflow from './Workflow';
 import Wait from './Wait';
 import Task from './Task';
+import Configuration from './Configuration';
 
-
-export { Task, Wait, Workflow };
+export { Configuration, Task, Wait, Workflow };

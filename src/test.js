@@ -2,6 +2,8 @@ import Client from './Client';
 import { Workflow } from './Worker';
 
 const client = new Client('PFTLSCKGRZ', 'sySpdVnTYcR0ECffwWRKHPe63YxU9wzC9jQxsUuQJkIlHITcRe5VzFVoQdwa', 'production');
+
+
 const onBoardingWorkflow = new Workflow({
     name: 'OnBoardingWorkflow',
     properties() {
@@ -28,8 +30,8 @@ const onBoardingWorkflow = new Workflow({
         return this.email;
     }
 });
-
-const w = client.start(onBoardingWorkflow, {
-    engaged: false,
-    email: 'tj@learnboost.com'
-});
+//
+// const w = client.start(onBoardingWorkflow, {
+//     engaged: false,
+//     email: 'tj@learnboost.com'
+// });
