@@ -7,24 +7,39 @@ var Configuration = require('./lib/Worker').Configuration;
 program
    .version('0.0.1');
 
- program
-   .command('start <.env> <source>')
-   .description('start a worker with .env credentials and source file')
-   .action(function(env, source) {
+program
+    .command('start <.env> <source>')
+    .description('Start a worker with .env credentials and source file')
+    .action(function(env, source) {
 
-       if (! fs.existsSync(env)) {
+        if (! fs.existsSync(env)) {
             console.log('Error! Unabled to find '+ env +' file.');
             return
-       }
+        }
 
-       if (! fs.existsSync(source)) {
+        if (! fs.existsSync(source)) {
             console.log('Error! Unabled to find '+ source +' file.');
             return
-       }
+        }
 
-       (new Configuration(env, source)).sendBackToMicroServer();
+        (new Configuration(env, source)).startMicroserver();
+    });
+
+program
+    .command('stop <.env>')
+    .description('Stop the listening of Zenaton executable for this app/environment/language')
+    .action(function(env) {
+
+        if (! fs.existsSync(env)) {
+            console.log('Error! Unabled to find '+ env +' file.');
+            return
+        }
 
 
-   });
+
+        (new Configuration(env)).stopMicroserver();
+    });
+
+
 
  program.parse(process.argv);

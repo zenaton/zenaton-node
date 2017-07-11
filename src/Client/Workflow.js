@@ -14,7 +14,7 @@ export default class Workflow {
         return this.id;
     }
 
-    start(flow, data) {
+    start(flow) {
         let customId;
 
         if ( !(flow instanceof W) ) {
@@ -27,9 +27,6 @@ export default class Workflow {
 
         this.workflowName = flow.name();
 
-        flow.setProperties(data);
-
-        const properties = flow.properties();
         if (flow.id()) {
             customId = flow.id();
 
@@ -37,15 +34,17 @@ export default class Workflow {
                 throw new ExternalZenatonException('The ID provided must not exceed 191 characters');
             }
         }
-
-        this.api.startWorkflow(this.workflowName, properties, (customId) || null)
+        
+        this.api.startWorkflow(this.workflowName, flow.getData(), (customId) || null)
             .then((response) => {
+                console.log(response);
                 if (response.error) {
                     throw new ExternalZenatonException(response.error);
                 }
                 this.id = response.custom_id
             })
             .catch((error) => {
+                console.log(error);
                 throw new ExternalZenatonException(error);
             });
 
@@ -67,7 +66,7 @@ export default class Workflow {
 
     }
 
-    getProperties() {
+    getData() {
 
     }
 

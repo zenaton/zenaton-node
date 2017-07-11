@@ -1,38 +1,72 @@
 import _ from 'lodash';
 import { ExternalZenatonException, objectsHaveSameKeys } from '../Common/index';
-
-let instance = null;
+import WorkflowManager from './WorkflowManager';
+import Position from './Position';
 
 export default class Workflow {
-    constructor(workflow) {
-        if (instance) {
-            return instance;
-        }
+    constructor(workflow = null) {
+
+        const workflowManager = new WorkflowManager();
 
         this.workflow = workflow;
+        this.workflow.data = {};
 
-        _.each(this.properties(), (p, k ) => {
-            this.workflow[k] = p;
-        })
-        instance = this;
+        this.position = new Position();
+
+        _.each(this.props(), (p) => {
+            this.workflow.data[p] = null;
+        });
+
+        workflowManager.setWorkflow(this);
+
+        const dataSetter = (data = null) => {
+            if (data) {
+                this.setData(data);
+            }
+            return this;
+        }
+
+        return dataSetter;
     }
 
-    properties() {
-        return this.workflow.properties();
+    props() {
+        return this.workflow.props;
     }
 
-    setProperties(properties) {
-        const actualProperties = this.properties();
+    setData(data) {
 
-        if ( ! ( objectsHaveSameKeys(actualProperties, properties) ) ) {
+        if ( ! ( objectsHaveSameKeys(this.workflow.data, data) ) ) {
             throw new ExternalZenatonException('The data sent must match the properties of the Workflow Object')
         }
 
-        this.workflow.properties = () => properties;
-        _.each(properties, (p, k ) => {
-            this.workflow[k] = p
+        _.each(data, (p, k ) => {
+            this.workflow.data[k] = p;
+            this.workflow[k] = p;
         });
+    }
 
+    getData() {
+        return this.workflow.data;
+    }
+
+    init(name, data, event) {
+        // select the good workflow with the name
+        // const workflow = this.workflowManager.getWorkflow(name)
+
+        // console.log(workflow);
+        // // Build the properties
+        // this.setData(JSON.parse(data));
+
+        // // build event
+        // $this->event = $event ? $this->jsonizer->decode(
+        //     $event,
+        //     EventInterface::class
+        //   ) : null;
+
+        // // init position
+        this.position.init();
+
+        return this;
     }
 
     handle() {

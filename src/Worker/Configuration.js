@@ -4,27 +4,17 @@ import path from 'path';
 import Microserver from './Microserver';
 
 export default class Configuration {
-    constructor(env, source) {
+    constructor(env, source = null) {
         this.microserver = new Microserver();
         this.env = env;
         this.source = source;
     }
 
-    sendBackToMicroServer()
+    startMicroserver()
     {
-        dotenv.config({path: path.dirname(this.env) + '/' + path.basename(this.env) })
 
-        if ( ! process.env.ZENATON_APP_ID) {
-            return 'Error! Environment variable ZENATON_APP_ID not set';
-        }
 
-        if ( ! process.env.ZENATON_API_TOKEN) {
-            return 'Error! Environment variable ZENATON_API_TOKEN not set';
-        }
-
-        if ( ! process.env.ZENATON_APP_ENV) {
-            return 'Error! Environment variable ZENATON_APP_ENV not set';
-        }
+        this.checkCredentials();
 
         // if (! process.env.ZENATON_HANDLE_ONLY ) {
         //     [workflowsNamesOnly, tasksNamesOnly] = this.verifyClass(process.env.ZENATON_HANDLE_ONLY);
@@ -47,12 +37,43 @@ export default class Configuration {
             tasks_name_only:  [],
             workflows_name_except:  [],
             tasks_name_except:  [],
-            worker_script: process.cwd() + '/../slave.js',
-            autoload_path: process.cwd() + this.source,
+            worker_script: process.cwd() + '/scripts/slave.js',
+            autoload_path: process.cwd() + '/' + this.source,
             programming_language: 'Javascript'
         };
 
+
         this.microserver.sendEnv(body)
+    }
+
+    stopMicroserver()
+    {
+        this.checkCredentials();
+
+        const body = {
+            app_id: process.env.ZENATON_APP_ID,
+            api_token: process.env.ZENATON_API_TOKEN,
+            app_env: process.env.ZENATON_APP_ENV,
+            programming_language: 'Javascript'
+        };
+
+        this.microserver.stop(body);
+    }
+
+    checkCredentials() {
+        dotenv.config({path: path.dirname(this.env) + '/' + path.basename(this.env) })
+
+        if ( ! process.env.ZENATON_APP_ID) {
+            throw new Error('Error! Environment variable ZENATON_APP_ID not set');
+        }
+
+        if ( ! process.env.ZENATON_API_TOKEN) {
+            throw new Error('Error! Environment variable ZENATON_API_TOKEN not set');
+        }
+
+        if ( ! process.env.ZENATON_APP_ENV) {
+            throw new Error('Error! Environment variable ZENATON_APP_ENV not set');
+        }
     }
 
     verifyClass(request)
