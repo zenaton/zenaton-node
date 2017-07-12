@@ -49,26 +49,6 @@ export default class Workflow {
         return this.workflow.data;
     }
 
-    init(name, data, event) {
-        // select the good workflow with the name
-        // const workflow = this.workflowManager.getWorkflow(name)
-
-        // console.log(workflow);
-        // // Build the properties
-        // this.setData(JSON.parse(data));
-
-        // // build event
-        // $this->event = $event ? $this->jsonizer->decode(
-        //     $event,
-        //     EventInterface::class
-        //   ) : null;
-
-        // // init position
-        this.position.init();
-
-        return this;
-    }
-
     handle() {
         return this.workflow.handle()
     }
@@ -76,10 +56,28 @@ export default class Workflow {
     name() {
         return this.workflow.name;
     }
+
     id() {
+        
         if (typeof this.workflow.id === 'function') {
             return this.workflow.id();
         }
+    }
+
+    getPosition() {
+        return this.position.get();
+    }
+
+    next() {
+        this.position.next();
+    }
+
+    nextParallel() {
+        this.position.nextParallel();
+    }
+
+    nextAsync() {
+        this.position.nextAsync();
     }
 
 

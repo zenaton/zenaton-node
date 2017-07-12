@@ -2,7 +2,7 @@ var Zenaton = require('../../lib/Worker');
 
 var bookByAir = new Zenaton.Task({
     name: 'ReserveAir',
-    data: ['trip'],
+    props: ['trip'],
     handle: function(done) {
         console.log('Reserving airline for trip ID: ' + this.trip.id);
         setTimeout(function(){

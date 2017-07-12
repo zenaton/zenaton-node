@@ -9,7 +9,6 @@ export default class WorkflowManager {
 
         this.workflows = {};
 
-
         instance = this;
     }
 
@@ -21,10 +20,15 @@ export default class WorkflowManager {
         return this.workflows[workflowName];
     }
 
-    init(name, data, event) {
-        const flow = this.getWorkflow(name);
-        flow.setData(JSON.parse(data));
+    getCurrentWorkflow() {
+        return this.currentWorkflow;
+    }
 
-        return flow;
+    init(name, data, event) {
+        const workflow = this.getWorkflow(name);
+        workflow.setData(JSON.parse(data));
+        workflow.position.init();
+        this.currentWorkflow = workflow;
+        return workflow;
     }
 }

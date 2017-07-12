@@ -1,5 +1,6 @@
 import Microserver from './Microserver';
 import WorkflowManager from './WorkflowManager';
+import { ModifiedDeciderException, ScheduledBoxException }  from '../Common';
 
 export default class Decider {
     constructor(uuid) {
@@ -18,6 +19,7 @@ export default class Decider {
             .catch((error) => {
                 console.log(`error: ${error}`);
             });
+
         // this.microserver.reset();
     }
 
@@ -25,7 +27,12 @@ export default class Decider {
         try {
             const output = this.flow.handle()
         } catch (e) {
-
+            console.log("catching");
+            // if (e instanceof ScheduledBoxException) {
+            //     console.log("ScheduledBoxException dans decider");
+            //     // this.microserver.completeDecision();
+            //     return;
+            // }
         }
     }
 }

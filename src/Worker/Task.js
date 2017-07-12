@@ -1,29 +1,44 @@
-let instance = null;
+import _ from 'lodash';
 import { ExternalZenatonException, objectsHaveSameKeys } from '../Common/index';
+
+let instance = null;
 
 export default class Task {
 
     constructor(task) {
+
         if (instance) {
             return instance
         }
 
         this.task = task;
-        instance = this;
+        this.task.data = {};
+
+        _.each(this.props(), (p) => {
+            this.task.data[p] = null;
+        });
+
+        const dataSetter = (data = null) => {
+            if (data) {
+                this.setData(data);
+            }
+            instance = this;
+            return instance;
+        }
+
+        return dataSetter;
     }
 
     setData(data) {
-        const actualData = this.data();
 
-        if ( ! ( objectsHaveSameKeys(actualData, data) ) ) {
+        if ( ! ( objectsHaveSameKeys(this.task.data, data) ) ) {
             throw new ExternalZenatonException('The data sent must match the properties of the Task Object')
         }
 
-        this.data.data = () => data;
         _.each(data, (p, k ) => {
-            this.task[k] = p
+            this.task.data[k] = p;
+            this.task[k] = p;
         });
-
     }
 
     init(name, data) {
@@ -37,8 +52,8 @@ export default class Task {
         return this;
     }
 
-    data() {
-        return this.task.data();
+    props() {
+        return this.task.props;
     }
 
     handle() {

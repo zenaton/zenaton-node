@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { get, post, put } from '../Common/Services/index';
 
 let instance = null;
@@ -12,6 +13,10 @@ export default class Microserver {
         }
 
         instance = this;
+    }
+
+    getUuid() {
+        return this.uuid;
     }
 
     setUuid(uuid) {
@@ -82,6 +87,40 @@ export default class Microserver {
                     reject(error);
                 });
         });
+    }
+
+    execute(boxes) {
+
+        const body = {};
+
+        body.action = 'execute';
+
+        const works = [];
+        _.each(boxes, (box) => {
+            works.push(box.getWork());
+        });
+        body.works = works;
+
+        return new Promise((resolve, reject) => {
+            this.sendDecision(body)
+                .then((response) => {
+                    if (response.properties) {
+                        console.log("properties");
+                        console.log(response.properties);
+                    }
+
+                    if (response.outputs) {
+                        console.log("outputs");
+                        console.log(response.outputs);
+                    }
+                    
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
+        });
+
     }
 
     sendDecision(body) {
