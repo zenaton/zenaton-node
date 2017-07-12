@@ -51,31 +51,23 @@ export default class Helpers {
         });
 
         // throw new ScheduledBoxException();
-        this.microserver.execute(dboxes)
-            .then((response) => {
-                console.log(response);
+        const response = this.microserver.execute(dboxes)
 
-                if (response.status === 'modified') {
-                    throw new ModifiedDeciderException()
-                }
+        if (response.status === 'modified') {
+            throw new ModifiedDeciderException()
+        }
 
-                if (! isSync) {
-                    return;
-                }
+        if (! isSync) {
+            return;
+        }
 
-                if (response.status === 'scheduled') {
-                    throw new ScheduledBoxException();
-                }
+        if (response.status === 'scheduled') {
+            throw new ScheduledBoxException();
+        }
 
-                if (response.status === 'completed') {
-                    console.log('completed dude');
-                }
-            })
-            .catch((error) => {
-                if(error instanceof ScheduledBoxException) {
-
-                }
-            })
+        if (response.status === 'completed') {
+            console.log('completed dude');
+        }
 
     }
 

@@ -10,23 +10,20 @@ export default class Slave {
     }
 
     process() {
-        this.microserver.askJob(this.instanceId, this.slaveId)
-            .then((result) => {
-                if (result.action) {
-                    switch (result.action) {
-                        case 'DecisionScheduled':
-                            (new Decider(result.uuid)).launch();
+        const result = this.microserver.askJob(this.instanceId, this.slaveId);
 
-                            break;
-                        case 'TaskScheduled':
-                            (new Worker(result.uuid, result.name, result.input, result.hash)).process();
-                            break;
+        if (result.action) {
+            switch (result.action) {
+                case 'DecisionScheduled':
+                    (new Decider(result.uuid)).launch();
 
-                    }
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+                    break;
+                case 'TaskScheduled':
+                    console.log('task');
+                    // (new Worker(result.uuid, result.name, result.input, result.hash)).process();
+                    break;
+
+            }
+        }
     }
 }

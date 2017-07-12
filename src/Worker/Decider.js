@@ -1,6 +1,7 @@
 import Microserver from './Microserver';
 import WorkflowManager from './WorkflowManager';
-import { ModifiedDeciderException, ScheduledBoxException }  from '../Common';
+import { ModifiedDeciderException, ScheduledBoxException }  from '../Common/Exceptions';
+import _ from 'lodash';
 
 export default class Decider {
     constructor(uuid) {
@@ -8,31 +9,31 @@ export default class Decider {
         this.workflowManager = new WorkflowManager();
     }
 
+    workflowExecute() {
+        return this.microserver.getWorkflowToExecute()
+    }
     launch() {
         let branch;
-        this.microserver.getWorkflowToExecute()
-            .then((branch => {
-
+        do {
+            branch = this.workflowExecute();
+            if (! _.isEmpty(branch)) {
                 this.flow = this.workflowManager.init(branch.name, branch.properties, branch.event);
                 this.process();
-            }))
-            .catch((error) => {
-                console.log(`error: ${error}`);
-            });
+            }
+        } while (! _.isEmpty(branch));
 
-        // this.microserver.reset();
+        this.microserver.reset();
     }
 
     process() {
         try {
             const output = this.flow.handle()
         } catch (e) {
-            console.log("catching");
-            // if (e instanceof ScheduledBoxException) {
-            //     console.log("ScheduledBoxException dans decider");
-            //     // this.microserver.completeDecision();
-            //     return;
-            // }
+            if (e instanceof ScheduledBoxException) {
+                console.log("ScheduledBoxException dans decider");
+                this.microserver.completeDecision();
+                return;
+            }
         }
     }
 }

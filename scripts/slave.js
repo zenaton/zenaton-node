@@ -3,7 +3,6 @@ var Slave = require('../lib/Worker').Slave;
 var Zenaton = require('../lib/Worker');
 
 require('../lib/functions');
-
 require(process.argv[2]);
 
 // function shutdown()

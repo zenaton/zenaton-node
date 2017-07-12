@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { get, post, put } from '../Common/Services/index';
+import WorkflowManager from './WorkflowManager';
 
 let instance = null;
 
@@ -11,7 +12,7 @@ export default class Microserver {
         if (instance) {
             return instance
         }
-
+        this.workflowManager = new WorkflowManager();
         instance = this;
     }
 
@@ -35,17 +36,7 @@ export default class Microserver {
     sendEnv(body) {
         const url = this.microServerUrl('/configuration');
 
-        return new Promise((resolve, reject) => {
-            post(url, body)
-                .then((response) => {
-                    console.log(response.msg);
-                    resolve(response.msg)
-                })
-                .catch((error) => {
-                    reject(error);
-                });
-        });
-
+        return post(url, body);
     }
 
     stop(body) {
@@ -65,28 +56,11 @@ export default class Microserver {
 
     askJob(instanceId, slaveId) {
         const url = this.microServerUrl('/jobs/' + instanceId + '?slave_id=' + slaveId);
-        return new Promise((resolve, reject) => {
-            get(url)
-                .then((response) => {
-                    resolve(response)
-                })
-                .catch((error) => {
-                    reject(error);
-                })
-        });
+        return get(url);
     }
 
     getWorkflowToExecute() {
-        return new Promise((resolve, reject) => {
-            this.sendDecision({action: 'start'})
-                .then((result) => {
-                    resolve(result);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    reject(error);
-                });
-        });
+        return this.sendDecision({action: 'start'})
     }
 
     execute(boxes) {
@@ -101,39 +75,39 @@ export default class Microserver {
         });
         body.works = works;
 
-        return new Promise((resolve, reject) => {
-            this.sendDecision(body)
-                .then((response) => {
-                    if (response.properties) {
-                        console.log("properties");
-                        console.log(response.properties);
-                    }
+        const response = this.sendDecision(body)
 
-                    if (response.outputs) {
-                        console.log("outputs");
-                        console.log(response.outputs);
-                    }
-                    
-                    resolve(response);
-                })
-                .catch((error) => {
-                    reject(error);
-                })
-        });
+        if (response.properties) {
+            console.log("properties");
+            console.log(response.properties);
+        }
+
+        if (response.outputs) {
+            console.log("outputs");
+            console.log(response.outputs);
+        }
+
+        return response;
 
     }
 
     sendDecision(body) {
         const url = this.microServerUrl('/decisions/' + this.uuid);
-        return new Promise((resolve, reject) => {
-            post(url, body)
-                .then((result) => {
-                    resolve(result);
-                })
-                .catch((error) => {
-                    reject(error);
-                });
+
+        const response =  post(url, body)
+        return response;
+    }
+
+
+    completeDecision()
+    {
+        const response = this.sendDecision({
+            action: 'terminate',
+            status: 'running',
+            properties: this.workflowManager.getCurrentWorkflow().workflow.data
         });
+
+        console.log(response);
     }
 
     microServerUrl(ressource)

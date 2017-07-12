@@ -44,16 +44,7 @@ export default class Api {
         body[CUSTOM_ID] = customId;
         body[PROGRAMMING_LANGUAGE] = 'Javascript';
 
-        return new Promise((resolve, reject) => {
-            post(this.getStartWorkflowURL(), body)
-                .then((response) => {
-                     resolve(response)
-                })
-                .catch((error) => {
-                    reject(error)
-                })
-        })
-
+        return post(this.getStartWorkflowURL(), body)
     }
 
     getStartWorkflowURL() {

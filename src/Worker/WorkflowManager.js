@@ -26,7 +26,7 @@ export default class WorkflowManager {
 
     init(name, data, event) {
         const workflow = this.getWorkflow(name);
-        workflow.setData(JSON.parse(data));
+        workflow.setData(JSON.parse(data))
         workflow.position.init();
         this.currentWorkflow = workflow;
         return workflow;

@@ -34,20 +34,11 @@ export default class Workflow {
                 throw new ExternalZenatonException('The ID provided must not exceed 191 characters');
             }
         }
-        
-        this.api.startWorkflow(this.workflowName, flow.getData(), (customId) || null)
-            .then((response) => {
-                console.log(response);
-                if (response.error) {
-                    throw new ExternalZenatonException(response.error);
-                }
-                this.id = response.custom_id
-            })
-            .catch((error) => {
-                console.log(error);
-                throw new ExternalZenatonException(error);
-            });
 
+        const response = this.api.startWorkflow(this.workflowName, flow.getData(), (customId) || null)
+
+        this.id = response.custom_id
+            
         return this;
     }
 
