@@ -48,16 +48,7 @@ export default class Microserver {
     stop(body) {
         const url = this.microServerUrl('/stop');
 
-        return new Promise((resolve, reject) => {
-            post(url, body)
-                .then((response) => {
-                    console.log(response.msg);
-                    resolve(response.msg)
-                })
-                .catch((error) => {
-                    reject(error);
-                });
-        });
+        return post(url, body).msg;
     }
 
     askJob(instanceId, slaveId) {
@@ -83,13 +74,11 @@ export default class Microserver {
 
         const response = this.sendDecision(body)
 
-        if (response.properties) {
-            console.log("properties");
-            console.log(response.properties);
-        }
+        // if (response.properties) {
+        //
+        // }
 
         if (response.outputs) {
-            console.log("outputs");
             const outputs = _.map(response.outputs, (output) => {
                 if (output) {
                     return JSON.parse(output);
@@ -128,7 +117,7 @@ export default class Microserver {
         });
     }
 
-    completeDecisionBranch(output) {
+    completeDecisionBranch(output = null) {
 
         const body = {
             action: 'terminate',
@@ -140,12 +129,12 @@ export default class Microserver {
         this.sendDecision(body);
     }
 
-    completeWork(output)
+    completeWork(output = null)
     {
         this.sendWork({
             action: 'terminate',
             status: 'completed',
-            output: JSON.stringify(output),
+            output: (output) ? JSON.stringify(output) : null,
             duration: 0
         });
     }

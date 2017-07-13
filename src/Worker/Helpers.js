@@ -68,7 +68,6 @@ export default class Helpers {
         if (response.status === 'completed') {
             flow.setData(response.properties);
             const outputs = response.outputs;
-            console.log('completed dude');
 
             return (outputs.length > 1) ? outputs : outputs[0];
         }

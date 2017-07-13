@@ -20,7 +20,6 @@ export default class Slave {
 
                     break;
                 case 'TaskScheduled':
-                    console.log('task');
                     (new Worker(result.uuid, result.name, result.input, result.hash)).process();
                     break;
 

@@ -10,28 +10,15 @@ export default class Decider {
     }
 
     workflowExecute() {
-        console.log("a");
         return this.microserver.getWorkflowToExecute()
     }
     launch() {
         let branch;
-        // do {
-        //     branch = this.workflowExecute();
-        //     if (! _.isEmpty(branch)) {
-        //         this.flow = this.workflowManager.init(branch.name, branch.properties, branch.event);
-        //         this.process();
-        //     }
-        // } while (! _.isEmpty(branch));
-
         while (! _.isEmpty(branch = this.workflowExecute())) {
-            console.log("branch");
-            console.log(branch);
-
             if (! _.isEmpty(branch)) {
                 this.flow = this.workflowManager.init(branch.name, branch.properties, branch.event);
                 this.process();
             }
-            // break;
         }
         this.microserver.reset();
     }
@@ -42,12 +29,11 @@ export default class Decider {
             output = this.flow.handle()
         } catch (e) {
             if (e instanceof ScheduledBoxException) {
-                console.log("ScheduledBoxException dans decider");
                 this.microserver.completeDecision();
                 return;
             }
         }
-        console.log("final output");
+
         this.microserver.completeDecisionBranch(output);
 
     }

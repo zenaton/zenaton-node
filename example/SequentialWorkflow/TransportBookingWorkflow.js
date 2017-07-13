@@ -1,30 +1,30 @@
-// var bookByCar = require('./bookByCar');
-// var sendConfirmation = require('./sendConfirmation');
 var Zenaton = require('../../lib/Worker');
-var bookByAir = require('./bookByAir');
+
+var bookByAir = require('./BookByAir');
+var bookByCar = require('./BookByCar');
+var SendConfirmation = require('./SendConfirmation');
+
 
 var transportBookingWorkflow = new Zenaton.Workflow({
     name: 'TransportBookingWorkflow',
-    props: ['booking'],
     handle: function() {
 
-        if (this.booking.byAir) {
-            this.booking.trip.ticket_id = execute(
-                bookByAir({trip: this.booking.trip})
-            );
+        if (this.transport === 'air') {
+            var booking_id = execute(bookByAir({id: this.id}));
         }
 
-        // if (this.booking.reserve_car) {
-        //     this.booking = execute(ReserveCar(this.booking));
-        // }
+        if (this.transport === 'car') {
+            var booking_id = execute(bookByCar({id: this.id}));
+        }
 
-        // execute(SendConfirmation(this.booking))
+        execute(SendConfirmation({
+            id: this.id,
+            customer_id: this.customer_id,
+            request_id: this.request_id,
+            transport: this.transport,
+            booking_id: booking_id
+        }));
     }
-    // onEvent: function(event) {
-    //     if (event.name === 'EngagedEvent') {
-    //         this.engaged = true;
-    //     }
-    // },
 });
 
 module.exports = transportBookingWorkflow;

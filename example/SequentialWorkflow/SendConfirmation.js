@@ -1,22 +1,21 @@
-var Task = require('../../lib/Worker').Task;
+var Zenaton = require('../../lib/Worker');
 
 var SendConfirmation = new Zenaton.Task({
     name: 'SendConfirmation',
-    data: function() {
-        return {
-            booking: null,
-        }
-    },
     handle: function(done) {
         console.log('Sending notification to customer ');
+        console.log('Customer ID: ' + this.customer_id);
+        console.log('Request ID: ' + this.id);
 
-        if (this.booking.reserve_air) {
-            console.log('Ticket ID: ' + this.booking.ticket_id);
+        if (this.transport === 'air') {
+            console.log('Ticket ID: ' + this.booking_id);
         }
 
-        if (this.booking.reserve_car) {
-            console.log('Car ID: ' + this.booking.car_id);
+        if (this.transport === 'car') {
+            console.log('Car ID: ' + this.booking_id);
         }
+
+        done();
     }
 });
 

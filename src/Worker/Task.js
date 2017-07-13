@@ -11,9 +11,9 @@ export default class Task {
         this.task = task;
         this.task.data = {};
 
-        _.each(this.props(), (p) => {
-            this.task.data[p] = null;
-        });
+        // _.each(this.props(), (p) => {
+        //     this.task.data[p] = null;
+        // });
 
         taskManager.setTask(this);
 
@@ -28,23 +28,14 @@ export default class Task {
     }
 
     setData(data) {
-
-        if ( ! ( objectsHaveSameKeys(this.task.data, data) ) ) {
-            throw new ExternalZenatonException('The data sent must match the properties of the Task Object')
-        }
-
         _.each(data, (p, k ) => {
             this.task.data[k] = p;
             this.task[k] = p;
         });
     }
 
-    props() {
-        return this.task.props;
-    }
-
-    handle() {
-        return this.task.handle();
+    handle(done) {
+        return this.task.handle(done);
     }
 
     timeout() {

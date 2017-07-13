@@ -13,9 +13,9 @@ export default class Workflow {
 
         this.position = new Position();
 
-        _.each(this.props(), (p) => {
-            this.workflow.data[p] = null;
-        });
+        // _.each(this.props(), (p) => {
+        //     this.workflow.data[p] = null;
+        // });
 
         workflowManager.setWorkflow(this);
 
@@ -29,21 +29,10 @@ export default class Workflow {
         return dataSetter;
     }
 
-    props() {
-        return this.workflow.props;
-    }
-
     setData(data) {
-        console.log("data");
-        console.log(data);
-        console.log(typeof data);
-        // data = JSON.parse(data);
+
         if (typeof data === 'string') {
             data = JSON.parse(data);
-        }
-
-        if ( ! ( objectsHaveSameKeys(this.workflow.data, data) ) ) {
-            throw new ExternalZenatonException('The data sent must match the properties of the Workflow Object')
         }
 
         _.each(data, (p, k ) => {
