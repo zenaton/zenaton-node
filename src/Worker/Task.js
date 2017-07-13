@@ -1,15 +1,12 @@
 import _ from 'lodash';
 import { ExternalZenatonException, objectsHaveSameKeys } from '../Common/index';
-
-let instance = null;
+import TaskManager from './TaskManager';
 
 export default class Task {
 
-    constructor(task) {
+    constructor(task = null) {
 
-        if (instance) {
-            return instance
-        }
+        const taskManager = new TaskManager();
 
         this.task = task;
         this.task.data = {};
@@ -18,12 +15,13 @@ export default class Task {
             this.task.data[p] = null;
         });
 
+        taskManager.setTask(this);
+
         const dataSetter = (data = null) => {
             if (data) {
                 this.setData(data);
             }
-            instance = this;
-            return instance;
+            return this;
         }
 
         return dataSetter;
@@ -39,17 +37,6 @@ export default class Task {
             this.task.data[k] = p;
             this.task[k] = p;
         });
-    }
-
-    init(name, data) {
-        // this.task = $this->jsonizer->getObjectFromNameAndEncodedProperties(
-        //     $name,
-        //     $input,
-        //     TaskInterface::class
-        // );
-        this.setData(JSON.parse(data));
-
-        return this;
     }
 
     props() {

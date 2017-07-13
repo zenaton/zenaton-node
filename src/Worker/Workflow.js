@@ -34,6 +34,13 @@ export default class Workflow {
     }
 
     setData(data) {
+        console.log("data");
+        console.log(data);
+        console.log(typeof data);
+        // data = JSON.parse(data);
+        if (typeof data === 'string') {
+            data = JSON.parse(data);
+        }
 
         if ( ! ( objectsHaveSameKeys(this.workflow.data, data) ) ) {
             throw new ExternalZenatonException('The data sent must match the properties of the Workflow Object')
@@ -58,7 +65,7 @@ export default class Workflow {
     }
 
     id() {
-        
+
         if (typeof this.workflow.id === 'function') {
             return this.workflow.id();
         }

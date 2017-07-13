@@ -1,5 +1,6 @@
 import Microserver from './Microserver';
 import Decider from './Decider';
+import Worker from './Worker';
 
 export default class Slave {
     constructor(source, instance_id, slave_id) {
@@ -20,7 +21,7 @@ export default class Slave {
                     break;
                 case 'TaskScheduled':
                     console.log('task');
-                    // (new Worker(result.uuid, result.name, result.input, result.hash)).process();
+                    (new Worker(result.uuid, result.name, result.input, result.hash)).process();
                     break;
 
             }

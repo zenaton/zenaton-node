@@ -5,10 +5,11 @@ var bookByAir = new Zenaton.Task({
     props: ['trip'],
     handle: function(done) {
         console.log('Reserving airline for trip ID: ' + this.trip.id);
-        setTimeout(function(){
-            this.trip.ticket_id = '154782684269';
-            done(null, this.trip.ticket_id);
-        }, Math.floor(Math.random() * 3) + 1 );
+        return this.trip;
+        // setTimeout(function(){
+        //     this.trip.ticket_id = '154782684269';
+        //     done(null, this.trip.ticket_id);
+        // }, Math.floor(Math.random() * 3) + 1 );
 
     }
 });

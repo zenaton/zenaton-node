@@ -9,7 +9,6 @@ var transportBookingWorkflow = new Zenaton.Workflow({
     handle: function() {
 
         if (this.booking.byAir) {
-            // console.log();
             this.booking.trip.ticket_id = execute(
                 bookByAir({trip: this.booking.trip})
             );

@@ -25,6 +25,12 @@ export default class Microserver {
         return this;
     }
 
+    setHash(hash)
+    {
+        this.hash = hash;
+        return this;
+    }
+
     reset() {
 
         this.uuid = null;
@@ -84,7 +90,13 @@ export default class Microserver {
 
         if (response.outputs) {
             console.log("outputs");
-            console.log(response.outputs);
+            const outputs = _.map(response.outputs, (output) => {
+                if (output) {
+                    return JSON.parse(output);
+                }
+            });
+
+            response.outputs = outputs;
         }
 
         return response;
@@ -98,6 +110,14 @@ export default class Microserver {
         return response;
     }
 
+    sendWork(body)
+    {
+        const url = this.microServerUrl('/works/' + this.uuid);
+
+        body.hash = this.hash;
+        return post(url, body);
+    }
+
 
     completeDecision()
     {
@@ -106,8 +126,28 @@ export default class Microserver {
             status: 'running',
             properties: this.workflowManager.getCurrentWorkflow().workflow.data
         });
+    }
 
-        console.log(response);
+    completeDecisionBranch(output) {
+
+        const body = {
+            action: 'terminate',
+            status: 'completed',
+            properties: this.workflowManager.getCurrentWorkflow().workflow.data,
+            output: (output) ? JSON.stringify(output) : null
+        };
+
+        this.sendDecision(body);
+    }
+
+    completeWork(output)
+    {
+        this.sendWork({
+            action: 'terminate',
+            status: 'completed',
+            output: JSON.stringify(output),
+            duration: 0
+        });
     }
 
     microServerUrl(ressource)
