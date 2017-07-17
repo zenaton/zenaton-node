@@ -24,9 +24,7 @@ export default class Workflow {
         if (! flow.name()) {
             throw new ExternalZenatonException('You need to set a Name argument to your workflow ');
         }
-
         this.workflowName = flow.name();
-
         if (flow.id()) {
             customId = flow.id();
 
@@ -38,7 +36,7 @@ export default class Workflow {
         const response = this.api.startWorkflow(this.workflowName, flow.getData(), (customId) || null)
 
         this.id = response.custom_id
-            
+
         return this;
     }
 

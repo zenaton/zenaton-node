@@ -1,5 +1,7 @@
 var Zenaton = require('../../lib/Worker');
 
+var _ = require('lodash');
+
 var bookByCar = new Zenaton.Task({
     name: 'BookByCar',
     handle: function(done) {
@@ -8,7 +10,7 @@ var bookByCar = new Zenaton.Task({
         setTimeout(function(){
             that.car_id = '1547826842785';
             done(null, that.car_id);
-        }, Math.floor(Math.random() * 3) + 1 );
+        }, _.random(1, 3) * 1000 );
 
     }
 });

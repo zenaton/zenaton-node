@@ -1,2 +1,3 @@
 require('./SequentialWorkflow/TransportBookingWorkflow');
-require('./AsynchronousWorkflow/SendInvitationWorkflow');
+require('./ParallelWorkflow/ParallelWorkflow');
+require('./AsynchronousWorkflow/SendInvitationsWorkflow');

@@ -10,6 +10,6 @@ if (typeof global.execute !== "function") {
 
 if (typeof global.executeAsync !== "function") {
     global.executeAsync = (...tasks) => {
-        return (new Helpers()).doExecute(arguments, false)
+        return (new Helpers()).doExecute(tasks, false)
     }
 }

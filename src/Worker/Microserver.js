@@ -41,7 +41,6 @@ export default class Microserver {
 
     sendEnv(body) {
         const url = this.microServerUrl('/configuration');
-
         return post(url, body);
     }
 
