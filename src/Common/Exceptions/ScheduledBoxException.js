@@ -1,5 +1,3 @@
-// import InternalZenatonException from './InternalZenatonException';
-
 export default class ScheduledBoxException extends Error {
     constructor(message = null, name = null) {
         super(message);

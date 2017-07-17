@@ -1,3 +1,11 @@
-import ZenatonException from './ZenatonException';
+export default class InternalZenatonException extends Error {
+    constructor(message = null, name = null) {
+        super(message);
+        Object.setPrototypeOf(this, InternalZenatonException.prototype);
+        this.name = name || this.constructor.name;
+    }
 
-export default class InternalZenatonException extends ZenatonException {}
+    dump() {
+        return { message: this.message, stack: this.stack };
+    }
+}

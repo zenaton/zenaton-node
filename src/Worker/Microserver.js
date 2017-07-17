@@ -39,6 +39,14 @@ export default class Microserver {
         return this;
     }
 
+    isDeciding() {
+        return (!this.hash && this.uuid);
+    }
+
+    isWorking() {
+        return (this.hash && this.uuid);
+    }
+
     sendEnv(body) {
         const url = this.microServerUrl('/configuration');
         return post(url, body);
@@ -72,10 +80,6 @@ export default class Microserver {
         body.works = works;
 
         const response = this.sendDecision(body)
-
-        // if (response.properties) {
-        //
-        // }
 
         if (response.outputs) {
             const outputs = _.map(response.outputs, (output) => {
@@ -128,6 +132,32 @@ export default class Microserver {
         this.sendDecision(body);
     }
 
+    failDecider(e) {
+
+        this.sendDecision({
+            action: 'terminate',
+            status: 'zenatonFailed',
+            error_code: 0,
+            error_name: e.name,
+            error_message: e.message,
+            error_stacktrace: e.stack,
+            failed_at: Date.now()
+        });
+    }
+
+    failDecision(e) {
+
+        this.sendDecision({
+            action: 'terminate',
+            status: 'failed',
+            error_code: 0,
+            error_name: e.name,
+            error_message: e.message,
+            error_stacktrace: e.stack,
+            failed_at: Date.now()
+        });
+    }
+
     completeWork(output = null)
     {
         this.sendWork({
@@ -135,6 +165,30 @@ export default class Microserver {
             status: 'completed',
             output: (output) ? JSON.stringify(output) : null,
             duration: 0
+        });
+    }
+
+    failWorker(e) {
+        this.sendWork({
+            action: 'terminate',
+            status: 'zenatonFailed',
+            error_code: 0,
+            error_message: e.message,
+            error_name: e.name,
+            error_stacktrace: e.stack,
+            failed_at: Date.now()
+        });
+    }
+
+    failWork(e) {
+        this.sendWork({
+            action: 'terminate',
+            status: 'failed',
+            error_code: 0,
+            error_message: (e.message) || null,
+            error_name: e.name || e,
+            error_stacktrace: e.stack || null,
+            failed_at: Date.now()
         });
     }
 

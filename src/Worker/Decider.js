@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Microserver from './Microserver';
 import WorkflowManager from './WorkflowManager';
-import { ModifiedDeciderException, ScheduledBoxException }  from '../Common/Exceptions';
+import { ScheduledBoxException, InternalZenatonException }  from '../Common/Exceptions';
 
 export default class Decider {
     constructor(uuid) {
@@ -28,10 +28,22 @@ export default class Decider {
         try {
             output = this.flow.handle()
         } catch (e) {
+
             if (e instanceof ScheduledBoxException) {
                 this.microserver.completeDecision();
                 return;
             }
+
+            if (e instanceof InternalZenatonException) {
+                this.microserver.failDecider(e);
+                this.microserver.reset();
+
+                throw e;
+            }
+
+            this.microserver.failDecision(e);
+            this.microserver.reset();
+            throw e;
         }
 
         this.microserver.completeDecisionBranch(output);

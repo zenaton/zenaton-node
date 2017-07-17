@@ -1,6 +1,7 @@
 import Microserver from './Microserver';
 import Task from './Task';
 import TaskManager from './TaskManager';
+import { ScheduledBoxException, InternalZenatonException, ZenatonException }  from '../Common/Exceptions';
 
 
 export default class Worker {
@@ -14,12 +15,26 @@ export default class Worker {
         try {
             this.task.handle(this.done.bind(this));
         } catch (e) {
+            if (e instanceof ZenatonException) {
+                this.microserver.failWorker(e);
+                this.microserver.reset();
+                throw e;
+            }
 
+            this.microserver.failWork(e);
+            this.microserver.reset();
+            throw e;
         }
 
     }
 
     done(error = null, output = null) {
+
+        if (error) {
+            this.microserver.failWork(error)
+            this.microserver.reset();
+            return;
+        }
         this.microserver.completeWork(output);
         this.microserver.reset();
     }

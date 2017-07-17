@@ -1,7 +1,11 @@
-import ZenatonException from './ZenatonException';
+export default class ModifiedDeciderException extends Error {
+    constructor(message = null, name = null) {
+        super(message);
+        Object.setPrototypeOf(this, ModifiedDeciderException.prototype);
+        this.name = name || this.constructor.name;
+    }
 
-export default class ModifiedDeciderException extends ZenatonException {
-    constructor(message = null){
-        super(message || "Error: your workflow has changed - please use versioning", 'ModifiedDeciderException');
+    dump() {
+        return { message: this.message, stack: this.stack };
     }
 }

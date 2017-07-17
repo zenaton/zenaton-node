@@ -47,8 +47,26 @@ export default class Api {
         return post(this.getStartWorkflowURL(), body)
     }
 
+    sendEvent(customId, workflowName, name, input) {
+        const url = this.getSendEventURL();
+
+        const body = {
+            custom_id: customId,
+            event_input: input,
+            event_name: name,
+            name: workflowName,
+            programming_language: 'Javascript'
+        };
+
+        return post(url, body);
+    }
+
     getStartWorkflowURL() {
         return this.addIdentification(`${ZENATON_URL}/instances`);
+    }
+
+    getSendEventURL() {
+        return this.addIdentification(`${ZENATON_URL}/events`);
     }
 
     addIdentification(url, params = '') {
