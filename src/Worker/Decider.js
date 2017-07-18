@@ -30,6 +30,7 @@ export default class Decider {
         } catch (e) {
 
             if (e instanceof ScheduledBoxException) {
+                this.workflowManager.setCurrentWorkflow(this.flow);
                 this.microserver.completeDecision();
                 return;
             }

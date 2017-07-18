@@ -1,6 +1,7 @@
 import Api from './Api';
 import { ExternalZenatonException } from '../Common/index';
 import { Workflow as W } from '../Worker/index';
+import { Event } from '../Worker';
 
 const SIZE_OF_VARCHAR = 191;
 
@@ -40,7 +41,15 @@ export default class Workflow {
         return this;
     }
 
-    sendEvent() {
+    sendEvent(event) {
+        if (event instanceof Event) {
+            return this.api.sendEvent(
+                this.id,
+                this.workflowName,
+                event.name,
+                event
+            );
+        }
 
     }
 

@@ -3,6 +3,7 @@ import { ExternalZenatonException, objectsHaveSameKeys } from '../Common/index';
 import WorkflowManager from './WorkflowManager';
 import Position from './Position';
 
+
 export default class Workflow {
     constructor(workflow = null) {
 
@@ -12,10 +13,6 @@ export default class Workflow {
         this.workflow.data = {};
 
         this.position = new Position();
-
-        // _.each(this.props(), (p) => {
-        //     this.workflow.data[p] = null;
-        // });
 
         workflowManager.setWorkflow(this);
 
@@ -45,8 +42,21 @@ export default class Workflow {
         return this.workflow.data;
     }
 
+
+    setEvent(event) {
+        this.workflow.event = event;
+    }
+
     handle() {
-        return this.workflow.handle()
+        if (!this.workflow.event) {
+            return this.workflow.handle()
+        }
+
+        if (typeof this.workflow.onEvent === 'function') {
+            this.workflow.onEvent(this.workflow.event)
+
+            return;
+        }
     }
 
     name() {
@@ -75,6 +85,4 @@ export default class Workflow {
     nextAsync() {
         this.position.nextAsync();
     }
-
-
 }

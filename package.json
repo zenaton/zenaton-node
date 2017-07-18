@@ -37,6 +37,7 @@
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
-    "sync-request": "^4.1.0"
+    "sync-request": "^4.1.0",
+    "watchjs": "^0.0.0"
   }
 }

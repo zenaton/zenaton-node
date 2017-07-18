@@ -52,7 +52,7 @@ export default class Api {
 
         const body = {
             custom_id: customId,
-            event_input: input,
+            event_input: JSON.stringify(input),
             event_name: name,
             name: workflowName,
             programming_language: 'Javascript'

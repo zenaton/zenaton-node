@@ -67,6 +67,7 @@ export default class Helpers {
 
         if (response.status === 'completed') {
             flow.setData(response.properties);
+            this.workflowManager.getCurrentWorkflow().setData(response.properties);
             const outputs = response.outputs;
 
             return (outputs.length > 1) ? outputs : outputs[0];

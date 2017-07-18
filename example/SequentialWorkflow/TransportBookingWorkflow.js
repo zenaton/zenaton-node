@@ -8,7 +8,7 @@ var SendConfirmation = require('./SendConfirmation');
 var transportBookingWorkflow = new Zenaton.Workflow({
     name: 'TransportBookingWorkflow',
     handle: function() {
-
+        this.transport = 'car';
         if (this.transport === 'air') {
             var booking_id = execute(bookByAir({id: this.id}));
         }
