@@ -19,11 +19,6 @@ export default class Event {
         return dataSetter;
     }
 
-
-    // name() {
-    //     return this.event.name;
-    // }
-
     setData(data) {
         _.each(data, (p, k ) => {
             this.data[k] = p;
