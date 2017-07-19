@@ -13,7 +13,7 @@ export default class TaskManager {
     }
 
     setTask(task) {
-        this.tasks[task.task.name] = task;
+        this.tasks[task.name] = task;
     }
 
     getTaskByName(name) {

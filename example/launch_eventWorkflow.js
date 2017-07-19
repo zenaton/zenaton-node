@@ -15,8 +15,8 @@ var data = {
 
 
  setTimeout(function(){
-    //  instance.sendEvent(deliveryAddressUpdatedEvent({address: 'One Infinite Loop Cupertino, CA 95014'}));
+     instance.sendEvent(deliveryAddressUpdatedEvent({address: 'One Infinite Loop Cupertino, CA 95014'}));
 
-     instance.sendEvent(orderCanceledEvent());
+    //  instance.sendEvent(orderCanceledEvent());
      console.log("event sent!");
  }, 2 * 1000 );

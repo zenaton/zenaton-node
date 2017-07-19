@@ -2,11 +2,11 @@
 
 export default class OutputBox {
     constructor(box) {
-        this.name = box.task.name;
-        this.input = box.task.data;
+        this.name = box.name;
+        this.input = box.data;
 
-        if(typeof box.task.getTimeout !== 'undefined') {
-            this.timeout = (box.task.getTimeout());
+        if(typeof box.getTimeout !== 'undefined') {
+            this.timeout = (box.getTimeout());
         } else {
             this.timeout = 2147483647;
         }

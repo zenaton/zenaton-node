@@ -8,12 +8,14 @@ export default class Task {
 
         const taskManager = new TaskManager();
 
-        this.task = task;
-        this.task.data = {};
+        // this.task = task;
+        // this.task.data = {};
 
-        // _.each(this.props(), (p) => {
-        //     this.task.data[p] = null;
-        // });
+        this.data = {};
+
+        _.each(task, (p, k) => {
+            this[k] = p;
+        });
 
         taskManager.setTask(this);
 
@@ -29,16 +31,8 @@ export default class Task {
 
     setData(data) {
         _.each(data, (p, k ) => {
-            this.task.data[k] = p;
-            this.task[k] = p;
+            this.data[k] = p;
+            this[k] = p;
         });
-    }
-
-    handle(done) {
-        return this.task.handle(done);
-    }
-
-    timeout() {
-        return this.task.timeout();
     }
 }

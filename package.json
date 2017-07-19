@@ -1,8 +1,8 @@
 {
-  "name": "common-javascript",
-  "version": "1.0.0",
+  "name": "zenaton-javascript",
+  "version": "0.0.0",
   "description": "",
-  "main": "lib/common.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel --presets es2015 src/ --out-dir lib/",
     "lint": "node_modules/.bin/eslint --ext .js .",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tasky-io/common-javascript.git"
+    "url": "git+https://github.com/zenaton/zenaton-javascript.git"
   },
   "author": "Louis Cibot",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tasky-io/common-javascript/issues"
+    "url": "https://github.com/zenaton/zenaton-javascript/issues"
   },
-  "homepage": "https://tasky.io",
+  "homepage": "https://zenaton.com",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",

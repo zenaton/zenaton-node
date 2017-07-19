@@ -6,7 +6,7 @@ export default class Event {
         _.each(event, (p, k) => {
             this[k] = p
         });
-        this.event = event;
+        
         this.data = {};
 
         const dataSetter = (data = null) => {
