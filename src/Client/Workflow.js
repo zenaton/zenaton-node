@@ -54,18 +54,20 @@ export default class Workflow {
     }
 
     kill() {
+        return this.api.updateInstance(this.id, this.workflowName, 'kill');
     }
 
     pause() {
-
+        return this.api.updateInstance(this.id, this.workflowName, 'pause');
     }
 
     resume() {
-
+        return this.api.updateInstance(this.id, this.workflowName, 'run');
     }
 
-    getData() {
-
+    getProperties() {
+        const res = this.api.getInstanceDetails(this.id, this.workflowName);
+        return JSON.parse(res.properties);
     }
 
 

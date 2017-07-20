@@ -47,6 +47,23 @@ export default class Api {
         return post(this.getStartWorkflowURL(), body)
     }
 
+    updateInstance(customerId, workflowName, mode)
+    {
+        const body = {
+            name: workflowName,
+            programming_language: 'Javascript',
+            mode: mode
+        };
+
+        return put(this.getInstanceDetailsURL(customerId), body);
+    }
+
+    getInstanceDetails(customerId, name)
+    {   const params = `name=${name}&programming_language=Javascript`;
+
+        return get(this.getInstanceDetailsURL(customerId, params));
+    }
+
     sendEvent(customId, workflowName, name, input) {
         const url = this.getSendEventURL();
 
@@ -63,6 +80,10 @@ export default class Api {
 
     getStartWorkflowURL() {
         return this.addIdentification(`${ZENATON_URL}/instances`);
+    }
+
+    getInstanceDetailsURL(customerId, params = '') {
+        return this.addIdentification(`${ZENATON_URL}/instances/${customerId}`, params);
     }
 
     getSendEventURL() {
