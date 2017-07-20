@@ -1,20 +1,13 @@
 import _ from 'lodash';
-import { ExternalZenatonException } from '../Common/Exceptions';
-import TaskManager from './TaskManager';
 
-class Task {
+class Event {
+    constructor(event) {
 
-    constructor(task = null) {
-
-        const taskManager = new TaskManager();
-
-        this.data = {};
-
-        _.each(task, (p, k) => {
-            this[k] = p;
+        _.each(event, (p, k) => {
+            this[k] = p
         });
 
-        taskManager.setTask(this);
+        this.data = {};
 
         const dataSetter = (data = null) => {
             if (data) {
@@ -34,4 +27,4 @@ class Task {
     }
 }
 
-module.exports = Task;
+module.exports = Event;

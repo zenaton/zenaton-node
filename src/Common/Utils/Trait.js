@@ -1,5 +1,5 @@
 // Mixin traits into an Object (another trait)
-export const mixin = (object, ...traits) => {
+const mixin = (object, ...traits) => {
 	let _traits = [];
 	if (object._traits) {
 		Array.prototype.push.apply(_traits, object._traits);
@@ -31,14 +31,14 @@ export const mixin = (object, ...traits) => {
 }
 
 // Mixin traits into a class. class Foo extends mixinClass(Base, Trait1) {}
-export const mixinClass = (baseClass, ...traits) => {
+const mixinClass = (baseClass, ...traits) => {
 	class traitedClass extends baseClass {};
 	mixin.apply(this, [traitedClass.prototype].concat(traits));
 	return traitedClass;
 }
 
 // Checks to see if a class or trait has a trait
-export const hasTrait = (object, trait) => {
+const hasTrait = (object, trait) => {
 	let _traits;
 	if (typeof object === "function") {
 		_traits = object.prototype._traits;
@@ -48,39 +48,5 @@ export const hasTrait = (object, trait) => {
 	return Array.isArray(_traits) && _traits.indexOf(trait) >= 0;
 }
 
-/*
-  var Trait1 = {
-    method1() {}
-  };
 
-  var Trait2 = {
-    method2() {}
-  };
-
-  var Trait3 = mixin({
-    method3() {}
-  }, Trait2);
-  hasTrait(Trait3, Trait2) // true
-  hasTrait(Trait3, Trait1) // false
-
-  class Base {}
-  class Foo extends mixinClass(Base, Trait1) {}
-
-  hasTrait(Foo, Trait1) // true
-  hasTrait(Foo, Trait2) // false
-
-  class Foo2 extends Foo {}
-
-  hasTrait(Foo2, Trait1) // true
-  hasTrait(Foo2, Trait2) // false
-
-  class Foo3 extends mixinClass(Foo, Trait2) {}
-
-  hasTrait(Foo3, Trait1) // true
-  hasTrait(Foo3, Trait2) // true
-  class Bar extends mixinClass(Base, Trait3) {}
-
-  hasTrait(Bar, Trait1) // false
-  hasTrait(Bar, Trait2) // true
-  hasTrait(Bar, Trait3) // true
-*/
+export { mixin, mixinClass, hasTrait };

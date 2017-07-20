@@ -1,6 +1,6 @@
-import Workflow from './Workflow';
-import Wait from './Wait';
+import Event from './Event';
 import Task from './Task';
+import Workflow from './Workflow';
+import { Wait, WaitWhile } from './Tasks';
 
-
-export { Task, Wait, Workflow };
+export { Event, Task, Wait, WaitWhile, Workflow };
