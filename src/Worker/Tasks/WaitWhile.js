@@ -1,4 +1,4 @@
-import { mixinClass } from '../../Common/Utils/Trait';
+import { mixinClass } from '../../Common/Utils';
 import WithDuration from '../../Common/Traits/WithDuration';
 
 class Base {}

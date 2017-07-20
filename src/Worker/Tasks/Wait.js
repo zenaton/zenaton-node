@@ -1,5 +1,5 @@
-import { mixinClass } from '../../Common/Utils/Trait';
-import ExternalZenatonException from '../../Common/Exceptions/ExternalZenatonException';
+import { mixinClass } from '../../Common/Utils';
+import { ExternalZenatonException } from '../../Common/Exceptions';
 import WithTimeout from '../../Common/Traits/WithTimeout';
 
 class Base {}

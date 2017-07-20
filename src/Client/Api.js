@@ -2,8 +2,8 @@
   * Setting up block level variable to store class state
   * , set's to null by default.
 */
-import { get, post, put } from '../Common/Services/index';
-import { ExternalZenatonException } from '../Common/index';
+import { get, post, put } from '../Common/Services';
+import { ExternalZenatonException } from '../Common/Exceptions';
 
 let instance = null;
 

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ExternalZenatonException, objectsHaveSameKeys } from '../Common/index';
+import { ExternalZenatonException } from '../Common/Exceptions';
 import TaskManager from './TaskManager';
 
 export default class Task {

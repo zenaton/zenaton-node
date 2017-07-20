@@ -1,4 +1,4 @@
-var Slave = require('../lib/Worker').Slave;
+var Slave = require('../lib/Worker/Slave');
 
 require('../lib/functions');
 require(process.argv[2]);

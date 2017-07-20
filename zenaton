@@ -2,7 +2,7 @@
 
 var program = require('commander');
 var fs = require('fs');
-var Configuration = require('./lib/Worker').Configuration;
+var Configuration = require('./lib/Worker/Configuration');
 
 program
    .version('0.0.1');

@@ -1,6 +1,5 @@
 import Task from './Task';
-import Wait from './Tasks/Wait';
-import WaitWhile from './Tasks/WaitWhile';
+import { Wait, WaitWhile} from './Tasks';
 
 export default class OutputBox {
     constructor(box) {

@@ -1,6 +1,6 @@
 import Api from './Api';
-import { ExternalZenatonException } from '../Common/index';
-import { Workflow as W } from '../Worker/index';
+import { ExternalZenatonException } from '../Common/Exceptions';
+import { Workflow as W } from '../Worker';
 import { Event } from '../Worker';
 
 const SIZE_OF_VARCHAR = 191;
