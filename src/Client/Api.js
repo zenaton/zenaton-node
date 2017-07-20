@@ -7,7 +7,7 @@ import { ExternalZenatonException } from '../Common/Exceptions';
 
 let instance = null;
 
-const ZENATON_URL = 'http://website.dev/api';
+const ZENATON_URL = 'https://zenaton.com/api';
 const APP_ENV = 'app_env';
 const APP_ID = 'app_id';
 const API_TOKEN = 'api_token';
