@@ -3,7 +3,7 @@ import path from 'path';
 
 import Microserver from './Microserver';
 
-export default class Configuration {
+class Configuration {
     constructor(env, source = null) {
         this.microserver = new Microserver();
         this.env = env;
@@ -81,3 +81,5 @@ export default class Configuration {
 
     }
 }
+
+module.exports = Configuration;

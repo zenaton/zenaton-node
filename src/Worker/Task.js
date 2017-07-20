@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { ExternalZenatonException } from '../Common/Exceptions';
 import TaskManager from './TaskManager';
 
-export default class Task {
+class Task {
 
     constructor(task = null) {
 
@@ -33,3 +33,5 @@ export default class Task {
         });
     }
 }
+
+module.exports = Task;

@@ -1,6 +1,6 @@
 const SEPARATOR_ASYNC = 'a';
 const SEPARATOR_PARALLEL = 'p';
-export default class Position
+class Position
 {
 
     constructor() {
@@ -47,3 +47,5 @@ export default class Position
           return i === -1 ? false : i
     }
 }
+
+module.exports = Position;

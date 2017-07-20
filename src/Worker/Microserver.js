@@ -6,7 +6,7 @@ let instance = null;
 
 const MICROSERVER_URL = 'http://localhost:4001';
 
-export default class Microserver {
+class Microserver {
     constructor() {
         // Singleton
         if (instance) {
@@ -197,3 +197,5 @@ export default class Microserver {
         return MICROSERVER_URL + ressource;
     }
 }
+
+module.exports = Microserver;

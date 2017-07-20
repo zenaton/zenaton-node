@@ -2,7 +2,7 @@ import Microserver from './Microserver';
 import Decider from './Decider';
 import Worker from './Worker';
 
-export default class Slave {
+class Slave {
     constructor(source, instance_id, slave_id) {
         this.source = source;
         this.instanceId = instance_id;
@@ -27,3 +27,5 @@ export default class Slave {
         }
     }
 }
+
+module.exports = Slave;

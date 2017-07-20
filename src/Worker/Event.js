@@ -1,12 +1,12 @@
 import _ from 'lodash';
 
-export default class Event {
+class Event {
     constructor(event) {
 
         _.each(event, (p, k) => {
             this[k] = p
         });
-        
+
         this.data = {};
 
         const dataSetter = (data = null) => {
@@ -26,3 +26,5 @@ export default class Event {
         });
     }
 }
+
+module.exports = Event;

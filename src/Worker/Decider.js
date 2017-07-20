@@ -3,7 +3,7 @@ import Microserver from './Microserver';
 import WorkflowManager from './WorkflowManager';
 import { ScheduledBoxException, InternalZenatonException }  from '../Common/Exceptions';
 
-export default class Decider {
+class Decider {
     constructor(uuid) {
         this.microserver = (new Microserver()).setUuid(uuid);
         this.workflowManager = new WorkflowManager();
@@ -51,3 +51,5 @@ export default class Decider {
 
     }
 }
+
+module.exports = Decider;

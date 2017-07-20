@@ -1,7 +1,7 @@
 import Task from './Task';
 import { Wait, WaitWhile} from './Tasks';
 
-export default class OutputBox {
+class OutputBox {
     constructor(box) {
         this.name = box.name;
         this.input = box.data;
@@ -65,3 +65,5 @@ export default class OutputBox {
         return (this.box instanceof WaitWhile);
     }
 }
+
+module.exports = OutputBox;

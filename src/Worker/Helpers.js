@@ -6,7 +6,7 @@ import OutputBox from './OutputBox';
 import { ModifiedDeciderException, ScheduledBoxException } from '../Common/Exceptions';
 let instance = null;
 
-export default class Helpers {
+class Helpers {
     constructor() {
 
         if (instance) {
@@ -83,3 +83,5 @@ export default class Helpers {
         return (this.microserver.getUuid()) ? true : false;
     }
 }
+
+module.exports = Helpers;

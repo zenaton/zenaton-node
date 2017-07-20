@@ -2,7 +2,7 @@ import { watch } from 'watchJs';
 import _ from 'lodash';
 let instance = null;
 
-export default class WorkflowManager {
+class WorkflowManager {
     constructor() {
         if (instance) {
             return instance;
@@ -53,3 +53,5 @@ export default class WorkflowManager {
         });
     }
 }
+
+module.exports = WorkflowManager;

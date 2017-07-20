@@ -4,7 +4,7 @@ import WorkflowManager from './WorkflowManager';
 import Position from './Position';
 
 
-export default class Workflow {
+class Workflow {
     constructor(workflow = null) {
 
         const workflowManager = new WorkflowManager();
@@ -86,3 +86,5 @@ export default class Workflow {
         this.position.nextAsync();
     }
 }
+
+module.exports = Workflow;

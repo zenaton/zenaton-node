@@ -4,7 +4,7 @@ import TaskManager from './TaskManager';
 import { ScheduledBoxException, InternalZenatonException, ZenatonException }  from '../Common/Exceptions';
 
 
-export default class Worker {
+class Worker {
     constructor(uuid, name, input, hash) {
         this.microserver = (new Microserver()).setUuid(uuid).setHash(hash);
         this.taskManager = new TaskManager();
@@ -39,3 +39,5 @@ export default class Worker {
         this.microserver.reset();
     }
 }
+
+module.exports = Worker;

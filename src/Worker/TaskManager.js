@@ -1,7 +1,7 @@
 
 let instance = null;
 
-export default class TaskManager {
+class TaskManager {
     constructor() {
         if (instance) {
             return instance;
@@ -31,3 +31,5 @@ export default class TaskManager {
         return task;
     }
 }
+
+module.exports = TaskManager;
