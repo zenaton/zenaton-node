@@ -49,6 +49,11 @@ const WithDuration = {
         return this;
     },
 
+    time_sleep_until(timestamp) {
+        while( new Date() < timestamp * 1000) {}
+        return true;
+    },
+
     getTimeoutMoment() {
         if(!this.timeoutMoment) {
             this.timeoutNow = moment();

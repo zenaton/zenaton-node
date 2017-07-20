@@ -1,5 +1,6 @@
 import Task from './Task';
 import Wait from './Tasks/Wait';
+import WaitWhile from './Tasks/WaitWhile';
 
 export default class OutputBox {
     constructor(box) {
@@ -43,6 +44,9 @@ export default class OutputBox {
         } else if (this.isWait()) {
             data.type = 'wait';
             data.event = this.event;
+        } else if (this.isWaitWhile()) {
+            data.type = 'while';
+            data.event = this.event;
         }
 
 
@@ -56,5 +60,9 @@ export default class OutputBox {
 
     isWait() {
         return (this.box instanceof Wait);
+    }
+
+    isWaitWhile() {
+        return (this.box instanceof WaitWhile);
     }
 }

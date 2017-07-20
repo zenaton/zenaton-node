@@ -42,7 +42,8 @@ const WithTimeout = mixin({
     timezone(timezone) {
         this.getTimeoutMoment().tz(timezone).format();
         return this;
-    }
+    },
+
 }, WithDuration)
 
 
