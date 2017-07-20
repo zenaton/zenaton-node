@@ -8,9 +8,6 @@ export default class Task {
 
         const taskManager = new TaskManager();
 
-        // this.task = task;
-        // this.task.data = {};
-
         this.data = {};
 
         _.each(task, (p, k) => {

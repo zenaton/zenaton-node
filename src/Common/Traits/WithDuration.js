@@ -1,43 +1,49 @@
 import moment from 'moment'
 
-export const WithDuration = {
-    _seconds(s) {
+const WithDuration = {
+
+    getTimeoutTimestamp() {
+
+        return (this.timeoutMoment) ? this.timeoutMoment.unix() : 2147483647;
+    },
+
+    seconds(s) {
         this.getTimeoutMoment().add(s, 'seconds');
 
         return this
     },
 
-    _minutes(m) {
+    minutes(m) {
         this.getTimeoutMoment().add(m, 'minutes');
 
         return this
     },
 
-    _hours(h) {
+    hours(h) {
         this.getTimeoutMoment().add(h, 'hours');
 
         return this
     },
 
-    _days(d) {
+    days(d) {
         this.getTimeoutMoment().add(d, 'days');
 
         return this
     },
 
-    _weeks(w) {
+    weeks(w) {
         this.getTimeoutMoment().add(w, 'weeks');
 
         return this
     },
 
-    _months(m) {
+    months(m) {
         this.getTimeoutMoment().add(m, 'months');
 
         return this
     },
 
-    _years(y) {
+    years(y) {
         this.getTimeoutMoment().add(y, 'years');
 
         return this;
@@ -53,4 +59,4 @@ export const WithDuration = {
     }
 };
 
-console.log(WithDuration._days(10)._years(1));
+export default WithDuration;
