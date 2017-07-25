@@ -4,7 +4,7 @@ import path from 'path';
 import Microserver from './Microserver';
 
 class Configuration {
-    constructor(env, source = null) {
+    constructor(env = null, source = null) {
         this.microserver = new Microserver();
         this.env = env;
         this.source = source;
@@ -37,6 +37,7 @@ class Configuration {
             tasks_name_only:  [],
             workflows_name_except:  [],
             tasks_name_except:  [],
+            // worker_script: process.cwd() + '/scripts/slave.js',
             worker_script: process.cwd() + '/node_modules/zenaton-javascript/scripts/slave.js',
             autoload_path: process.cwd() + '/' + this.source,
             programming_language: 'Javascript'
@@ -79,6 +80,10 @@ class Configuration {
     verifyClass(request)
     {
 
+    }
+
+    status() {
+        return this.microserver.status();
     }
 }
 

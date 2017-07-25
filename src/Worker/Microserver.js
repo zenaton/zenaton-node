@@ -58,6 +58,12 @@ class Microserver {
         return post(url, body).msg;
     }
 
+    status()
+    {
+        const url = this.microServerUrl('/status');
+        return get(url);
+    }
+
     askJob(instanceId, slaveId) {
         const url = this.microServerUrl('/jobs/' + instanceId + '?slave_id=' + slaveId);
         return get(url);
