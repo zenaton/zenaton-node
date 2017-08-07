@@ -36,21 +36,8 @@ class WorkflowManager {
         workflow.setEvent(JSON.parse(event));
 
         this.setCurrentWorkflow(workflow);
-        this.updateProperties(workflow);
-
+        
         return workflow;
-    }
-
-
-    updateProperties(workflow) {
-
-        const keys = _.keys(workflow.workflow);
-        const keyToWatch = _.difference(keys, ['name', 'handle', 'data', 'event', 'onEvent']);
-        _.each(keyToWatch, (k) => {
-            watch(workflow.workflow, k, () => {
-                workflow.workflow.data[k] = workflow.workflow[k];
-            })
-        });
     }
 }
 

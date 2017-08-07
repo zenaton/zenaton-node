@@ -27,10 +27,7 @@ class Task {
     }
 
     setData(data) {
-        _.each(data, (p, k ) => {
-            this.data[k] = p;
-            this[k] = p;
-        });
+        this.data = data;
     }
 }
 

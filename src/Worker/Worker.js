@@ -29,7 +29,6 @@ class Worker {
     }
 
     done(error = null, output = null) {
-
         if (error) {
             this.microserver.failWork(error)
             this.microserver.reset();

@@ -84,7 +84,6 @@ class Microserver {
             works.push(box.getWork());
         });
         body.works = works;
-
         const response = this.sendDecision(body)
 
         if (response.outputs) {
