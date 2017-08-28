@@ -34,7 +34,6 @@ class Workflow {
 
         _.each(data, (p, k ) => {
             this.workflow.data[k] = p;
-            this.workflow[k] = p;
         });
     }
 
@@ -65,8 +64,8 @@ class Workflow {
 
     id() {
 
-        if (typeof this.workflow.id === 'function') {
-            return this.workflow.id();
+        if (typeof this.workflow.getId === 'function') {
+            return this.workflow.getId();
         }
     }
 

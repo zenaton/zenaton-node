@@ -15,6 +15,12 @@ export default class Workflow {
         return this.id;
     }
 
+    setInstance(customId, workflowName) {
+        this.id = customId;
+        this.workflowName = workflowName;
+        return this;
+    }
+
     start(flow) {
         let customId;
 
@@ -67,7 +73,7 @@ export default class Workflow {
 
     getProperties() {
         const res = this.api.getInstanceDetails(this.id, this.workflowName);
-        return JSON.parse(res.properties);
+        return JSON.parse(res.instance.properties);
     }
 
 

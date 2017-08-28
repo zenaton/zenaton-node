@@ -22,7 +22,9 @@ program
             return
         }
 
-        (new Configuration(env, source)).startMicroserver();
+        var response = (new Configuration(env, source)).startMicroserver();
+
+        console.log(response);
     });
 
 program
