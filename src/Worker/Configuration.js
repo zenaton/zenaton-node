@@ -45,8 +45,8 @@ class Configuration {
             tasks_name_only:  tasksNamesOnly || [],
             workflows_name_except: workflowsNamesToExcept || [],
             tasks_name_except: tasksNamesToExcept || [],
-            worker_script: process.cwd() + '/scripts/slave.js',
-            // worker_script: process.cwd() + '/node_modules/zenaton-javascript/scripts/slave.js',
+            // worker_script: process.cwd() + '/scripts/slave.js',
+            worker_script: process.cwd() + '/node_modules/zenaton-javascript/scripts/slave.js',
             autoload_path: process.cwd() + '/' + this.source,
             programming_language: 'Javascript'
         };
