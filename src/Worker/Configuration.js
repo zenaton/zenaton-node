@@ -39,18 +39,20 @@ class Configuration {
             app_id: process.env.ZENATON_APP_ID,
             api_token: process.env.ZENATON_API_TOKEN,
             app_env: process.env.ZENATON_APP_ENV,
+            api_url: process.env.ZENATON_API_URL || 'https://zenaton.com/api',
             concurrent_max: process.env.ZENATON_CONCURRENT_MAX || 100,
             workflows_name_only:  workflowsNamesOnly || [],
             tasks_name_only:  tasksNamesOnly || [],
             workflows_name_except: workflowsNamesToExcept || [],
             tasks_name_except: tasksNamesToExcept || [],
-            worker_script: process.cwd() + '/node_modules/zenaton-javascript/scripts/slave.js',
+            worker_script: process.cwd() + '/scripts/slave.js',
+            // worker_script: process.cwd() + '/node_modules/zenaton-javascript/scripts/slave.js',
             autoload_path: process.cwd() + '/' + this.source,
             programming_language: 'Javascript'
         };
 
-
-        return this.microserver.sendEnv(body);
+        console.log(this.microserver.sendEnv(body));
+        // return this.microserver.sendEnv(body);
     }
 
     stopMicroserver()

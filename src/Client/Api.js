@@ -2,13 +2,13 @@
   * Setting up block level variable to store class state
   * , set's to null by default.
 */
+import dotenv from 'dotenv';
 import { get, post, put } from '../Common/Services';
 import { ExternalZenatonException } from '../Common/Exceptions';
 
 let instance = null;
 
 const ZENATON_URL = 'https://zenaton.com/api';
-
 const APP_ENV = 'app_env';
 const APP_ID = 'app_id';
 const API_TOKEN = 'api_token';
@@ -33,7 +33,6 @@ export default class Api {
         this.appId = appId;
         this.apiToken = apiToken;
         this.appEnv = appEnv;
-
         return this;
     }
 
@@ -45,24 +44,26 @@ export default class Api {
         body[CUSTOM_ID] = customId;
         body[PROGRAMMING_LANGUAGE] = 'Javascript';
 
-        return post(this.getStartWorkflowURL(), body)
+        return post(this.instanceUrl(), body)
     }
 
-    updateInstance(customerId, workflowName, mode)
+    updateInstance(customId, workflowName, mode)
     {
+
+        const params = `custom_id=${customId}`;
         const body = {
             name: workflowName,
             programming_language: 'Javascript',
             mode: mode
         };
 
-        return put(this.getInstanceDetailsURL(customerId), body);
+        return put(this.instanceUrl(params), body);
     }
 
-    getInstanceDetails(customerId, name)
-    {   const params = `name=${name}&programming_language=Javascript`;
+    getInstanceDetails(customId, name)
+    {   const params = `custom_id=${customId}&name=${name}&programming_language=Javascript`;
 
-        return get(this.getInstanceDetailsURL(customerId, params));
+        return get(this.instanceUrl(params));
     }
 
     sendEvent(customId, workflowName, name, input) {
@@ -79,16 +80,17 @@ export default class Api {
         return post(url, body);
     }
 
-    getStartWorkflowURL() {
-        return this.addIdentification(`${ZENATON_URL}/instances`);
+    getApiUrl()
+    {
+        return (process.env.ZENATON_API_URL) ?  process.env.ZENATON_API_URL : ZENATON_URL  ;
     }
 
-    getInstanceDetailsURL(customerId, params = '') {
-        return this.addIdentification(`${ZENATON_URL}/instances/${customerId}`, params);
+    instanceUrl(params = '') {
+        return this.addIdentification(`${this.getApiUrl()}/instances`, params);
     }
 
     getSendEventURL() {
-        return this.addIdentification(`${ZENATON_URL}/events`);
+        return this.addIdentification(`${this.getApiUrl()}/events`);
     }
 
     addIdentification(url, params = '') {

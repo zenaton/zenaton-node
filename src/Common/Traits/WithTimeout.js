@@ -35,8 +35,40 @@ const WithTimeout = mixin({
 
     monday(n = 1) {
         const t = this.getTimeoutMoment();
-
+        const h = t.hours();
+        const m = t.minutes();
+        const s = t.seconds();
         return this;
+    },
+
+    tuesday(n = 1) {
+        const t = this.getTimeoutMoment();
+
+    },
+
+    wednesday(n = 1) {
+        const t = this.getTimeoutMoment();
+
+    },
+
+    thursday(n = 1) {
+        const t = this.getTimeoutMoment();
+
+    },
+
+    friday(n = 1) {
+        const t = this.getTimeoutMoment();
+
+    },
+
+    saturday(n = 1) {
+        const t = this.getTimeoutMoment();
+
+    },
+
+    sunday(n = 1) {
+        const t = this.getTimeoutMoment();
+
     },
 
     timezone(timezone) {
@@ -48,3 +80,6 @@ const WithTimeout = mixin({
 
 
 export default WithTimeout;
+
+
+WithTimeout.monday();

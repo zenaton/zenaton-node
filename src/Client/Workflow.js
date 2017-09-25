@@ -40,11 +40,7 @@ export default class Workflow {
             }
         }
 
-        const response = this.api.startWorkflow(this.workflowName, flow.getData(), (customId) || null)
-
-        this.id = response.custom_id
-
-        return this;
+        return this.api.startWorkflow(this.workflowName, flow.getData(), (customId) || null)
     }
 
     sendEvent(event) {
@@ -73,7 +69,7 @@ export default class Workflow {
 
     getProperties() {
         const res = this.api.getInstanceDetails(this.id, this.workflowName);
-        return JSON.parse(res.instance.properties);
+        return JSON.parse(res.data.properties);
     }
 
 
