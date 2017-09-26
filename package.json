@@ -7,7 +7,8 @@
     "build": "./node_modules/.bin/babel --presets es2015 src/ --out-dir lib/",
     "lint": "node_modules/.bin/eslint --ext .js .",
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cp -f ./zenaton ./../../; chmod +x ./../../zenaton"
   },
   "repository": {
     "type": "git",
