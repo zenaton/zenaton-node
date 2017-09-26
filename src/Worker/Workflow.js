@@ -30,8 +30,7 @@ class Workflow {
 
         if (typeof data === 'string') {
             data = JSON.parse(data);
-        }
-
+        }        
         _.each(data, (p, k ) => {
             this.workflow.data[k] = p;
         });

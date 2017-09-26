@@ -51,8 +51,7 @@ class Configuration {
             programming_language: 'Javascript'
         };
 
-        console.log(this.microserver.sendEnv(body));
-        // return this.microserver.sendEnv(body);
+        return this.microserver.sendEnv(body);
     }
 
     stopMicroserver()
