@@ -8,7 +8,7 @@
     "lint": "node_modules/.bin/eslint --ext .js .",
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cp -f ./zenaton ./../../; chmod +x ./../../zenaton"
+    "postinstall": "cp -f ./zenaton ./../../"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "chalk": "^2.1.0",
     "commander": "^2.11.0",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",

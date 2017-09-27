@@ -54,8 +54,7 @@ class Microserver {
 
     stop(body) {
         const url = this.microServerUrl('/stop');
-
-        return post(url, body).msg;
+        return post(url, body);
     }
 
     status()

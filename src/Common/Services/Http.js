@@ -1,36 +1,26 @@
 import request from 'sync-request';
 
     export const get = (url) => {
-        try {
-            const response = request('GET', url);
-
-            return JSON.parse(response.getBody('utf8'));
-        } catch (e) {
-            return e.message;
-        }
+        const response = request('GET', url);
+        return parseBody(response);
     };
 
     export const post = (url, body) => {
-        try {
-            const response = request('POST', url, {
-                json: body
-            });
-            return JSON.parse(response.getBody('utf8'));
-        } catch (e) {
-            return e.message;
-        }
 
-
+        const response = request('POST', url, {
+            json: body
+        });
+        return parseBody(response);
     };
 
     export const put = (url, body) => {
-        try {
-            const response = request('PUT', url, {
-                json: body
-            });
 
-            return JSON.parse(response.getBody('utf8'));
-        } catch (e) {
-            return e.message;
-        }
+        const response = request('PUT', url, {
+            json: body
+        });
+        return parseBody(response);
+    };
+
+    const parseBody = (response) => {
+        return JSON.parse(response.body.toString('utf8'));
     };
