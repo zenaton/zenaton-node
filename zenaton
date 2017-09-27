@@ -1,68 +1,53 @@
 #!/usr/bin/env node
-var chalk = require('chalk');
-var log = console.log;
 var program = require('commander');
-var fs = require('fs');
 var _ = require('lodash');
 
-
-var Configuration = require('./lib/Worker/Configuration');
-var StartCommand =  require('./lib/Worker/Command').StartCommand;
-
-
-// var program = new StartCommand();
-
-// Before publish
-// var Configuration = require('zenaton-javascript').Configuration;
+var Command = require('./lib/Worker/Command');
+var StartCommand =  Command.StartCommand;
+var StopCommand = Command.StopCommand;
+var StatusCommand = Command.StatusCommand;
 
 program
    .version('0.0.1');
 
 program
-    .option('--env', 'Set the environment variable')
-    .option('--boot', 'Set the source variable')
+    .option('--env', 'Define location of your .env file')
+    .option('--boot', 'Define location of your boot file')
     .command('start [env] --boot [boot]')
-    .description('Start a worker with .env credentials path and source file path')
+    .description('Start Zenaton worker')
     .action(function(env, boot) {
 
         if (!program.env) {
-            env = null
+            env = null;
         }
 
         if (!program.boot) {
-            boot = null
+            boot = null;
         }
 
         (new StartCommand()).execute(env, boot);
     });
 
-// program
-//     .option('--env', 'Set the environment variable')
-//     .command('stop <.env>')
-//     .description('Stop the listening of Zenaton executable for this app/environment/language')
-//     .action(function(env) {
-//
-//         if (! fs.existsSync(env)) {
-//             log(chalk.red('Error! Unabled to find '+ env +' file.'));
-//             return
-//         }
-//
-//         var feedback = (new Configuration(env)).stopMicroserver();
-//         (feedback.error) ? log(chalk.red(feedback.error)) : log(chalk.green(feedback.msg));
-//     });
-//
-//
-// program
-//     .command('status')
-//     .description('List all the subscribed application of a worker.')
-//     .action(function() {
-//
-//         const feedback = (new Configuration()).status();
-//         _.each(feedback, function(f) {
-//             console.log(f);
-//         });
-//     });
-//
-//
-//
+program
+    .option('--env', 'Define location of your .env file')
+    .command('stop [env]')
+    .description('Stop the listening of Zenaton executable for this app/environment/language')
+    .action(function(env) {
+
+
+        if (!program.env) {
+            env = null;
+        }
+
+        (new StopCommand()).execute(env);
+    });
+
+
+program
+    .command('status')
+    .description('List all the subscribed application of a worker.')
+    .action(function() {
+        (new StatusCommand().execute());
+    });
+
  program.parse(process.argv);
