@@ -2,11 +2,11 @@
 var program = require('commander');
 var _ = require('lodash');
 
-// var Command = require('./lib/Worker/Command');
-var Command = require('zenaton-javascript');
-var StartCommand =  Command.StartCommand;
-var StopCommand = Command.StopCommand;
-var StatusCommand = Command.StatusCommand;
+// var z = require('./lib');
+var z = require('zenaton-javascript');
+var StartCommand =  z.StartCommand;
+var StopCommand = z.StopCommand;
+var StatusCommand = z.StatusCommand;
 
 program
    .version('0.0.1');

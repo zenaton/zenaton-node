@@ -1,4 +1,4 @@
 import Client from './Client';
-import { Event, Task, Wait, WaitWhile, Workflow, Command } from './Worker';
+import { Event, Task, Wait, WaitWhile, Workflow, StartCommand, StopCommand, StatusCommand } from './Worker';
 
-export { Client, Command, Event, Task, Wait, WaitWhile, Workflow };
+export { Client, StartCommand, StopCommand, StatusCommand, Event, Task, Wait, WaitWhile, Workflow };
