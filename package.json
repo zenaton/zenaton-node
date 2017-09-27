@@ -1,6 +1,6 @@
 {
   "name": "zenaton-javascript",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
