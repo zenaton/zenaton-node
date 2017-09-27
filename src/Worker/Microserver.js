@@ -196,9 +196,11 @@ class Microserver {
         });
     }
 
+
     microServerUrl(ressource)
     {
-        return MICROSERVER_URL + ressource;
+        const url = (process.env.ZENATON_WORKER_PORT) ? 'http://localhost:' + process.env.ZENATON_WORKER_PORT : MICROSERVER_URL;
+        return url + ressource;
     }
 }
 

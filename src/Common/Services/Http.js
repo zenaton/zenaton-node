@@ -7,10 +7,17 @@ import request from 'sync-request';
 
     export const post = (url, body) => {
 
-        const response = request('POST', url, {
-            json: body
-        });
-        return parseBody(response);
+        try {
+            const response = request('POST', url, {
+                json: body
+            });
+            return parseBody(response);
+        } catch (e) {
+            const response = {};
+            const port = (process.env.ZENATON_WORKER_PORT) ? process.env.ZENATON_WORKER_PORT : 4001;
+            response.error = "Connection Problem. Please Check that you've started a zenaton_worker or ensure that PORT " + port +" is available."
+            return response;
+        }
     };
 
     export const put = (url, body) => {

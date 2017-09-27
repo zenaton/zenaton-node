@@ -60,8 +60,8 @@ class StartCommand extends Command {
             tasks_name_only:  this.getClassNamesByTypeFromEnv('ZENATON_HANDLE_ONLY', 'task'),
             workflows_name_except: this.getClassNamesByTypeFromEnv('ZENATON_HANDLE_EXCEPT', 'workflow'),
             tasks_name_except: this.getClassNamesByTypeFromEnv('ZENATON_HANDLE_EXCEPT', 'task'),
-            worker_script: process.cwd() + '/scripts/slave.js',
-            // worker_script: process.cwd() + '/node_modules/zenaton-javascript/scripts/slave.js',
+            // worker_script: process.cwd() + '/scripts/slave.js',
+            worker_script: process.cwd() + '/node_modules/zenaton-javascript/scripts/slave.js',
             autoload_path: bootFile,
             programming_language: 'Javascript'
 

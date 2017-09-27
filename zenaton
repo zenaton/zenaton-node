@@ -2,7 +2,8 @@
 var program = require('commander');
 var _ = require('lodash');
 
-var Command = require('./lib/Worker/Command');
+// var Command = require('./lib/Worker/Command');
+var Command = require('zenaton-javascript');
 var StartCommand =  Command.StartCommand;
 var StopCommand = Command.StopCommand;
 var StatusCommand = Command.StatusCommand;
