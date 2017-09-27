@@ -8,7 +8,7 @@
     "lint": "node_modules/.bin/eslint --ext .js .",
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cp -f ./zenaton ./../../"
+    "postinstall": "cp -f ./zenaton ./../../ && cp -n .env.example ./../../.env || true"
   },
   "repository": {
     "type": "git",
