@@ -12,35 +12,20 @@ program
    .version('0.0.1');
 
 program
-    .option('--env', 'Define location of your .env file')
-    .option('--boot', 'Define location of your boot file')
-    .command('start [env] --boot [boot]')
+    .option('--boot [boot]', 'Define location of your boot file')
+    .option('--env [env]', 'Define location of your .env file')
+    .command('start')
     .description('Start Zenaton worker')
-    .action(function(env, boot) {
-
-        if (!program.env) {
-            env = null;
-        }
-
-        if (!program.boot) {
-            boot = null;
-        }
-
-        (new StartCommand()).execute(env, boot);
+    .action(function() {
+        (new StartCommand()).execute(program.env, program.boot);
     });
 
 program
-    .option('--env', 'Define location of your .env file')
-    .command('stop [env]')
+    .option('--env [env]', 'Define location of your .env file')
+    .command('stop')
     .description('Stop the listening of Zenaton executable for this app/environment/language')
-    .action(function(env) {
-
-
-        if (!program.env) {
-            env = null;
-        }
-
-        (new StopCommand()).execute(env);
+    .action(function() {
+        (new StopCommand()).execute(program.env);
     });
 
 
