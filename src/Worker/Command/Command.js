@@ -32,7 +32,7 @@ class Command {
 
         if (!fs.existsSync(envFile)) {
             if (usingDefault) {
-                log(info('Please locate your env file with --env option'));
+                log(error('Please locate your env file with --env option'));
             } else {
                 log(error(`Unable to find ${envFile} file`));
             }
@@ -57,7 +57,7 @@ class Command {
 
         if (!fs.existsSync(bootFile)) {
             if (usingDefault) {
-                log(info('Please locate your boot file with --boot option'));
+                log(error('Please locate your boot file with --boot option'));
             } else {
                 log(error(`Unable to find ${bootFile} file`));
             }
@@ -70,7 +70,6 @@ class Command {
 
     loadEnvFile(envFile) {
         dotenv.config({path: envFile });
-        // dotenv.config({path: path.dirname(envFile) + '/' + path.basename(envFile) });
     }
 
     loadBootFile(bootFile) {
