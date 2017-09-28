@@ -33,10 +33,10 @@ class WorkflowManager {
         const workflow = this.getWorkflow(name);
         workflow.setData(data);
         workflow.position.init();
-        workflow.setEvent(JSON.parse(event));
+        workflow.setEvent(event);
 
         this.setCurrentWorkflow(workflow);
-        
+
         return workflow;
     }
 }

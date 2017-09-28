@@ -20,10 +20,14 @@ class Event {
     }
 
     setData(data) {
-        _.each(data, (p, k ) => {
-            this.data[k] = p;
-            this[k] = p;
-        });
+        if (typeof data === 'object') {
+            _.each(data, (p, k ) => {
+                this.data[k] = p;
+                this[k] = p;
+            });
+        } else {
+            this.data =  data;
+        }
     }
 }
 

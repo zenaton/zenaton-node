@@ -27,13 +27,13 @@ class Workflow {
     }
 
     setData(data) {
-
-        if (typeof data === 'string') {
-            data = JSON.parse(data);
-        }        
-        _.each(data, (p, k ) => {
-            this.workflow.data[k] = p;
-        });
+        if (typeof data === 'object') {
+            _.each(data, (p, k ) => {
+                this.workflow.data[k] = p;
+            });
+        } else {
+            this.workflow.data =  data;
+        }
     }
 
     getData() {
