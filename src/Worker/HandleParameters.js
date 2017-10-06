@@ -1,7 +1,12 @@
 import _ from 'lodash';
 
+import TaskManager from './TaskManager';
+import WorkflowManager from './WorkflowManager';
+
 class HandleParameters {
     constructor() {
+        this.taskManager = new TaskManager();
+        this.workflowManager = new WorkflowManager();
     }
 
     process(classes) {
