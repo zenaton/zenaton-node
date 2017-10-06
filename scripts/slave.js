@@ -1,8 +1,10 @@
 var Slave = require('../lib/Worker/Slave');
-
+var boot = process.argv[2];
+var instanceId = process.argv[3];
+var slaveId = process.argv[4];
 require('../lib/functions');
-require(process.argv[2]);
+require(boot);
 
 
-// arg 2 : source, arg3: instance_id, arg4: slave_id
-(new Slave(process.argv[2], process.argv[3], process.argv[4])).process();
+// arg3: instance_id, arg4: slave_id
+(new Slave(instanceId, slaveId)).process();

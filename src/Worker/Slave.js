@@ -3,8 +3,7 @@ import Decider from './Decider';
 import Worker from './Worker';
 
 class Slave {
-    constructor(source, instance_id, slave_id) {
-        this.source = source;
+    constructor(instance_id, slave_id) {
         this.instanceId = instance_id;
         this.slaveId = slave_id;
         this.microserver = new Microserver();
