@@ -1,4 +1,3 @@
-
 let instance = null;
 
 class TaskManager {

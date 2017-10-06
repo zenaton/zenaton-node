@@ -1,4 +1,3 @@
-import { watch } from 'watchJs';
 import _ from 'lodash';
 let instance = null;
 
