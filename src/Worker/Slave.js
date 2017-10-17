@@ -3,14 +3,13 @@ import Decider from './Decider';
 import Worker from './Worker';
 
 class Slave {
-    constructor(instance_id, slave_id) {
-        this.instanceId = instance_id;
+    constructor(slave_id) {
         this.slaveId = slave_id;
         this.microserver = new Microserver();
     }
 
     process() {
-        const result = this.microserver.askJob(this.instanceId, this.slaveId);
+        const result = this.microserver.askJob(this.slaveId);
 
         if (result.action) {
             switch (result.action) {
