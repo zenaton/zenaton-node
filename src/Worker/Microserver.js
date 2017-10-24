@@ -63,8 +63,8 @@ class Microserver {
         return get(url);
     }
 
-    askJob(instanceId, slaveId) {
-        const url = this.microServerUrl('/jobs?slave_id=' + slaveId);
+    askJob(instanceId, workerId) {
+        const url = this.microServerUrl('/jobs?worker_id=' + workerId);
         return get(url);
     }
 
