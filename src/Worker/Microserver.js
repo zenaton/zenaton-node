@@ -95,6 +95,10 @@ class Microserver {
             response.outputs = outputs;
         }
 
+        if (response.properties) {
+            response.properties = JSON.parse(response.properties);
+        }
+
         return response;
 
     }
@@ -120,7 +124,7 @@ class Microserver {
         const response = this.sendDecision({
             action: 'terminate',
             status: 'running',
-            properties: this.workflowManager.getCurrentWorkflow().workflow.data
+            properties: JSON.stringify(this.workflowManager.getCurrentWorkflow().workflow.data)
         });
     }
 
@@ -129,7 +133,7 @@ class Microserver {
         const body = {
             action: 'terminate',
             status: 'completed',
-            properties: this.workflowManager.getCurrentWorkflow().workflow.data,
+            properties: JSON.stringify(this.workflowManager.getCurrentWorkflow().workflow.data),
             output: (output) ? JSON.stringify(output) : null
         };
 
