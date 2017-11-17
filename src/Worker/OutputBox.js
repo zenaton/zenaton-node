@@ -34,7 +34,7 @@ class OutputBox {
         const data = {
             name: this.name,
             position: this.position,
-            input: this.input,
+            input: JSON.stringify(this.input),
             timeout: this.timeout
         };
 

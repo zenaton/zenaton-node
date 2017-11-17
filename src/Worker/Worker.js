@@ -8,7 +8,7 @@ class Worker {
     constructor(uuid, name, input, hash) {
         this.microserver = (new Microserver()).setUuid(uuid).setHash(hash);
         this.taskManager = new TaskManager();
-        this.task = this.taskManager.init(name, input);
+        this.task = this.taskManager.init(name, JSON.parse(input));
     }
 
     process() {
