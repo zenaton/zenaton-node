@@ -2,66 +2,66 @@ import moment from 'moment'
 
 const WithDuration = {
 
-    getTimeoutTimestamp() {
+	getTimeoutTimestamp() {
 
-        return (this.timeoutMoment) ? this.timeoutMoment.unix() : 2147483647;
-    },
+		return (this.timeoutMoment) ? this.timeoutMoment.unix() : 2147483647
+	},
 
-    seconds(s) {
-        this.getTimeoutMoment().add(s, 'seconds');
+	seconds(s) {
+		this.getTimeoutMoment().add(s, 'seconds')
 
-        return this
-    },
+		return this
+	},
 
-    minutes(m) {
-        this.getTimeoutMoment().add(m, 'minutes');
+	minutes(m) {
+		this.getTimeoutMoment().add(m, 'minutes')
 
-        return this
-    },
+		return this
+	},
 
-    hours(h) {
-        this.getTimeoutMoment().add(h, 'hours');
+	hours(h) {
+		this.getTimeoutMoment().add(h, 'hours')
 
-        return this
-    },
+		return this
+	},
 
-    days(d) {
-        this.getTimeoutMoment().add(d, 'days');
+	days(d) {
+		this.getTimeoutMoment().add(d, 'days')
 
-        return this
-    },
+		return this
+	},
 
-    weeks(w) {
-        this.getTimeoutMoment().add(w, 'weeks');
+	weeks(w) {
+		this.getTimeoutMoment().add(w, 'weeks')
 
-        return this
-    },
+		return this
+	},
 
-    months(m) {
-        this.getTimeoutMoment().add(m, 'months');
+	months(m) {
+		this.getTimeoutMoment().add(m, 'months')
 
-        return this
-    },
+		return this
+	},
 
-    years(y) {
-        this.getTimeoutMoment().add(y, 'years');
+	years(y) {
+		this.getTimeoutMoment().add(y, 'years')
 
-        return this;
-    },
+		return this
+	},
 
-    time_sleep_until(timestamp) {
-        while( new Date() < timestamp * 1000) {}
-        return true;
-    },
+	time_sleep_until(timestamp) {
+		while( new Date() < timestamp * 1000) {}
+		return true
+	},
 
-    getTimeoutMoment() {
-        if(!this.timeoutMoment) {
-            this.timeoutNow = moment();
-            this.timeoutMoment = moment(this.timeoutNow);
-        }
+	getTimeoutMoment() {
+		if(!this.timeoutMoment) {
+			this.timeoutNow = moment()
+			this.timeoutMoment = moment(this.timeoutNow)
+		}
 
-        return this.timeoutMoment;
-    }
-};
+		return this.timeoutMoment
+	}
+}
 
-export default WithDuration;
+export default WithDuration

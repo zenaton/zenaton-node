@@ -14,7 +14,7 @@
     "url": "git+https://github.com/zenaton/zenaton-javascript.git"
   },
   "author": "Zenaton Inc",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/zenaton/zenaton-javascript/issues"
   },

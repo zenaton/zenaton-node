@@ -1,3 +1,3 @@
-import Workflow from './Workflow';
+import Workflow from './Workflow'
 
-export { Workflow };
+export { Workflow }

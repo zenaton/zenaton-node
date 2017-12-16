@@ -1,5 +1,4 @@
-import Task from './Task';
-import Wait from './Wait';
-import WaitWhile from './WaitWhile';
+import Task from './Task'
+import Wait from './Wait'
 
-export { Task, Wait, WaitWhile };
+export { Task, Wait }

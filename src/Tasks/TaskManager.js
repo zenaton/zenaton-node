@@ -1,34 +1,34 @@
-let instance = null;
+let instance = null
 
 class TaskManager {
-    constructor() {
-        if (instance) {
-            return instance;
-        }
+	constructor() {
+		if (instance) {
+			return instance
+		}
 
-        this.tasks = {};
+		this.tasks = {}
 
-        instance = this;
-    }
+		instance = this
+	}
 
-    setTask(name, task) {
-        this.tasks[name] = task;
-    }
+	setTask(name, task) {
+		this.tasks[name] = task
+	}
 
-    getTaskByName(name) {
-        return this.tasks[name];
-    }
+	getTaskByName(name) {
+		return this.tasks[name]
+	}
 
-    getCurrentTask() {
-        return this.currentTask;
-    }
+	getCurrentTask() {
+		return this.currentTask
+	}
 
-    init(name, data) {
-        const task = this.getTaskByName(name);
-        task.setData(data);
-        this.currentTask = task;
-        return task;
-    }
+	init(name, data) {
+		const task = this.getTaskByName(name)
+		task.setData(data)
+		this.currentTask = task
+		return task
+	}
 }
 
-module.exports = TaskManager;
+module.exports = TaskManager

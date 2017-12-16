@@ -1,58 +1,58 @@
-import _ from 'lodash';
+import _ from 'lodash'
 
-import Client from '../Client/Client';
+import Client from '../Client/Client'
 
-let instance = null;
+let instance = null
 
 module.exports = class Engine {
-    constructor() {
-        // singleton
-        if (instance) { return instance; }
-        instance = this;
+	constructor() {
+		// singleton
+		if (instance) { return instance }
+		instance = this
 
-        this.client = new Client();
+		this.client = new Client()
 
-        // executed by Zenaton worker
-        this.worker = null;
-    }
+		// executed by Zenaton worker
+		this.worker = null
+	}
 
-    execute(jobs) {
-        // check arguments'type
-        this.checkArguments(jobs);
+	execute(jobs) {
+		// check arguments'type
+		this.checkArguments(jobs)
 
-        // local execution
-        if (this.worker == null) {
-            let outputs = [];
-            _.each(jobs, (job) => {
-                outputs.push(job.handle())
-            });
+		// local execution
+		if (this.worker == null) {
+			let outputs = []
+			_.each(jobs, (job) => {
+				outputs.push(job.handle())
+			})
 
-            return (jobs.length > 1) ? outputs : outputs[0];
-        }
+			return (jobs.length > 1) ? outputs : outputs[0]
+		}
 
-        // executed by Zenaton worker
-        return this.worker.doExecute(jobs, true);
-    }
+		// executed by Zenaton worker
+		return this.worker.doExecute(jobs, true)
+	}
 
-    dispatch(jobs) {
-        // check arguments'type
-        this.checkArguments(jobs);
+	dispatch(jobs) {
+		// check arguments'type
+		this.checkArguments(jobs)
 
-        // local execution
-        if (this.worker == null) {
-            // dispatch works to Zenaton (only workflows by now)
-            _.each(jobs, (job) => {
-                this.client.startWorkflow(job);
-            });
-            // return nothing
-            return;
-        }
+		// local execution
+		if (this.worker == null) {
+			// dispatch works to Zenaton (only workflows by now)
+			_.each(jobs, (job) => {
+				this.client.startWorkflow(job)
+			})
+			// return nothing
+			return
+		}
 
-        // executed by Zenaton worker
-        return this.worker.doExecute(jobs, false);
-    }
+		// executed by Zenaton worker
+		return this.worker.doExecute(jobs, false)
+	}
 
-    checkArguments(jobs) {
+	checkArguments(jobs) {
 
-    }
+	}
 }

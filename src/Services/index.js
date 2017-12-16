@@ -1,3 +1,3 @@
-import { get, post, put } from './Http';
+import { get, post, put } from './Http'
 
-export { get, post, put };
+export { get, post, put }

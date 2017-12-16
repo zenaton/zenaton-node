@@ -1,34 +1,17 @@
-import _ from 'lodash';
+import InvalidArgumentException from '../Exceptions/InvalidArgumentException'
 
-class Event {
-    constructor(event) {
+module.exports = function Event(name) {
 
-        _.each(event, (p, k) => {
-            this[k] = p
-        });
+	if ('string' !== typeof name) {
+		throw new InvalidArgumentException('1st parameter must be a string')
+	}
 
-        this.data = {};
+	const EventClass = class {
+		constructor(data) {
+			this.name = name
+			this.data = data
+		}
+	}
 
-        const dataSetter = (data = null) => {
-            if (data) {
-                this.setData(data);
-            }
-            return this;
-        }
-
-        return dataSetter;
-    }
-
-    setData(data) {
-        if (typeof data === 'object') {
-            _.each(data, (p, k ) => {
-                this.data[k] = p;
-                this[k] = p;
-            });
-        } else {
-            this.data =  data;
-        }
-    }
+	return EventClass
 }
-
-module.exports = Event;

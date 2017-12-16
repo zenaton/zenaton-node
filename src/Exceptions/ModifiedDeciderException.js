@@ -1,11 +1,5 @@
-export default class ModifiedDeciderException extends Error {
-    constructor(message = null, name = null) {
-        super(message);
-        Object.setPrototypeOf(this, ModifiedDeciderException.prototype);
-        this.name = name || this.constructor.name;
-    }
+var ExternalZenatonException = require('./ExternalZenatonException')
 
-    dump() {
-        return { message: this.message, stack: this.stack };
-    }
+module.exports = class ModifiedDeciderException extends ExternalZenatonException {
+
 }

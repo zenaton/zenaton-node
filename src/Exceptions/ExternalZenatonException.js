@@ -1,3 +1,5 @@
-import ZenatonException from './ZenatonException';
+var ZenatonException = require('./ZenatonException')
 
-export default class ExternalZenatonException extends ZenatonException {}
+module.exports = class ExternalZenatonException extends ZenatonException {
+
+}
