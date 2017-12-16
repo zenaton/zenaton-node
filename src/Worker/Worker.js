@@ -1,7 +1,7 @@
 import Microserver from './Microserver';
 import Task from './Task';
 import TaskManager from './TaskManager';
-import { ScheduledBoxException, InternalZenatonException, ZenatonException }  from '../Common/Exceptions';
+import { ScheduledBoxException, InternalZenatonException, ZenatonException }  from '../Exceptions';
 
 
 class Worker {

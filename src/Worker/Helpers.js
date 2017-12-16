@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Microserver from './Microserver';
 import WorkflowManager from './WorkflowManager';
 import OutputBox from './OutputBox';
-import { ModifiedDeciderException, ScheduledBoxException } from '../Common/Exceptions';
+import { ModifiedDeciderException, ScheduledBoxException } from '../Exceptions';
 let instance = null;
 
 class Helpers {

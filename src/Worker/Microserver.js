@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { get, post, put } from '../Common/Services';
+import { get, post, put } from '../Services';
 import WorkflowManager from './WorkflowManager';
 
 let instance = null;

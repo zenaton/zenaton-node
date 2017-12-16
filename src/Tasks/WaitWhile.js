@@ -1,5 +1,5 @@
-import { mixinClass } from '../../Common/Utils';
-import WithDuration from '../../Common/Traits/WithDuration';
+import { mixinClass } from '../Utils';
+import WithDuration from '../Traits/WithDuration';
 
 class Base {}
 class WaitWhile extends mixinClass(Base, WithDuration) {

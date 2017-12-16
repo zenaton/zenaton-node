@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Microserver from './Microserver';
 import WorkflowManager from './WorkflowManager';
-import { ScheduledBoxException, InternalZenatonException }  from '../Common/Exceptions';
+import { ScheduledBoxException, InternalZenatonException }  from '../Exceptions';
 
 class Decider {
     constructor(uuid) {

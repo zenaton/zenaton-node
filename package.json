@@ -1,10 +1,10 @@
 {
-  "name": "zenaton-javascript",
-  "version": "0.1.30",
+  "name": "zenaton",
+  "version": "0.2.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel --presets es2015 src/ --out-dir lib/",
+    "build": "./node_modules/.bin/babel src/ --out-dir lib/",
     "lint": "node_modules/.bin/eslint --ext .js .",
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/zenaton/zenaton-javascript.git"
   },
-  "author": "Louis Cibot",
+  "author": "Zenaton Inc",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/zenaton/zenaton-javascript/issues"
@@ -23,13 +23,26 @@
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-es2015-modules-commonjs-simple": "^6.7.4",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
     "eslint": "^4.1.0"
   },
   "babel": {
     "presets": [
-      "es2015"
-    ]
+      "es2017"
+    ],
+    "plugins": [
+      [
+        "transform-es2015-modules-commonjs-simple",
+        {
+          "noMangle": true
+        }
+      ]
+    ],
+    "sourceMaps": true
   },
   "dependencies": {
     "axios": "^0.16.2",

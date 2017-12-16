@@ -1,23 +1,19 @@
-import _ from 'lodash';
-let instance = null;
+let instance;
 
-class WorkflowManager {
+module.exports = class WorkflowManager {
     constructor() {
-        if (instance) {
-            return instance;
-        }
+        if (instance) { return instance; }
+        instance = this;
 
         this.workflows = {};
-
-        instance = this;
     }
 
-    setWorkflow(workflowInstance) {
-        this.workflows[workflowInstance.workflow.name] = workflowInstance;
+    setWorkflow(name, workflow) {
+        this.workflows[name] = workflow;
     }
 
-    getWorkflow(workflowName) {
-        return this.workflows[workflowName];
+    getWorkflow(name) {
+        return this.workflows[name];
     }
 
     getCurrentWorkflow() {
@@ -39,5 +35,3 @@ class WorkflowManager {
         return workflow;
     }
 }
-
-module.exports = WorkflowManager;

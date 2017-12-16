@@ -13,6 +13,7 @@ import request from 'sync-request';
             });
             return parseBody(response);
         } catch (e) {
+            console.log(e);
             const response = {};
             const port = (process.env.ZENATON_WORKER_PORT) ? process.env.ZENATON_WORKER_PORT : 4001;
             response.error = "Connection Problem. Please Check that you've started a zenaton_worker or ensure that PORT " + port +" is available."

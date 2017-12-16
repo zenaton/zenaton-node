@@ -4,4 +4,10 @@ import ModifiedDeciderException from './ModifiedDeciderException';
 import ScheduledBoxException from './ScheduledBoxException';
 import ZenatonException from './ZenatonException';
 
-export { ExternalZenatonException, InternalZenatonException, ModifiedDeciderException, ScheduledBoxException, ZenatonException };
+export {
+    ExternalZenatonException,
+    InternalZenatonException,
+    ModifiedDeciderException,
+    ScheduledBoxException,
+    ZenatonException
+};

@@ -11,8 +11,8 @@ class TaskManager {
         instance = this;
     }
 
-    setTask(task) {
-        this.tasks[task.name] = task;
+    setTask(name, task) {
+        this.tasks[name] = task;
     }
 
     getTaskByName(name) {

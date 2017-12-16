@@ -1,5 +1,5 @@
 import Api from './Api';
-import { ExternalZenatonException } from '../Common/Exceptions';
+import { ExternalZenatonException } from '../Exceptions';
 import { Workflow as W } from '../Worker';
 import { Event } from '../Worker';
 

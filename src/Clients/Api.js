@@ -3,8 +3,8 @@
   * , set's to null by default.
 */
 import dotenv from 'dotenv';
-import { get, post, put } from '../Common/Services';
-import { ExternalZenatonException } from '../Common/Exceptions';
+import { get, post, put } from '../Services';
+import { ExternalZenatonException } from '../Exceptions';
 
 let instance = null;
 
