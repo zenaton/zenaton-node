@@ -1,5 +1,6 @@
-import { ExternalZenatonException, InvalidArgumentException } from './Exceptions'
-import { get, post, put } from './Services'
+const ExternalZenatonException = require('./Exceptions/ExternalZenatonException')
+const InvalidArgumentException = require('./Exceptions/InvalidArgumentException')
+const axios = require('axios')
 
 const MAX_ID_SIZE = 256
 
@@ -66,7 +67,7 @@ export default class Client {
 		body[ATTR_ID] = id || null,
 		body[ATTR_PROG] = 'Javascript'
 
-		post(this.getInstanceWorkerUrl(), body)
+		axios.post(this.getInstanceWorkerUrl(), body)
 
 		return
 	}
