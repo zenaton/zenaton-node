@@ -1,7 +1,7 @@
 {
   "name": "zenaton",
-  "version": "0.2.0",
-  "description": "",
+  "version": "0.2.1",
+  "description": "Zenaton library",
   "main": "lib/index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src/ --out-dir lib/",
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/zenaton/zenaton-javascript.git"
   },
   "author": "Zenaton Inc",
-  "license": "MIT",
+  "license": "UNDEFINED",
   "bugs": {
     "url": "https://github.com/zenaton/zenaton-javascript/issues"
   },
