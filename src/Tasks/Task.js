@@ -1,4 +1,4 @@
-import TaskManager from './TaskManager'
+import TaskManager from '../Managers/TaskManager'
 import InvalidArgumentException from '../Exceptions/InvalidArgumentException'
 
 module.exports = function Task(name, handle) {

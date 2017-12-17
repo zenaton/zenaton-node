@@ -1,14 +1,11 @@
-let instance = null
+let instance
 
 class TaskManager {
 	constructor() {
-		if (instance) {
-			return instance
-		}
+		if (instance) { return instance }
+		instance = this
 
 		this.tasks = {}
-
-		instance = this
 	}
 
 	setTask(name, task) {

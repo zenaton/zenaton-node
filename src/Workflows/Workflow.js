@@ -1,6 +1,6 @@
 import Client from '../Client'
 import InvalidArgumentException from '../Exceptions/InvalidArgumentException'
-import WorkflowManager from './WorkflowManager'
+import WorkflowManager from '../Managers/WorkflowManager'
 
 module.exports = function Workflow(name, flow) {
 
