@@ -12,26 +12,9 @@ module.exports = class WorkflowManager {
 		this.workflows[name] = workflow
 	}
 
-	getWorkflow(name) {
-		return this.workflows[name]
+	getWorkflow(name, data) {
+		return new this.workflows[name](data)
 	}
 
-	getCurrentWorkflow() {
-		return this.currentWorkflow
-	}
 
-	setCurrentWorkflow(newCurrentWorkflow) {
-		this.currentWorkflow = newCurrentWorkflow
-	}
-
-	init(name, data, event) {
-		const workflow = this.getWorkflow(name)
-		workflow.setData(data)
-		workflow.position.init()
-		workflow.setEvent(event)
-
-		this.setCurrentWorkflow(workflow)
-
-		return workflow
-	}
 }

@@ -1,12 +1,13 @@
 const ExternalZenatonException = require('./Exceptions/ExternalZenatonException')
 const InvalidArgumentException = require('./Exceptions/InvalidArgumentException')
-const axios = require('axios')
+const http = require('./Services/Http')
 
 const MAX_ID_SIZE = 256
 
 const ZENATON_API_URL = 'https://zenaton.com/api/v1'
 const ZENATON_WORKER_URL = 'http://localhost:'
 const DEFAULT_WORKER_PORT = 4001
+const WORKER_API_VERSION = 'v_newton'
 
 const APP_ENV = 'app_env'
 const APP_ID = 'app_id'
@@ -67,7 +68,7 @@ export default class Client {
 		body[ATTR_ID] = id || null,
 		body[ATTR_PROG] = 'Javascript'
 
-		axios.post(this.getInstanceWorkerUrl(), body)
+		http.post(this.getInstanceWorkerUrl(), body)
 
 		return
 	}
@@ -171,7 +172,8 @@ export default class Client {
 
 	getWorkerUrl()
 	{
-		return ZENATON_WORKER_URL + (process.env.ZENATON_WORKER_PORT ?  process.env.ZENATON_WORKER_PORT : DEFAULT_WORKER_PORT)
+		let url = ZENATON_WORKER_URL + (process.env.ZENATON_WORKER_PORT ?  process.env.ZENATON_WORKER_PORT : DEFAULT_WORKER_PORT)
+		return url + '/' + WORKER_API_VERSION
 	}
 
 	getInstanceZenatonUrl(params = '') {

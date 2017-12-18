@@ -7,9 +7,9 @@ import TaskManager from './Managers/TaskManager'
 import WorkflowManager from './Managers/WorkflowManager'
 import {ExternalZenatonException, InternalZenatonException, InvalidArgumentException} from './Exceptions'
 
-const Path = require('path')
-const path = require('path').resolve(__dirname, __filename)
-process.env.ZENATON_PATH = path
+// store path to this file
+// for use by Zenaton worker
+process.env.ZENATON_PATH = require('path').resolve(__dirname, __filename)
 
 export {
 	Client,
