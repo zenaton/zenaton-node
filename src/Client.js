@@ -173,7 +173,7 @@ export default class Client {
 	getWorkerUrl()
 	{
 		let url = ZENATON_WORKER_URL + (process.env.ZENATON_WORKER_PORT ?  process.env.ZENATON_WORKER_PORT : DEFAULT_WORKER_PORT)
-		return url + '/' + WORKER_API_VERSION
+		return url + '/api/' + WORKER_API_VERSION
 	}
 
 	getInstanceZenatonUrl(params = '') {
