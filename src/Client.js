@@ -34,19 +34,40 @@ let instance
 
 export default class Client {
 
-	constructor(appId, apiToken, appEnv) {
+	constructor(worker = false) {
 		if (instance) {
-			if (! instance.appId || ! instance.apiToken || ! instance.appEnv) {
+			if (! worker && (! instance.appId || ! instance.apiToken || ! instance.appEnv)) {
 				throw new ExternalZenatonException('Please initialize your Zenaton client with your credentials')
 			}
 			return instance
 		}
 		instance = this
+	}
 
+	static init(appId, apiToken, appEnv) {
 		// store credentials in singleton
+		new Client()
+			.setAppId(appId)
+			.setApiToken(apiToken)
+			.setAppEnv(appEnv)
+	}
+
+	setAppId(appId) {
 		this.appId = appId
+
+		return this
+	}
+
+	setApiToken(apiToken) {
 		this.apiToken = apiToken
+
+		return this
+	}
+
+	setAppEnv(appEnv) {
 		this.appEnv = appEnv
+
+		return this
 	}
 
 	getWorkerUrl(ressources = '', params = '') {

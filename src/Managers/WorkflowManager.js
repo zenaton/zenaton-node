@@ -15,4 +15,8 @@ module.exports = class WorkflowManager {
 	getWorkflow(name, data) {
 		return new this.workflows[name](data)
 	}
+
+	getClass(name) {
+		return this.workflows[name]
+	}
 }

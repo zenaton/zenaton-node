@@ -1,6 +1,7 @@
-import Client from '../Client'
-import InvalidArgumentException from '../Exceptions/InvalidArgumentException'
-import WorkflowManager from '../Managers/WorkflowManager'
+const Client = require('../Client')
+const Builder = require('../Query/builder')
+const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
+const WorkflowManager = require('../Managers/WorkflowManager')
 
 module.exports = function Workflow(name, flow) {
 
@@ -40,10 +41,14 @@ module.exports = function Workflow(name, flow) {
 				new Client().startWorkflow(this)
 			}
 		}
+
+		static whereId(id) {
+			return (new Builder(name)).whereId(id)
+		}
 	}
 
-	const workflowManager = new WorkflowManager()
-	workflowManager.setWorkflow(name, workflowClass)
+	// store this fonction in a singleton to retrieve it later
+	new WorkflowManager().setWorkflow(name, workflowClass)
 
 	return workflowClass
 }

@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 import Client from '../Client/Client'
 
 let instance = null
@@ -21,17 +19,18 @@ module.exports = class Engine {
 		this.checkArguments(jobs)
 
 		// local execution
-		if (this.worker == null) {
+		if (this.worker == null || jobs.length == 0) {
 			let outputs = []
-			_.each(jobs, (job) => {
+			// simply apply handle method
+			jobs.forEach(job => {
 				outputs.push(job.handle())
 			})
-
-			return (jobs.length > 1) ? outputs : outputs[0]
+			// return results
+			return outputs
 		}
 
 		// executed by Zenaton worker
-		return this.worker.doExecute(jobs, true)
+		return this.worker.process(jobs, true)
 	}
 
 	dispatch(jobs) {
@@ -39,17 +38,18 @@ module.exports = class Engine {
 		this.checkArguments(jobs)
 
 		// local execution
-		if (this.worker == null) {
+		if (this.worker == null || jobs.length == 0) {
+			let outputs = []
 			// dispatch works to Zenaton (only workflows by now)
-			_.each(jobs, (job) => {
+			jobs.forEach(job => {
 				this.client.startWorkflow(job)
 			})
-			// return nothing
-			return
+			// return results
+			return outputs
 		}
 
 		// executed by Zenaton worker
-		return this.worker.doExecute(jobs, false)
+		return this.worker.process(jobs, false)
 	}
 
 	checkArguments(jobs) {

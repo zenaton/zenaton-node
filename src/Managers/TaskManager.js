@@ -1,6 +1,6 @@
 let instance
 
-class TaskManager {
+module.exports = class TaskManager {
 	constructor() {
 		if (instance) { return instance }
 		instance = this
@@ -12,20 +12,11 @@ class TaskManager {
 		this.tasks[name] = task
 	}
 
-	getTaskByName(name) {
+	getTask(name, data) {
+		return new this.tasks[name](data)
+	}
+
+	getClass(name) {
 		return this.tasks[name]
 	}
-
-	getCurrentTask() {
-		return this.currentTask
-	}
-
-	init(name, data) {
-		const task = this.getTaskByName(name)
-		task.setData(data)
-		this.currentTask = task
-		return task
-	}
 }
-
-module.exports = TaskManager
