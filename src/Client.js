@@ -132,7 +132,7 @@ export default class Client {
 			ATTR_NAME + '=' + workflowName+ '&' +
 			ATTR_PROG + '=' + PROG
 
-		let data = http.get(this.getInstanceZenatonUrl(params)).data
+		let data = http.get(this.getInstanceWebsiteUrl(params)).data
 
 		return new WorkflowManager().getWorkflow(workflowName, JSON.parse(data.properties))
 	}
@@ -165,7 +165,7 @@ export default class Client {
 		return http.put(this.getInstanceWorkerUrl(params), body)
 	}
 
-	getInstanceZenatonUrl(params = '') {
+	getInstanceWebsiteUrl(params = '') {
 		return this.getWebsiteUrl('instances', params)
 	}
 
@@ -178,9 +178,10 @@ export default class Client {
 	}
 
 	addAppEnv(url, params = '') {
+		// when called from worker, APP_ENV and APP_ID is not defined
 		return url
-			+ APP_ENV + '=' + this.appEnv
-			+ '&' + APP_ID + '=' + this.appId
-			+ '&' + params
+			+ (this.appEnv ? APP_ENV + '=' + this.appEnv + '&' : '')
+			+ (this.appId ? APP_ID + '=' + this.appId + '&' : '')
+			+ (params ? params + '&' : '')
 	}
 }
