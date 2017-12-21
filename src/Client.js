@@ -32,12 +32,13 @@ const WORKFLOW_RUN = 'run'
 
 let instance
 
-export default class Client {
+module.exports = class Client {
 
 	constructor(worker = false) {
 		if (instance) {
 			if (! worker && (! instance.appId || ! instance.apiToken || ! instance.appEnv)) {
-				throw new ExternalZenatonException('Please initialize your Zenaton client with your credentials')
+				console.log('Please initialize your Zenaton client with your credentials')
+				// throw new ExternalZenatonException('Please initialize your Zenaton client with your credentials')
 			}
 			return instance
 		}

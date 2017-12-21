@@ -1,4 +1,5 @@
-import Client from '../Client/Client'
+const util = require('util')
+const Client = require('../Client')
 
 let instance = null
 
@@ -10,16 +11,21 @@ module.exports = class Engine {
 
 		this.client = new Client()
 
-		// executed by Zenaton worker
-		this.worker = null
+		// No processer
+		this.processer = null
+	}
+
+	setProcesser(processer) {
+		this.processer = processer
 	}
 
 	execute(jobs) {
+
 		// check arguments'type
 		this.checkArguments(jobs)
 
 		// local execution
-		if (this.worker == null || jobs.length == 0) {
+		if (this.processer === null || jobs.length == 0) {
 			let outputs = []
 			// simply apply handle method
 			jobs.forEach(job => {
@@ -29,8 +35,8 @@ module.exports = class Engine {
 			return outputs
 		}
 
-		// executed by Zenaton worker
-		return this.worker.process(jobs, true)
+		// executed by Zenaton processer
+		return this.processer.process(jobs, true)
 	}
 
 	dispatch(jobs) {
@@ -38,7 +44,7 @@ module.exports = class Engine {
 		this.checkArguments(jobs)
 
 		// local execution
-		if (this.worker == null || jobs.length == 0) {
+		if (this.processer === null || jobs.length == 0) {
 			let outputs = []
 			// dispatch works to Zenaton (only workflows by now)
 			jobs.forEach(job => {
@@ -48,11 +54,17 @@ module.exports = class Engine {
 			return outputs
 		}
 
-		// executed by Zenaton worker
-		return this.worker.process(jobs, false)
+		// executed by Zenaton processer
+		return this.processer.process(jobs, false)
 	}
 
 	checkArguments(jobs) {
-
+		jobs.forEach( job => {
+			// if ( ('object' !== typeof job) || (!( Task instanceof job) && !( Workflow instanceof job))) {
+			// 	throw new InvalidArgumentException(
+			// 		'You can only execute or dispatch Zenaton Task or Workflow'
+			// 	)
+			// }
+		})
 	}
 }

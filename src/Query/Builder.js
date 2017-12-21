@@ -1,4 +1,4 @@
-const { Client } = require('../Services/Zenaton')
+const { Client } = require('../Client')
 
 let instance
 

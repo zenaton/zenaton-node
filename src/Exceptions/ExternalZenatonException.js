@@ -1,5 +1,5 @@
-var ZenatonException = require('./ZenatonException')
+const ZenatonException = require('./ZenatonException')
 
-module.exports = class ExternalZenatonException extends ZenatonException {
-
+module.exports = class extends ZenatonException {
+	
 }

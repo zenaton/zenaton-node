@@ -1,5 +1,5 @@
-const TaskManager = require('../Managers/TaskManager')
-const Engine = require('../Engine/Engine')
+const AbstractTask = require('./AbstractTask')
+const TaskManager = require('./TaskManager')
 const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
 
 module.exports = function Task(name, handle) {
@@ -11,39 +11,17 @@ module.exports = function Task(name, handle) {
 		throw new InvalidArgumentException('2nd parameter must be an object')
 	}
 
-	const task = class {
+	const task = class extends AbstractTask {
 		constructor(data) {
-			let that = this
+			console.log('=== TASK DATA ====')
+			console.log(data)
+			super(name, handle)
 
-			this.name = name
+			// instance data
 			this.data = data
 
-			// ensure handle function is called
-			// with right context
-			// let binded = handle.bind(this)
-
-			// let promiseHandle = function () {
-			// 	return new Promise(function (resolve, reject) {
-			// 		// call handle with custom done function
-			// 		binded(function(err, data) {
-			// 			if (err) return reject(err)
-			// 			resolve(data)
-			// 		})
-			// 	})
-			// }
-
-			//
+			// handle method binded on data
 			this.handle = handle.bind(this.data)
-
-			// asynchroneous execution within a workflow
-			this.dispatch = function () {
-				new Engine().dispatch([that])[0]
-			}
-
-			// synchroneous execution within a workflow
-			this.execute = function () {
-				return new Engine().execute([that])[0]
-			}
 		}
 	}
 

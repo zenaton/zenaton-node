@@ -23,8 +23,6 @@ class Wait extends mixinClass(Base, WithTimeout) {
 	getEvent() {
 		return this.event
 	}
-
-
 }
 
 module.exports = Wait
