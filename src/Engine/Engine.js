@@ -1,4 +1,3 @@
-const util = require('util')
 const Client = require('../Client')
 
 let instance = null

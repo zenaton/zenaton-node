@@ -1,5 +1,3 @@
-const util = require('util')
-const uuid = require('node-uuid')
 const AbstractWorkflow = require('./AbstractWorkflow')
 const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
 const WorkflowManager = require('./WorkflowManager')

@@ -1,4 +1,3 @@
-const util = require('util')
 const Engine = require('../Engine/Engine')
 
 module.exports = class AbstractTask {
@@ -28,8 +27,6 @@ module.exports = class AbstractTask {
 
 	// synchroneous execution within a workflow
 	execute() {
-		console.log('==== TASK.EXECUTE ====')
-		console.log(util.inspect(this, false, null))
 		return new Engine().execute([this])[0]
 	}
 }

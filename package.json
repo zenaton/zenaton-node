@@ -60,7 +60,6 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
-    "node-uuid": "^1.4.8",
     "sync-request": "^4.1.0"
   }
 }

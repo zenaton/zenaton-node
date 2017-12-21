@@ -13,8 +13,6 @@ module.exports = function Task(name, handle) {
 
 	const task = class extends AbstractTask {
 		constructor(data) {
-			console.log('=== TASK DATA ====')
-			console.log(data)
 			super(name, handle)
 
 			// instance data
