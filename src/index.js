@@ -10,7 +10,7 @@ const Exceptions = require('./Exceptions')
 const Parallel = require('./Parallel/Parallel')
 
 // define parallel global function
-if (undefined === typeof global.parallel) {
+if (undefined === global.parallel) {
 	global.parallel = (...tasks) => {
 		return (new Parallel(tasks))
 	}
