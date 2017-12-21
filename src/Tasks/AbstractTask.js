@@ -1,7 +1,7 @@
 const Engine = require('../Engine/Engine')
 
 module.exports = class AbstractTask {
-	constructor(name, handle) {
+	constructor(name) {
 		// class name
 		this.name = name
 

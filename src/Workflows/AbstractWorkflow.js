@@ -12,6 +12,6 @@ module.exports = class AbstractWorkflow {
 	}
 
 	static methods() {
-		return ['getId', 'onEvent', 'onStart', 'onSuccess', 'onFailure', 'onTimeout']
+		return ['id', 'onEvent', 'onStart', 'onSuccess', 'onFailure', 'onTimeout']
 	}
 }

@@ -13,7 +13,7 @@ module.exports = function Task(name, handle) {
 
 	const task = class extends AbstractTask {
 		constructor(data) {
-			super(name, handle)
+			super(name)
 
 			// instance data
 			this.data = data

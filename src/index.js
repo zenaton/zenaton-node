@@ -1,8 +1,9 @@
+/* global process, __dirname, __filename */
+
 // store path to this file for use by Zenaton worker
 process.env.ZENATON_LIBRARY_PATH = require('path').resolve(__dirname, __filename)
 
 const Client = require('./Client')
-const Event = require('./Events/Event')
 const Engine = require('./Engine/Engine')
 const { AbstractTask, Task, Wait, TaskManager } = require('./Tasks')
 const { AbstractWorkflow, Workflow, WorkflowManager } = require('./Workflows')
@@ -18,7 +19,6 @@ if (undefined === global.parallel) {
 
 module.exports = {
 	Client,
-	Event,
 	Engine,
 	AbstractTask,
 	Task,

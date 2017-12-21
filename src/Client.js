@@ -1,3 +1,4 @@
+/* global process */
 const WorkflowManager = require('./Managers/WorkflowManager')
 const ExternalZenatonException = require('./Exceptions/ExternalZenatonException')
 const InvalidArgumentException = require('./Exceptions/InvalidArgumentException')
@@ -98,12 +99,12 @@ module.exports = class Client {
 
 		// custom id management
 		let customId = null
-		if (flow.getId !== undefined) {
+		if (flow.id !== undefined) {
 			// customId can be a value or a function
-			customId = ('function' === typeof flow.getId) ? flow.getId() : flow.getId
+			customId = ('function' === typeof flow.id) ? flow.id() : flow.id
 			// customId should be a string or a number
 			if (('string' !== typeof customId) && ('number' !== typeof customId)) {
-				throw new InvalidArgumentException('Provided id must be a string or a number')
+				throw new InvalidArgumentException('Provided id must be a string or a number - current value: ' + customId)
 			}
 			// at the end, it's a string
 			customId = customId.toString()
@@ -162,15 +163,15 @@ module.exports = class Client {
 	/**
      * Send an event to a workflow instance
      */
-	sendEvent(workflowName, customId, event_name, event_data) {
+	sendEvent(workflowName, customId, eventName, eventData) {
 		let url = this.getSendEventURL()
 
 		const body = {}
 		body[ATTR_PROG] = PROG
 		body[ATTR_NAME] = workflowName
 		body[ATTR_ID] = customId
-		body[EVENT_NAME] = event_name
-		body[EVENT_INPUT] = event_data
+		body[EVENT_NAME] = eventName
+		body[EVENT_INPUT] = eventData
 
 		http.post(url, body)
 	}

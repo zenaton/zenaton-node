@@ -28,6 +28,11 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "camelcase": [
+            "error",
+            { "properties": "always" }
+        ],
+        "no-console": 0
     }
 }

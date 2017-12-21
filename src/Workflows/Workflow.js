@@ -1,25 +1,27 @@
 const AbstractWorkflow = require('./AbstractWorkflow')
 const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
 const WorkflowManager = require('./WorkflowManager')
-const Builder = require('../Query/builder')
+const Builder = require('../Query/Builder')
 
-module.exports = function Workflow(name, handle, options = {}) {
+module.exports = function Workflow(name, flow) {
 
 	// check that provided data have the right format
 	if ('string' !== typeof name) {
 		throw new InvalidArgumentException('1st parameter must be a string (workflow name)')
 	}
-	if ('function' !== typeof handle) {
-		throw new InvalidArgumentException('2nd parameter must be an function (workflow implementation)')
+	if ('function' !== typeof flow && 'object' !== typeof flow) {
+		throw new InvalidArgumentException('2nd parameter must be an function or an object (workflow implemention)')
 	}
-	if ('object' !== typeof options) {
-		throw new InvalidArgumentException('3rd parameter must be an object (workflow options)')
-	}
-	AbstractWorkflow.methods().forEach(function(method) {
-		if ((undefined !== options[method]) && ('function' !== typeof options[method])) {
-			throw new InvalidArgumentException(method + '" method must be a function')
+	if ('object' === typeof flow) {
+		if ('function' !== typeof flow.handle) {
+			throw new InvalidArgumentException('"handle" method must be a function')
 		}
-	})
+		AbstractWorkflow.methods().forEach(function(method) {
+			if ((undefined !== flow[method]) && ('function' !== typeof flow[method])) {
+				throw new InvalidArgumentException(method + '" method must be a function')
+			}
+		})
+	}
 
 	const Workflow = class extends AbstractWorkflow {
 		constructor(data) {
@@ -29,15 +31,20 @@ module.exports = function Workflow(name, handle, options = {}) {
 			// data instance
 			this.data = data
 
+			// defined by a simple function?
+			let isFn = ('function' === typeof flow)
+
 			// set and bind handle function
-			this.handle = handle.bind(this.data)
+			this.handle = (isFn ? flow : flow.handle).bind(this.data)
 
 			// set and bind instance methods
-			AbstractWorkflow.methods().forEach( method => {
-				if (undefined !== options[method]) {
-					that[method] = options[method].bind(that.data)
-				}
-			})
+			if (! isFn) {
+				AbstractWorkflow.methods().forEach( method => {
+					if (undefined !== flow[method]) {
+						that[method] = flow[method].bind(that.data)
+					}
+				})
+			}
 
 		}
 
