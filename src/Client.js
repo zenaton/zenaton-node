@@ -171,7 +171,7 @@ module.exports = class Client {
 		body[ATTR_NAME] = workflowName
 		body[ATTR_ID] = customId
 		body[EVENT_NAME] = eventName
-		body[EVENT_INPUT] = eventData
+		body[EVENT_INPUT] = JSON.stringify(eventData)
 
 		http.post(url, body)
 	}
