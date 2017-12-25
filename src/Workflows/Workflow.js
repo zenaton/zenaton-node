@@ -3,7 +3,7 @@ const InvalidArgumentException = require('../Exceptions/InvalidArgumentException
 const WorkflowManager = require('./WorkflowManager')
 const Builder = require('../Query/Builder')
 
-module.exports = function Workflow(name, flow) {
+module.exports = function (name, flow) {
 
 	// check that provided data have the right format
 	if ('string' !== typeof name) {
@@ -18,7 +18,7 @@ module.exports = function Workflow(name, flow) {
 		}
 		AbstractWorkflow.methods().forEach(function(method) {
 			if ((undefined !== flow[method]) && ('function' !== typeof flow[method])) {
-				throw new InvalidArgumentException(method + '" method must be a function')
+				throw new InvalidArgumentException('"' + method + '" method must be a function')
 			}
 		})
 	}
@@ -45,7 +45,6 @@ module.exports = function Workflow(name, flow) {
 					}
 				})
 			}
-
 		}
 
 		static whereId(id) {

@@ -1,10 +1,8 @@
-import moment from 'moment-timezone'
+const Trait = require('../Services/Trait')
+const moment = require('moment-timezone')
+const WithDuration = require('./WithDuration')
 
-import { mixin } from '../Utils/Trait'
-
-import WithDuration from './WithDuration'
-
-const WithTimeout = mixin({
+module.exports = Trait.mix({
 	timestamp(timestamp) {
 		this.getTimeoutMoment().unix(timestamp)
 
@@ -35,40 +33,44 @@ const WithTimeout = mixin({
 
 	monday(n = 1) {
 		const t = this.getTimeoutMoment()
-		const h = t.hours()
-		const m = t.minutes()
-		const s = t.seconds()
+
 		return this
 	},
 
 	tuesday(n = 1) {
 		const t = this.getTimeoutMoment()
 
+		return this
 	},
 
 	wednesday(n = 1) {
 		const t = this.getTimeoutMoment()
 
+		return this
 	},
 
 	thursday(n = 1) {
 		const t = this.getTimeoutMoment()
 
+		return this
 	},
 
 	friday(n = 1) {
 		const t = this.getTimeoutMoment()
 
+		return this
 	},
 
 	saturday(n = 1) {
 		const t = this.getTimeoutMoment()
 
+		return this
 	},
 
 	sunday(n = 1) {
 		const t = this.getTimeoutMoment()
 
+		return this
 	},
 
 	timezone(timezone) {
@@ -77,9 +79,3 @@ const WithTimeout = mixin({
 	},
 
 }, WithDuration)
-
-
-export default WithTimeout
-
-
-WithTimeout.monday()

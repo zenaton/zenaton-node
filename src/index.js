@@ -8,6 +8,7 @@ const Engine = require('./Engine/Engine')
 const { AbstractTask, Task, Wait, TaskManager } = require('./Tasks')
 const { AbstractWorkflow, Workflow, WorkflowManager } = require('./Workflows')
 const Exceptions = require('./Exceptions')
+const serializer = require('./Services/Serializer')
 const Parallel = require('./Parallel/Parallel')
 
 // define parallel global function
@@ -20,6 +21,7 @@ if (undefined === global.parallel) {
 module.exports = {
 	Client,
 	Engine,
+	serializer,
 	AbstractTask,
 	Task,
 	Wait,

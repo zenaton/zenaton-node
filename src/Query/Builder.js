@@ -32,9 +32,7 @@ module.exports = class QueryBuilder
      * Send an event to a workflow instance
      */
 	send(eventName, eventData) {
-		this.client.sendEvent(this.workflowClass, this.id, eventName, eventData)
-
-		return this
+		return this.client.sendEvent(this.workflowClass, this.id, eventName, eventData)
 	}
 
 	/**

@@ -1,5 +1,5 @@
-// Mixin traits into an Object (another trait)
-const mixin = (object, ...traits) => {
+// Mixin traits into another trait
+const mix = (object, ...traits) => {
 	let _traits = []
 	if (object._traits) {
 		Array.prototype.push.apply(_traits, object._traits)
@@ -30,15 +30,15 @@ const mixin = (object, ...traits) => {
 	return object
 }
 
-// Mixin traits into a class. class Foo extends mixinClass(Base, Trait1) {}
-const mixinClass = (baseClass, ...traits) => {
+// Mixin traits into a class.
+const apply = (baseClass, ...traits) => {
 	class traitedClass extends baseClass {}
-	mixin.apply(this, [traitedClass.prototype].concat(traits))
+	mix.apply(this, [traitedClass.prototype].concat(traits))
 	return traitedClass
 }
 
 // Checks to see if a class or trait has a trait
-const hasTrait = (object, trait) => {
+const has = (object, trait) => {
 	let _traits
 	if (typeof object === 'function') {
 		_traits = object.prototype._traits
@@ -49,4 +49,4 @@ const hasTrait = (object, trait) => {
 }
 
 
-export { mixin, mixinClass, hasTrait }
+export { mix, apply, has }

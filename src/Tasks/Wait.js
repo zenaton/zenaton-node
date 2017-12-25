@@ -1,23 +1,20 @@
-import { mixinClass } from '../Utils'
-import { ExternalZenatonException } from '../Exceptions'
-import WithTimeout from '../Traits/WithTimeout'
+const Trait = require('../Services/Trait')
+const { ExternalZenatonException } = require('../Exceptions')
+const WithTimeout = require('../Traits/WithTimeout')
 
-class Base {}
-class Wait extends mixinClass(Base, WithTimeout) {
+const Wait = class {
 	constructor(event = null) {
-		super()
 
-		if (event != null && (typeof event !== 'string')) {
-			throw new ExternalZenatonException('bad event argument')
+		if (event !== null && (typeof event !== 'string')) {
+			throw new ExternalZenatonException('1st parameter, if any, must be a string (event name)')
 		}
 
-		this.data = null
 		this.name = 'Wait'
 		this.event = event
 	}
 
 	handle() {
-		this.time_sleep_until(this.getTimeoutTimestamp())
+		// this.time_sleep_until(this.getTimeoutTimestamp())
 	}
 
 	getEvent() {
@@ -25,4 +22,4 @@ class Wait extends mixinClass(Base, WithTimeout) {
 	}
 }
 
-module.exports = Wait
+module.exports = Trait.apply(Wait, WithTimeout)

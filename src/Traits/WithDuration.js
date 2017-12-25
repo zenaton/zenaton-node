@@ -1,6 +1,6 @@
-import moment from 'moment'
+const moment = require('moment')
 
-const WithDuration = {
+module.exports = {
 
 	getTimeoutTimestamp() {
 
@@ -63,5 +63,3 @@ const WithDuration = {
 		return this.timeoutMoment
 	}
 }
-
-export default WithDuration

@@ -3,6 +3,7 @@ const WorkflowManager = require('./Managers/WorkflowManager')
 const ExternalZenatonException = require('./Exceptions/ExternalZenatonException')
 const InvalidArgumentException = require('./Exceptions/InvalidArgumentException')
 const http = require('./Services/Http')
+const serializer = require('./Services/Serializer')
 
 const ZENATON_API_URL = 'https://zenaton.com/api/v1'
 const ZENATON_WORKER_URL = 'http://localhost'
@@ -119,31 +120,31 @@ module.exports = class Client {
 		body[ATTR_PROG] = PROG
 		body[ATTR_CANONICAL] = canonical
 		body[ATTR_NAME] = flow.name,
-		body[ATTR_DATA] = JSON.stringify(flow.data)
-		body[ATTR_ID] = customId,
+		body[ATTR_DATA] = serializer.encode(flow.data)
+		body[ATTR_ID] = customId
 
-		http.post(this.getInstanceWorkerUrl(), body)
+		return http.post(this.getInstanceWorkerUrl(), body)
 	}
 
 	/**
      * Kill a workflow instance
      */
 	killWorkflow(workflowName, customId) {
-		this.updateInstance(workflowName, customId, WORKFLOW_KILL)
+		return this.updateInstance(workflowName, customId, WORKFLOW_KILL)
 	}
 
 	/**
      * Pause a workflow instance
      */
 	pauseWorkflow(workflowName, customId) {
-		this.updateInstance(workflowName, customId, WORKFLOW_PAUSE)
+		return this.updateInstance(workflowName, customId, WORKFLOW_PAUSE)
 	}
 
 	/**
      * Resume a workflow instance
      */
 	resumeWorkflow(workflowName, customId) {
-		this.updateInstance(workflowName, customId, WORKFLOW_RUN)
+		return this.updateInstance(workflowName, customId, WORKFLOW_RUN)
 	}
 
 	/**
@@ -155,9 +156,10 @@ module.exports = class Client {
 			ATTR_NAME + '=' + workflowName+ '&' +
 			ATTR_PROG + '=' + PROG
 
-		let data = http.get(this.getInstanceWebsiteUrl(params)).data
-
-		return new WorkflowManager().getWorkflow(workflowName, JSON.parse(data.properties))
+		return http.get(this.getInstanceWebsiteUrl(params))
+			.then( body => {
+				return new WorkflowManager().getWorkflow(workflowName, serializer.decode(body.data.properties))
+			})
 	}
 
 	/**
@@ -171,9 +173,9 @@ module.exports = class Client {
 		body[ATTR_NAME] = workflowName
 		body[ATTR_ID] = customId
 		body[EVENT_NAME] = eventName
-		body[EVENT_INPUT] = JSON.stringify(eventData)
+		body[EVENT_INPUT] = serializer.encode(eventData)
 
-		http.post(url, body)
+		return http.post(url, body)
 	}
 
 

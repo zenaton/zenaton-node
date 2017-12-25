@@ -2,7 +2,7 @@ const AbstractTask = require('./AbstractTask')
 const TaskManager = require('./TaskManager')
 const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
 
-module.exports = function Task(name, handle) {
+module.exports = function (name, handle) {
 
 	if ('string' !== typeof name) {
 		throw new InvalidArgumentException('1st parameter must be a string')
