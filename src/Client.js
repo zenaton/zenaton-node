@@ -100,12 +100,12 @@ module.exports = class Client {
 
 		// custom id management
 		let customId = null
-		if (flow.id !== undefined) {
+		if ('function' === typeof flow.id) {
 			// customId can be a value or a function
-			customId = ('function' === typeof flow.id) ? flow.id() : flow.id
+			customId = flow.id()
 			// customId should be a string or a number
 			if (('string' !== typeof customId) && ('number' !== typeof customId)) {
-				throw new InvalidArgumentException('Provided id must be a string or a number - current value: ' + customId)
+				throw new InvalidArgumentException('Provided id must be a string or a number - current type: ' + (typeof customId))
 			}
 			// at the end, it's a string
 			customId = customId.toString()

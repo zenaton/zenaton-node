@@ -32,9 +32,8 @@ const mix = (object, ...traits) => {
 
 // Mixin traits into a class.
 const apply = (baseClass, ...traits) => {
-	class traitedClass extends baseClass {}
-	mix.apply(this, [traitedClass.prototype].concat(traits))
-	return traitedClass
+	mix.apply(this, [baseClass.prototype].concat(traits))
+	return baseClass
 }
 
 // Checks to see if a class or trait has a trait
@@ -49,4 +48,4 @@ const has = (object, trait) => {
 }
 
 
-export { mix, apply, has }
+export {mix, apply, has}
