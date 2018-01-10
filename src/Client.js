@@ -1,5 +1,5 @@
 /* global process */
-const WorkflowManager = require('./Managers/WorkflowManager')
+const workflowManager = require('./Managers/WorkflowManager')
 const ExternalZenatonException = require('./Exceptions/ExternalZenatonException')
 const InvalidArgumentException = require('./Exceptions/InvalidArgumentException')
 const http = require('./Services/Http')
@@ -94,10 +94,6 @@ module.exports = class Client {
      * Start a workflow instance
      */
 	startWorkflow(flow) {
-		let canonical = null
-		// if $flow is a versionned workflow
-		// TODO
-
 		// custom id management
 		let customId = null
 		if ('function' === typeof flow.id) {
@@ -118,8 +114,8 @@ module.exports = class Client {
 		// start workflow
 		const body = {}
 		body[ATTR_PROG] = PROG
-		body[ATTR_CANONICAL] = canonical
-		body[ATTR_NAME] = flow.name,
+		body[ATTR_CANONICAL] = flow.getCanonical()
+		body[ATTR_NAME] = flow.name
 		body[ATTR_DATA] = serializer.encode(flow.data)
 		body[ATTR_ID] = customId
 
@@ -158,7 +154,7 @@ module.exports = class Client {
 
 		return http.get(this.getInstanceWebsiteUrl(params))
 			.then( body => {
-				return new WorkflowManager().getWorkflow(workflowName, serializer.decode(body.data.properties))
+				return workflowManager.getWorkflow(workflowName, body.data.properties)
 			})
 	}
 

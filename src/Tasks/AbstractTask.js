@@ -29,4 +29,8 @@ module.exports = class AbstractTask {
 	execute() {
 		return new Engine().execute([this])[0]
 	}
+
+	static methods() {
+		return ['construct']
+	}
 }

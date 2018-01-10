@@ -5,29 +5,43 @@ process.env.ZENATON_LIBRARY_PATH = require('path').resolve(__dirname, __filename
 
 const Client = require('./Client')
 const Engine = require('./Engine/Engine')
-const { AbstractTask, Task, Wait, TaskManager } = require('./Tasks')
-const { AbstractWorkflow, Workflow, WorkflowManager } = require('./Workflows')
+const { AbstractTask, Task, Wait, taskManager } = require('./Tasks')
+const { Version, AbstractWorkflow, Workflow, workflowManager } = require('./Workflows')
 const Exceptions = require('./Exceptions')
 const serializer = require('./Services/Serializer')
 const Parallel = require('./Parallel/Parallel')
 
-// define parallel global function
-if (undefined === global.parallel) {
-	global.parallel = (...tasks) => {
-		return (new Parallel(tasks))
+
+
+// Parallel dispatchs
+if (!Array.prototype.dispatch) {
+	Array.prototype.dispatch = function() {
+		new Engine().dispatch(this)
 	}
 }
+
+// Parallel executions
+if (!Array.prototype.execute) {
+	Array.prototype.execute = function() {
+		return new Engine().execute(this)
+	}
+}
+
+// if those functions are already in use, then user should do instead:
+// new Parallel(...tasks)
 
 module.exports = {
 	Client,
 	Engine,
 	serializer,
+	Parallel,
 	AbstractTask,
 	Task,
 	Wait,
-	TaskManager,
+	taskManager,
+	Version,
 	AbstractWorkflow,
 	Workflow,
-	WorkflowManager,
+	workflowManager,
 	Exceptions
 }

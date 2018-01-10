@@ -1,9 +1,11 @@
+const Version = require('./Version')
 const AbstractWorkflow = require('./AbstractWorkflow')
 const Workflow = require('./Workflow')
-const WorkflowManager = require('./WorkflowManager')
+const workflowManager = require('./WorkflowManager')
 
 module.exports = {
+	Version,
 	AbstractWorkflow,
 	Workflow,
-	WorkflowManager
+	workflowManager
 }

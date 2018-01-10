@@ -1,11 +1,11 @@
 const AbstractTask = require('./AbstractTask')
 const Task = require('./Task')
 const Wait = require('./Wait')
-const TaskManager = require('./TaskManager')
+const taskManager = require('./TaskManager')
 
 module.exports = {
 	AbstractTask,
 	Task,
 	Wait,
-	TaskManager
+	taskManager
 }
