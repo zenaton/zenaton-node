@@ -1,5 +1,5 @@
 /* global process */
-const workflowManager = require('./Managers/WorkflowManager')
+const workflowManager = require('./Workflows/WorkflowManager')
 const ExternalZenatonException = require('./Exceptions/ExternalZenatonException')
 const InvalidArgumentException = require('./Exceptions/InvalidArgumentException')
 const http = require('./Services/Http')

@@ -31,29 +31,6 @@
     "babel-preset-es2017": "^6.24.1",
     "eslint": "^4.1.0"
   },
-  "babel": {
-    "presets": [
-      "es2015"
-    ],
-    "plugins": [
-      [
-        "transform-es2015-modules-commonjs-simple",
-        {
-          "noMangle": true
-        }
-      ],
-      [
-        "babel-plugin-transform-builtin-extend",
-        {
-          "globals": [
-            "Error",
-            "Array"
-          ]
-        }
-      ]
-    ],
-    "sourceMaps": true
-  },
   "dependencies": {
     "axios": "^0.16.2",
     "dotenv": "^4.0.0",
