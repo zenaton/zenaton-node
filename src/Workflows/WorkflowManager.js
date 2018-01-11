@@ -1,5 +1,6 @@
 const serializer = require('../Services/Serializer')
 const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
+const util = require('util')
 
 let instance
 
@@ -30,7 +31,7 @@ const WorkflowManager = class {
 		// get workflow class
 		var workflowClass = this.getClass(name)
 		// if Version => the workflow was versioned meanwhile => get the initial class
-		if ('VersionClass' === workflowClass.constructor.name) {
+		if ('VersionClass' === workflowClass.name) {
 			workflowClass = workflowClass.getInitialClass()
 		}
 		// do not use construct function to set data

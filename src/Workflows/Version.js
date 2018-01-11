@@ -59,7 +59,7 @@ module.exports = function (name, implementation) {
 		}
 	}
 
-	// store this fonction in a singleton to retrieve it later
+	// store this fonction in a singleton to be able to retrieve it later
 	workflowManager.setClass(name, VersionClass)
 
 	return VersionClass
