@@ -35,7 +35,7 @@ const WorkflowManager = class {
 			workflowClass = workflowClass.getInitialClass()
 		}
 		// do not use construct function to set data
-		workflowClass._useConstruct = false
+		workflowClass._useConstructor = false
 		// return new workflow instance
 		return new workflowClass(data)
 	}

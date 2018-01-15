@@ -114,7 +114,7 @@ module.exports = class Client {
 		// start workflow
 		const body = {}
 		body[ATTR_PROG] = PROG
-		body[ATTR_CANONICAL] = flow.getCanonical()
+		body[ATTR_CANONICAL] = flow._getCanonical()
 		body[ATTR_NAME] = flow.name
 		body[ATTR_DATA] = serializer.encode(flow.data)
 		body[ATTR_ID] = customId

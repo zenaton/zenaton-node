@@ -31,6 +31,6 @@ module.exports = class AbstractTask {
 	}
 
 	static methods() {
-		return ['construct', 'getMaxProcessingTime']
+		return ['getMaxProcessingTime']
 	}
 }

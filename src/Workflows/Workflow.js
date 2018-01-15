@@ -24,7 +24,7 @@ module.exports = function (name, flow) {
 		})
 	}
 
-	let _useConstruct = true
+	let _useConstructor = true
 
 	// WARNING "WorkflowClass" is used in Version.js, do not update it alone
 	const WorkflowClass = class extends AbstractWorkflow {
@@ -35,11 +35,11 @@ module.exports = function (name, flow) {
 			let isFn = ('function' === typeof flow)
 
 			// set instance data
-			if (false === _useConstruct || isFn || undefined === flow['construct']) {
+			if (false === _useConstructor || isFn || undefined === flow['constructor']) {
 				this.data = data[0]
 			} else {
 				this.data = {}
-				flow['construct'].bind(this.data)(...data)
+				flow['constructor'].bind(this.data)(...data)
 			}
 
 			// set and bind handle function
@@ -48,24 +48,42 @@ module.exports = function (name, flow) {
 			// set and bind instance methods
 			if (! isFn) {
 				let that = this
-				AbstractWorkflow.methods().forEach( method => {
-					if (undefined !== flow[method] && 'construct' !== method) {
-						that[method] = flow[method].bind(that.data)
+				Object.keys(flow).forEach( method => {
+					if ('constructor' !== method) {
+						if (AbstractWorkflow.methods().indexOf(method) < 0) {
+							// private method
+							if (undefined !== that.data[method]) {
+								throw new InvalidArgumentException('"' + method + '" is defined more than once in "' + name + '" workflow')
+							}
+							that.data[method] = flow[method].bind(that.data)
+						} else {
+							// zenaton method
+							that[method] = flow[method].bind(that.data)
+						}
 					}
 				})
 			}
 		}
 
-		setCanonical(canonical) {
+		/**
+		 * set canonical name (used by Version)
+		 */
+		_setCanonical(canonical) {
 			this.canonical = canonical
 
 			return this
 		}
 
-		getCanonical() {
+		/**
+		 * get canonical name
+		 */
+		_getCanonical() {
 			return this.canonical
 		}
 
+		/**
+		 * ORM begin
+		 */
 		static whereId(id) {
 			return (new Builder(name)).whereId(id)
 		}
@@ -74,8 +92,8 @@ module.exports = function (name, flow) {
 		 * static methods used to tell class to
 		 * not use construct method to inject data
 		 */
-		static get _useConstruct() { return _useConstruct }
-		static set _useConstruct(value) { _useConstruct = value }
+		static get _useConstructor() { return _useConstructor }
+		static set _useConstructor(value) { _useConstructor = value }
 	}
 
 	// store this fonction in a singleton to retrieve it later

@@ -5,24 +5,24 @@ const InvalidArgumentException = require('../Exceptions/InvalidArgumentException
 module.exports = function (name, task) {
 
 	if ('string' !== typeof name) {
-		throw new InvalidArgumentException('1st parameter must be a string')
+		throw new InvalidArgumentException('1st parameter (task name) must be a string')
 	}
 	// check definition
 	if ('function' !== typeof task && 'object' !== typeof task) {
-		throw new InvalidArgumentException('2nd parameter must be an function or an object (task implemention)')
+		throw new InvalidArgumentException('2nd parameter (task implemention) must be an function or an object ')
 	}
 	if ('object' === typeof task) {
-		if ('function' !== typeof task.handle) {
-			throw new InvalidArgumentException('"handle" method must be a function')
+		if (undefined == task.handle) {
+			throw new InvalidArgumentException('Your task must define at least a "handle" method')
 		}
-		AbstractTask.methods().forEach(function(method) {
-			if ((undefined !== task[method]) && ('function' !== typeof task[method])) {
-				throw new InvalidArgumentException('"' + method + '" method must be a function')
+		Object.keys(task).forEach(function (method) {
+			if ('function' !== typeof task[method]) {
+				throw new InvalidArgumentException('Task\'s methods must be functions - check value of "' + method + '"')
 			}
 		})
 	}
 
-	let _useConstruct = true
+	let _useConstructor = true
 
 	const TaskClass = class extends AbstractTask {
 		constructor(...data) {
@@ -32,11 +32,11 @@ module.exports = function (name, task) {
 			let isFn = ('function' === typeof task)
 
 			// set instance data
-			if (false === _useConstruct || isFn || undefined === task['construct']) {
+			if (false === _useConstructor || isFn || undefined === task['constructor']) {
 				this.data = data[0]
 			} else {
 				this.data = {}
-				task['construct'].bind(this.data)(...data)
+				task['constructor'].bind(this.data)(...data)
 			}
 
 			// handle method binded on data
@@ -45,9 +45,18 @@ module.exports = function (name, task) {
 			// set and bind instance methods
 			if (! isFn) {
 				let that = this
-				AbstractTask.methods().forEach( method => {
-					if (undefined !== task[method] && 'construct' !== method) {
-						that[method] = task[method].bind(that.data)
+				Object.keys(task).forEach( method => {
+					if ('constructor' !== method) {
+						if (AbstractTask.methods().indexOf(method) < 0) {
+							// private method
+							if (undefined !== that.data[method]) {
+								throw new InvalidArgumentException('"' + method + '" is defined more than once in "' + name + '" task')
+							}
+							that.data[method] = task[method].bind(that.data)
+						} else {
+							// zenaton method
+							that[method] = task[method].bind(that.data)
+						}
 					}
 				})
 			}
@@ -57,8 +66,8 @@ module.exports = function (name, task) {
 		 * static methods used to tell class to
 		 * not use construct method to inject data
 		 */
-		static get _useConstruct() { return _useConstruct }
-		static set _useConstruct(value) { _useConstruct = value }
+		static get _useConstructor() { return _useConstructor }
+		static set _useConstructor(value) { _useConstructor = value }
 	}
 
 	// store this fonction in a singleton to retrieve it later

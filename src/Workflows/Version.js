@@ -43,7 +43,7 @@ module.exports = function (name, implementation) {
 	const VersionClass = class {
 		constructor(...data) {
 			// return instance of current class
-			return new (versions[versions.length - 1])(...data).setCanonical(name)
+			return new (versions[versions.length - 1])(...data)._setCanonical(name)
 		}
 
 		static getCurrentClass() {

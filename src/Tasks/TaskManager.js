@@ -30,7 +30,7 @@ const TaskManager = class {
 		// get task class
 		var taskClass = this.getClass(name)
 		// do not use construct function to set data
-		taskClass._useConstruct = false
+		taskClass._useConstructor = false
 		// return new task instance
 		return new taskClass(data)
 	}
