@@ -24,9 +24,9 @@ module.exports = function (name, flow) {
 		})
 	}
 
-	let _useConstructor = true
+	let _useInit = true
 
-	// WARNING "WorkflowClass" is used in Version.js, do not update it alone
+	// WARNING "WorkflowClass" is used in Version.js, do not change it in isolation
 	const WorkflowClass = class extends AbstractWorkflow {
 		constructor(...data) {
 			super(name)
@@ -35,21 +35,20 @@ module.exports = function (name, flow) {
 			let isFn = ('function' === typeof flow)
 
 			// set instance data
-			if (false === _useConstructor || isFn || undefined === flow['constructor']) {
+			if (false === _useInit || isFn || undefined === flow['init']) {
 				this.data = data[0]
 			} else {
 				this.data = {}
-				flow['constructor'].bind(this.data)(...data)
+				flow['init'].bind(this.data)(...data)
 			}
 
-			// set and bind handle function
-			this.handle = (isFn ? flow : flow.handle).bind(this.data)
-
 			// set and bind instance methods
-			if (! isFn) {
+			if (isFn) {
+				this.handle = flow.bind(this.data)
+			} else {
 				let that = this
 				Object.keys(flow).forEach( method => {
-					if ('constructor' !== method) {
+					if ('init' !== method) {
 						if (AbstractWorkflow.methods().indexOf(method) < 0) {
 							// private method
 							if (undefined !== that.data[method]) {
@@ -92,8 +91,8 @@ module.exports = function (name, flow) {
 		 * static methods used to tell class to
 		 * not use construct method to inject data
 		 */
-		static get _useConstructor() { return _useConstructor }
-		static set _useConstructor(value) { _useConstructor = value }
+		static get _useInit() { return _useInit }
+		static set _useInit(value) { _useInit = value }
 	}
 
 	// store this fonction in a singleton to retrieve it later

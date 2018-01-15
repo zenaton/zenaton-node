@@ -22,7 +22,7 @@ module.exports = function (name, task) {
 		})
 	}
 
-	let _useConstructor = true
+	let _useInit = true
 
 	const TaskClass = class extends AbstractTask {
 		constructor(...data) {
@@ -32,21 +32,20 @@ module.exports = function (name, task) {
 			let isFn = ('function' === typeof task)
 
 			// set instance data
-			if (false === _useConstructor || isFn || undefined === task['constructor']) {
+			if (false === _useInit || isFn || undefined === task['init']) {
 				this.data = data[0]
 			} else {
 				this.data = {}
-				task['constructor'].bind(this.data)(...data)
+				task['init'].bind(this.data)(...data)
 			}
 
-			// handle method binded on data
-			this.handle = (isFn ? task : task.handle).bind(this.data)
-
 			// set and bind instance methods
-			if (! isFn) {
+			if (isFn) {
+				this.handle = task.bind(this.data)
+			} else {
 				let that = this
 				Object.keys(task).forEach( method => {
-					if ('constructor' !== method) {
+					if ('init' !== method) {
 						if (AbstractTask.methods().indexOf(method) < 0) {
 							// private method
 							if (undefined !== that.data[method]) {
@@ -66,8 +65,8 @@ module.exports = function (name, task) {
 		 * static methods used to tell class to
 		 * not use construct method to inject data
 		 */
-		static get _useConstructor() { return _useConstructor }
-		static set _useConstructor(value) { _useConstructor = value }
+		static get _useInit() { return _useInit }
+		static set _useInit(value) { _useInit = value }
 	}
 
 	// store this fonction in a singleton to retrieve it later

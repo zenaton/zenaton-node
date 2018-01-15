@@ -34,10 +34,14 @@ const WorkflowManager = class {
 		if ('VersionClass' === workflowClass.name) {
 			workflowClass = workflowClass.getInitialClass()
 		}
-		// do not use construct function to set data
-		workflowClass._useConstructor = false
+		// do not use init function to set data
+		workflowClass._useInit = false
 		// return new workflow instance
-		return new workflowClass(data)
+		const workflow = new workflowClass(data)
+		// avoid side effect
+		workflowClass._useInit = true
+		// return workflow
+		return workflow
 	}
 }
 

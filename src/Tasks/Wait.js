@@ -4,8 +4,8 @@ const Trait = require('../Services/Trait')
 const WithTimestamp = require('../Traits/WithTimestamp')
 const moment = require('moment-timezone')
 
-let WaitClass = Task('_ZenatonWait', {
-	constructor(event = null) {
+let WaitClass = Task('_Wait', {
+	init(event = null) {
 		if (event !== null && (typeof event !== 'string')) {
 			throw new InvalidArgumentException('1st parameter, if any, must be a string (event name)')
 		}
