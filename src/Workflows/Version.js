@@ -1,5 +1,6 @@
 const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
 const workflowManager = require('./WorkflowManager')
+const AbstractWorkflow = require('./AbstractWorkflow')
 const Builder = require('../Query/Builder')
 
 module.exports = function (name, implementation) {
@@ -34,7 +35,7 @@ module.exports = function (name, implementation) {
 
 	// check type
 	versions.forEach(flow => {
-		if ('function' !== typeof flow || 'WorkflowClass' !== flow.name) {
+		if ('function' !== typeof flow || !(flow.prototype instanceof AbstractWorkflow)) {
 			throw new InvalidArgumentException('element of versions array should be workflow class')
 		}
 	})

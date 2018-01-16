@@ -37,6 +37,7 @@ const WorkflowManager = class {
 		// do not use init function to set data
 		workflowClass._useInit = false
 		// return new workflow instance
+		// Object.create(workflowClass);
 		const workflow = new workflowClass(data)
 		// avoid side effect
 		workflowClass._useInit = true

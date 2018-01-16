@@ -69,6 +69,9 @@ module.exports = function (name, task) {
 		static set _useInit(value) { _useInit = value }
 	}
 
+	// define name of this class
+	Object.defineProperty (TaskClass, 'name', {value: name})
+
 	// store this fonction in a singleton to retrieve it later
 	taskManager.setClass(name, TaskClass)
 

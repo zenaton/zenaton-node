@@ -95,6 +95,9 @@ module.exports = function (name, flow) {
 		static set _useInit(value) { _useInit = value }
 	}
 
+	// define name of this class
+	Object.defineProperty (WorkflowClass, 'name', {value: name})
+
 	// store this fonction in a singleton to retrieve it later
 	workflowManager.setClass(name, WorkflowClass)
 
