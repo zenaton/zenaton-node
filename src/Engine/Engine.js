@@ -10,12 +10,12 @@ module.exports = class Engine {
 
 		this.client = new Client()
 
-		// No processer
-		this.processer = null
+		// No processor
+		this.processor = null
 	}
 
-	setProcesser(processer) {
-		this.processer = processer
+	setProcessor(processor) {
+		this.processor = processor
 	}
 
 	execute(jobs) {
@@ -24,7 +24,7 @@ module.exports = class Engine {
 		this.checkArguments(jobs)
 
 		// local execution
-		if (this.processer === null || jobs.length == 0) {
+		if (this.processor === null || jobs.length == 0) {
 			let outputs = []
 			// simply apply handle method
 			jobs.forEach(job => {
@@ -34,8 +34,8 @@ module.exports = class Engine {
 			return outputs
 		}
 
-		// executed by Zenaton processer
-		return this.processer.process(jobs, true)
+		// executed by Zenaton processor
+		return this.processor.process(jobs, true)
 	}
 
 	dispatch(jobs) {
@@ -43,7 +43,7 @@ module.exports = class Engine {
 		this.checkArguments(jobs)
 
 		// local execution
-		if (this.processer === null || jobs.length == 0) {
+		if (this.processor === null || jobs.length == 0) {
 			let outputs = []
 			// dispatch works to Zenaton (only workflows by now)
 			jobs.forEach(job => {
@@ -53,8 +53,8 @@ module.exports = class Engine {
 			return outputs
 		}
 
-		// executed by Zenaton processer
-		return this.processer.process(jobs, false)
+		// executed by Zenaton processor
+		return this.processor.process(jobs, false)
 	}
 
 	checkArguments(jobs) {
