@@ -6,7 +6,6 @@
   "scripts": {
     "build": "./node_modules/.bin/babel src/ --out-dir lib/",
     "lint": "node_modules/.bin/eslint --ext .js .",
-    "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,29 +13,21 @@
     "url": "git+https://github.com/zenaton/zenaton-javascript.git"
   },
   "author": "Zenaton Inc",
-  "license": "UNDEFINED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/zenaton/zenaton-javascript/issues"
   },
   "homepage": "https://zenaton.com",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-plugin-transform-es2015-modules-commonjs-simple": "^6.7.4",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-es2016": "^6.24.1",
-    "babel-preset-es2017": "^6.24.1",
+    "@babel/core": "^7.0.0-beta.38",
+    "@babel/preset-env": "^7.0.0-beta.38",
+    "babel-cli": "^7.0.0-beta.3",
+    "babel-preset-env": "^1.6.1",
     "eslint": "^4.1.0"
   },
   "dependencies": {
     "axios": "^0.16.2",
     "dotenv": "^4.0.0",
-    "lodash": "^4.17.4",
-    "moment": "^2.18.1",
-    "moment-timezone": "^0.5.13",
-    "sync-request": "^4.1.0"
+    "moment-timezone": "^0.5.13"
   }
 }
