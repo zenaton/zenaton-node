@@ -29,5 +29,8 @@
     "axios": "^0.16.2",
     "dotenv": "^4.0.0",
     "moment-timezone": "^0.5.13"
+  },
+  "engine": {
+    "node": ">=5"
   }
 }
