@@ -1,4 +1,4 @@
-const InvalidArgumentError = require('../Errors/InvalidArgumentError')
+const InvalidArgumentError = require('../../Errors/InvalidArgumentError')
 const workflowManager = require('./WorkflowManager')
 const AbstractWorkflow = require('./AbstractWorkflow')
 const Builder = require('../Query/Builder')

@@ -1,5 +1,5 @@
 const moment = require('moment-timezone')
-const { InternalZenatonError } = require('../Errors')
+const { InternalZenatonError } = require('../../Errors')
 
 module.exports = {
 

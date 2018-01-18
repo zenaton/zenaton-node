@@ -1,7 +1,7 @@
 const moment = require('moment-timezone')
 const Trait = require('../Services/Trait')
 const WithDuration = require('./WithDuration')
-const { ExternalZenatonError, InternalZenatonError } = require('../Errors')
+const { ExternalZenatonError, InternalZenatonError } = require('../../Errors')
 
 const MODE_AT = 'AT'
 const MODE_WEEK_DAY = 'WEEK_DAY'

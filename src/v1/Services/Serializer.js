@@ -1,4 +1,4 @@
-const { InternalZenatonError } = require('../Errors')
+const { InternalZenatonError } = require('../../Errors')
 // this string prefixs ids that are used to identify objects and Closure
 const ID_PREFIX = '@zenaton#'
 

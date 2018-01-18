@@ -1,7 +1,7 @@
 /* global process */
+const ExternalZenatonError = require('../Errors/ExternalZenatonError')
+const InvalidArgumentError = require('../Errors/InvalidArgumentError')
 const workflowManager = require('./Workflows/WorkflowManager')
-const ExternalZenatonError = require('./Errors/ExternalZenatonError')
-const InvalidArgumentError = require('./Errors/InvalidArgumentError')
 const http = require('./Services/Http')
 const serializer = require('./Services/Serializer')
 

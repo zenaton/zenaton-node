@@ -1,6 +1,6 @@
 const AbstractTask = require('./AbstractTask')
 const taskManager = require('./TaskManager')
-const InvalidArgumentError = require('../Errors/InvalidArgumentError')
+const InvalidArgumentError = require('../../Errors/InvalidArgumentError')
 
 module.exports = function (name, task) {
 

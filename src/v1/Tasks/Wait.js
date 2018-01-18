@@ -1,4 +1,4 @@
-const { InvalidArgumentError } = require('../Errors')
+const { InvalidArgumentError } = require('../../Errors')
 const Task = require('./Task')
 const Trait = require('../Services/Trait')
 const WithTimestamp = require('../Traits/WithTimestamp')

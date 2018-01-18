@@ -1,5 +1,5 @@
 const serializer = require('../Services/Serializer')
-const InvalidArgumentError = require('../Errors/InvalidArgumentError')
+const InvalidArgumentError = require('../../Errors/InvalidArgumentError')
 const util = require('util')
 
 let instance
