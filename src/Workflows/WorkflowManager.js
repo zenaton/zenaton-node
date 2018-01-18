@@ -1,5 +1,5 @@
 const serializer = require('../Services/Serializer')
-const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
+const InvalidArgumentError = require('../Errors/InvalidArgumentError')
 const util = require('util')
 
 let instance
@@ -15,7 +15,7 @@ const WorkflowManager = class {
 	setClass(name, workflow) {
 		// check that this workflow does not exist yet
 		if (undefined !== this.getClass(name)) {
-			throw new InvalidArgumentException('"' + name + '" workflow can not be defined twice')
+			throw new InvalidArgumentError('"' + name + '" workflow can not be defined twice')
 		}
 
 		this.workflows[name] = workflow

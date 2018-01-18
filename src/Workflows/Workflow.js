@@ -1,5 +1,5 @@
 const AbstractWorkflow = require('./AbstractWorkflow')
-const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
+const InvalidArgumentError = require('../Errors/InvalidArgumentError')
 const workflowManager = require('./WorkflowManager')
 const Builder = require('../Query/Builder')
 
@@ -7,19 +7,19 @@ module.exports = function (name, flow) {
 
 	// check that provided data have the right format
 	if ('string' !== typeof name) {
-		throw new InvalidArgumentException('1st parameter must be a string (workflow name)')
+		throw new InvalidArgumentError('1st parameter must be a string (workflow name)')
 	}
 	// check definition
 	if ('function' !== typeof flow && 'object' !== typeof flow) {
-		throw new InvalidArgumentException('2nd parameter must be an function or an object (workflow implemention)')
+		throw new InvalidArgumentError('2nd parameter must be an function or an object (workflow implemention)')
 	}
 	if ('object' === typeof flow) {
 		if ('function' !== typeof flow.handle) {
-			throw new InvalidArgumentException('"handle" method must be a function')
+			throw new InvalidArgumentError('"handle" method must be a function')
 		}
 		AbstractWorkflow.methods().forEach(function(method) {
 			if ((undefined !== flow[method]) && ('function' !== typeof flow[method])) {
-				throw new InvalidArgumentException('"' + method + '" method must be a function')
+				throw new InvalidArgumentError('"' + method + '" method must be a function')
 			}
 		})
 	}
@@ -52,7 +52,7 @@ module.exports = function (name, flow) {
 						if (AbstractWorkflow.methods().indexOf(method) < 0) {
 							// private method
 							if (undefined !== that.data[method]) {
-								throw new InvalidArgumentException('"' + method + '" is defined more than once in "' + name + '" workflow')
+								throw new InvalidArgumentError('"' + method + '" is defined more than once in "' + name + '" workflow')
 							}
 							that.data[method] = flow[method].bind(that.data)
 						} else {

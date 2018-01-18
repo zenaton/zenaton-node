@@ -1,4 +1,4 @@
-const { InternalZenatonException } = require('../Exceptions')
+const { InternalZenatonError } = require('../Errors')
 // this string prefixs ids that are used to identify objects and Closure
 const ID_PREFIX = '@zenaton#'
 
@@ -59,7 +59,7 @@ module.exports = new class {
 		if (KEY_DATA in array) {
 			return array[KEY_DATA]
 		}
-		throw new InternalZenatonException('Unknown key in: ' + json)
+		throw new InternalZenatonError('Unknown key in: ' + json)
 	}
 
 	isObjectId(s)

@@ -1,7 +1,7 @@
 const moment = require('moment-timezone')
 const Trait = require('../Services/Trait')
 const WithDuration = require('./WithDuration')
-const { ExternalZenatonException, InternalZenatonException } = require('../Exceptions')
+const { ExternalZenatonError, InternalZenatonError } = require('../Errors')
 
 const MODE_AT = 'AT'
 const MODE_WEEK_DAY = 'WEEK_DAY'
@@ -123,7 +123,7 @@ module.exports = Trait.mix({
 				then = then.add(1, 'months')
 				break
 			default:
-				throw new InternalZenatonException('Unknown mode: ' + this._mode)
+				throw new InternalZenatonError('Unknown mode: ' + this._mode)
 			}
 		}
 
@@ -182,11 +182,11 @@ module.exports = Trait.mix({
 	_setMode(mode) {
 		// can not apply twice the same method
 		if (mode === this._mode) {
-			throw new ExternalZenatonException('Incompatible definition in Wait methods')
+			throw new ExternalZenatonError('Incompatible definition in Wait methods')
 		}
 		// timestamp can only be used alone
 		if ((null !== this._mode && MODE_TIMESTAMP === mode) || MODE_TIMESTAMP === this._mode) {
-			throw new ExternalZenatonException('Incompatible definition in Wait methods')
+			throw new ExternalZenatonError('Incompatible definition in Wait methods')
 		}
 		// other mode takes precedence to MODE_AT
 		if (null === this._mode || MODE_AT === this._mode) {

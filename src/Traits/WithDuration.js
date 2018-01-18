@@ -1,5 +1,5 @@
 const moment = require('moment-timezone')
-const { InternalZenatonException } = require('../Exceptions')
+const { InternalZenatonError } = require('../Errors')
 
 module.exports = {
 
@@ -93,7 +93,7 @@ module.exports = {
 		case 'years':
 			return then.add(value, 'years')
 		default:
-			throw new InternalZenatonException('Unknown methods ' + method)
+			throw new InternalZenatonError('Unknown methods ' + method)
 		}
 	}
 }

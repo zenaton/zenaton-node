@@ -7,7 +7,7 @@ const Client = require('./Client')
 const Engine = require('./Engine/Engine')
 const { AbstractTask, Task, Wait, taskManager } = require('./Tasks')
 const { Version, AbstractWorkflow, Workflow, workflowManager } = require('./Workflows')
-const Exceptions = require('./Exceptions')
+const Errors = require('./Errors')
 const serializer = require('./Services/Serializer')
 const Parallel = require('./Parallel/Parallel')
 
@@ -27,9 +27,6 @@ if (!Array.prototype.execute) {
 	}
 }
 
-// if those functions are already in use, then user should do instead:
-// new Parallel(...tasks)
-
 module.exports = {
 	Client,
 	Engine,
@@ -43,5 +40,5 @@ module.exports = {
 	AbstractWorkflow,
 	Workflow,
 	workflowManager,
-	Exceptions
+	Errors
 }

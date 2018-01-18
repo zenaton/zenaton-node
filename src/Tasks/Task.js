@@ -1,23 +1,23 @@
 const AbstractTask = require('./AbstractTask')
 const taskManager = require('./TaskManager')
-const InvalidArgumentException = require('../Exceptions/InvalidArgumentException')
+const InvalidArgumentError = require('../Errors/InvalidArgumentError')
 
 module.exports = function (name, task) {
 
 	if ('string' !== typeof name) {
-		throw new InvalidArgumentException('1st parameter (task name) must be a string')
+		throw new InvalidArgumentError('1st parameter (task name) must be a string')
 	}
 	// check definition
 	if ('function' !== typeof task && 'object' !== typeof task) {
-		throw new InvalidArgumentException('2nd parameter (task implemention) must be an function or an object ')
+		throw new InvalidArgumentError('2nd parameter (task implemention) must be an function or an object ')
 	}
 	if ('object' === typeof task) {
 		if (undefined == task.handle) {
-			throw new InvalidArgumentException('Your task must define at least a "handle" method')
+			throw new InvalidArgumentError('Your task must define at least a "handle" method')
 		}
 		Object.keys(task).forEach(function (method) {
 			if ('function' !== typeof task[method]) {
-				throw new InvalidArgumentException('Task\'s methods must be functions - check value of "' + method + '"')
+				throw new InvalidArgumentError('Task\'s methods must be functions - check value of "' + method + '"')
 			}
 		})
 	}
@@ -49,7 +49,7 @@ module.exports = function (name, task) {
 						if (AbstractTask.methods().indexOf(method) < 0) {
 							// private method
 							if (undefined !== that.data[method]) {
-								throw new InvalidArgumentException('"' + method + '" is defined more than once in "' + name + '" task')
+								throw new InvalidArgumentError('"' + method + '" is defined more than once in "' + name + '" task')
 							}
 							that.data[method] = task[method].bind(that.data)
 						} else {

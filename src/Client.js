@@ -1,7 +1,7 @@
 /* global process */
 const workflowManager = require('./Workflows/WorkflowManager')
-const ExternalZenatonException = require('./Exceptions/ExternalZenatonException')
-const InvalidArgumentException = require('./Exceptions/InvalidArgumentException')
+const ExternalZenatonError = require('./Errors/ExternalZenatonError')
+const InvalidArgumentError = require('./Errors/InvalidArgumentError')
 const http = require('./Services/Http')
 const serializer = require('./Services/Serializer')
 
@@ -40,7 +40,7 @@ module.exports = class Client {
 		if (instance) {
 			if (! worker && (! instance.appId || ! instance.apiToken || ! instance.appEnv)) {
 				console.log('Please initialize your Zenaton client with your credentials')
-				// throw new ExternalZenatonException('Please initialize your Zenaton client with your credentials')
+				// throw new ExternalZenatonError('Please initialize your Zenaton client with your credentials')
 			}
 			return instance
 		}
@@ -101,13 +101,13 @@ module.exports = class Client {
 			customId = flow.id()
 			// customId should be a string or a number
 			if (('string' !== typeof customId) && ('number' !== typeof customId)) {
-				throw new InvalidArgumentException('Provided id must be a string or a number - current type: ' + (typeof customId))
+				throw new InvalidArgumentError('Provided id must be a string or a number - current type: ' + (typeof customId))
 			}
 			// at the end, it's a string
 			customId = customId.toString()
 			// should be not more than 256 bytes;
 			if (customId.length >= MAX_ID_SIZE) {
-				throw new ExternalZenatonException('Provided id must not exceed ' + MAX_ID_SIZE + ' bytes')
+				throw new ExternalZenatonError('Provided id must not exceed ' + MAX_ID_SIZE + ' bytes')
 			}
 		}
 

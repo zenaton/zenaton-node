@@ -60,7 +60,7 @@ module.exports = class Engine {
 	checkArguments(jobs) {
 		jobs.forEach( job => {
 			// if ( ('object' !== typeof job) || (!( Task instanceof job) && !( Workflow instanceof job))) {
-			// 	throw new InvalidArgumentException(
+			// 	throw new InvalidArgumentError(
 			// 		'You can only execute or dispatch Zenaton Task or Workflow'
 			// 	)
 			// }
