@@ -5,5 +5,10 @@
                 "node": "5.0.0"
             }
         }]
+    ],
+    "plugins": [
+        ["babel-plugin-transform-builtin-extend", {
+            globals: ["Error", "Array"]
+        }]
     ]
 }
