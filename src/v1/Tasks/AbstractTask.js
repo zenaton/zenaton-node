@@ -4,20 +4,6 @@ module.exports = class AbstractTask {
 	constructor(name) {
 		// class name
 		this.name = name
-
-		// ensure handle function is called
-		// with right context
-		// let binded = handle.bind(this)
-
-		// let promiseHandle = function () {
-		// 	return new Promise(function (resolve, reject) {
-		// 		// call handle with custom done function
-		// 		binded(function(err, data) {
-		// 			if (err) return reject(err)
-		// 			resolve(data)
-		// 		})
-		// 	})
-		// }
 	}
 
 	// asynchroneous execution within a workflow
@@ -31,6 +17,6 @@ module.exports = class AbstractTask {
 	}
 
 	static methods() {
-		return ['handle', 'getMaxProcessingTime']
+		return ['handle', 'maxProcessingTime']
 	}
 }
