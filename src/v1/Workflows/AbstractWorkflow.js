@@ -1,4 +1,4 @@
-const Client = require('../Client')
+const Engine = require('../Engine/Engine')
 
 module.exports = class AbstractWorkflow {
 	constructor(name) {
@@ -6,9 +6,14 @@ module.exports = class AbstractWorkflow {
 		this.name = name
 	}
 
-	// dispatch function
+	// asynchroneous execution within a workflow
 	dispatch() {
-		new Client().startWorkflow(this)
+		return new Engine().dispatch([this])
+	}
+
+	// synchroneous execution within a workflow
+	execute() {
+		return new Engine().execute([this])[0]
 	}
 
 	static methods() {

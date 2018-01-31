@@ -50,7 +50,7 @@ module.exports = class Engine {
 			let outputs = []
 			// dispatch works to Zenaton (only workflows by now)
 			jobs.forEach(job => {
-				this.client.startWorkflow(job)
+				outputs.push(this.client.startWorkflow(job))
 			})
 			// return results
 			return outputs
