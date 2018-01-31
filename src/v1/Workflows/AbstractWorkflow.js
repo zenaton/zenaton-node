@@ -8,7 +8,7 @@ module.exports = class AbstractWorkflow {
 
 	// asynchroneous execution within a workflow
 	dispatch() {
-		return new Engine().dispatch([this])
+		return new Engine().dispatch([this])[0]
 	}
 
 	// synchroneous execution within a workflow

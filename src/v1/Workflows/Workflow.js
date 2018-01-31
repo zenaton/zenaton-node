@@ -20,8 +20,11 @@ module.exports = function (name, flow) {
 		throw new InvalidArgumentError('2nd parameter (workflow implemention) must be an function or an object')
 	}
 	if ('object' === typeof flow) {
-		if ('function' !== typeof flow.handle) {
-			throw new InvalidArgumentError('"handle" method must be a function')
+		if (undefined === flow.handle) {
+			throw new InvalidArgumentError('Your workflow MUST define a "handle" method')
+		}
+		if (undefined !== flow._promiseHandle) {
+			throw new InvalidArgumentError('Your workflow can NOT redefine a "_promiseHandle" method')
 		}
 		AbstractWorkflow.methods().forEach(function(method) {
 			if ((undefined !== flow[method]) && ('function' !== typeof flow[method])) {
@@ -48,11 +51,11 @@ module.exports = function (name, flow) {
 				flow['init'].bind(this.data)(...data)
 			}
 
+			let that = this
 			// set and bind instance methods
 			if (isFn) {
 				this.handle = flow.bind(this.data)
 			} else {
-				let that = this
 				Object.keys(flow).forEach( method => {
 					if ('init' !== method) {
 						if (AbstractWorkflow.methods().indexOf(method) < 0) {
@@ -66,6 +69,15 @@ module.exports = function (name, flow) {
 							that[method] = flow[method].bind(that.data)
 						}
 					}
+				})
+			}
+			// special handle method returning a promise
+			this._promiseHandle = function () {
+				return new Promise(function (resolve, reject) {
+					that.handle(function(err, data) {
+						if (err) return reject(err)
+						resolve(data)
+					})
 				})
 			}
 		}

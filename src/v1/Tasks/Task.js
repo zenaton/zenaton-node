@@ -18,8 +18,11 @@ module.exports = function (name, task) {
 		throw new InvalidArgumentError('2nd parameter (task implemention) must be an function or an object ')
 	}
 	if ('object' === typeof task) {
-		if (undefined == task.handle) {
-			throw new InvalidArgumentError('Your task must define at least a "handle" method')
+		if (undefined === task.handle) {
+			throw new InvalidArgumentError('Your task MUST define a "handle" method')
+		}
+		if (undefined !== task._promiseHandle) {
+			throw new InvalidArgumentError('Your task can NOT redefine a "_promiseHandle" method')
 		}
 		Object.keys(task).forEach(function (method) {
 			if ('function' !== typeof task[method]) {
@@ -45,11 +48,11 @@ module.exports = function (name, task) {
 				task['init'].bind(this.data)(...data)
 			}
 
+			let that = this
 			// set and bind instance methods
 			if (isFn) {
 				this.handle = task.bind(this.data)
 			} else {
-				let that = this
 				Object.keys(task).forEach( method => {
 					if ('init' !== method) {
 						if (AbstractTask.methods().indexOf(method) < 0) {
@@ -63,6 +66,15 @@ module.exports = function (name, task) {
 							that[method] = task[method].bind(that.data)
 						}
 					}
+				})
+			}
+			// special handle method returning a promise
+			this._promiseHandle = function () {
+				return new Promise(function (resolve, reject) {
+					that.handle(function(err, data) {
+						if (err) return reject(err)
+						resolve(data)
+					})
 				})
 			}
 		}

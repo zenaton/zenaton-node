@@ -31,7 +31,13 @@ module.exports = class Engine {
 			let outputs = []
 			// simply apply handle method
 			jobs.forEach(job => {
-				outputs.push(job.handle())
+				if (this.isWorkflow(job)) {
+					outputs.push(job.handle())
+				} else if (this.isTask(job)) {
+					outputs.push(job._promiseHandle())
+				} else {
+					throw new InvalidArgumentError()
+				}
 			})
 			// return results
 			return outputs
@@ -50,7 +56,14 @@ module.exports = class Engine {
 			let outputs = []
 			// dispatch works to Zenaton (only workflows by now)
 			jobs.forEach(job => {
-				outputs.push(this.client.startWorkflow(job))
+				if (this.isWorkflow(job)) {
+					outputs.push(this.client.startWorkflow(job))
+				} else if (this.isTask(job)) {
+					// outputs.push(this.client.startTask(job))
+					outputs.push(job._promiseHandle())
+				} else {
+					throw new InvalidArgumentError()
+				}
 			})
 			// return results
 			return outputs
@@ -61,16 +74,24 @@ module.exports = class Engine {
 	}
 
 	checkArguments(jobs) {
-		jobs.forEach( job => {
-			if (
-				'object' !== typeof job ||
-				'string' !== typeof job.name ||
-				(undefined === workflowManager.getClass(job.name) && undefined === taskManager.getClass(job.name))
-			) {
+		jobs.forEach(job => {
+			if (!this.isWorkflow(job) && !this.isTask(job) ) {
 				throw new InvalidArgumentError(
 					'You can only execute or dispatch Zenaton Task or Workflow'
 				)
 			}
 		})
+	}
+
+	isWorkflow(job)  {
+		return ('object' === typeof job) &&
+			('string' === typeof job.name) &&
+			(undefined !== workflowManager.getClass(job.name))
+	}
+
+	isTask(job)  {
+		return ('object' === typeof job) &&
+			('string' === typeof job.name) &&
+			(undefined !== taskManager.getClass(job.name))
 	}
 }
