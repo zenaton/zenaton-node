@@ -7,7 +7,13 @@ module.exports = function (name, task) {
 	if ('string' !== typeof name) {
 		throw new InvalidArgumentError('1st parameter (task name) must be a string')
 	}
-	// check definition
+
+	// task getter
+	if (undefined === task) {
+		return taskManager.getClass(name)
+	}
+
+	// check task definition
 	if ('function' !== typeof task && 'object' !== typeof task) {
 		throw new InvalidArgumentError('2nd parameter (task implemention) must be an function or an object ')
 	}

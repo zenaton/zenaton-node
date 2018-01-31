@@ -9,9 +9,15 @@ module.exports = function (name, flow) {
 	if ('string' !== typeof name) {
 		throw new InvalidArgumentError('1st parameter must be a string (workflow name)')
 	}
+
+	// workflow getter
+	if (undefined === flow) {
+		return workflowManager.getClass(name)
+	}
+
 	// check definition
 	if ('function' !== typeof flow && 'object' !== typeof flow) {
-		throw new InvalidArgumentError('2nd parameter must be an function or an object (workflow implemention)')
+		throw new InvalidArgumentError('2nd parameter (workflow implemention) must be an function or an object')
 	}
 	if ('object' === typeof flow) {
 		if ('function' !== typeof flow.handle) {
