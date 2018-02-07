@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zenaton/zenaton-javascript.git"
+    "url": "git+https://github.com/zenaton/zenaton-node.git"
   },
   "author": "Zenaton Inc",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zenaton/zenaton-javascript/issues"
+    "url": "https://github.com/zenaton/zenaton-node/issues"
   },
   "homepage": "https://zenaton.com",
   "devDependencies": {
