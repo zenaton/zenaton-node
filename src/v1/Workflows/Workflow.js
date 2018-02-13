@@ -45,7 +45,7 @@ module.exports = function (name, flow) {
 
 			// set instance data
 			if (false === _useInit || isFn || undefined === flow['init']) {
-				this.data = data[0]
+				this.data = data.length > 0 ? data[0] : {}
 			} else {
 				this.data = {}
 				flow['init'].bind(this.data)(...data)
