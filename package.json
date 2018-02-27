@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src/ --out-dir lib/",
+    "watch": "watch 'npm run build' ./src",
     "lint": "node_modules/.bin/eslint --ext .js .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,7 +25,8 @@
     "babel-cli": "^7.0.0-beta.3",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-preset-env": "^1.6.1",
-    "eslint": "^4.1.0"
+    "eslint": "^4.1.0",
+    "watch": "latest"
   },
   "dependencies": {
     "axios": "^0.16.2",
