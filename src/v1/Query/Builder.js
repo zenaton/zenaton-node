@@ -1,13 +1,8 @@
 const Client = require('../Client')
 
-let instance
-
 module.exports = class QueryBuilder
 {
 	constructor(workflowClass) {
-		if (instance) { return instance }
-		instance = this
-
 		this.client = new Client()
 		this.workflowClass = workflowClass
 	}
