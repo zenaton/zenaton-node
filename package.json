@@ -4,9 +4,10 @@
   "description": "Zenaton library",
   "main": "lib/index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src/ --out-dir lib/",
-    "watch": "watch 'npm run build' ./src",
-    "lint": "node_modules/.bin/eslint --ext .js .",
+    "build": "babel src/ --out-dir lib/",
+    "build:watch": "yarn build --watch --verbose",
+    "lint": "eslint --color .",
+    "format": "prettier --write '**/*.{js,json,css,md}'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,21 +20,26 @@
     "url": "https://github.com/zenaton/zenaton-node/issues"
   },
   "homepage": "https://zenaton.com",
-  "devDependencies": {
-    "@babel/core": "^7.0.0-beta.38",
-    "@babel/preset-env": "^7.0.0-beta.38",
-    "babel-cli": "^7.0.0-beta.3",
-    "babel-plugin-transform-builtin-extend": "^1.1.2",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^4.1.0",
-    "watch": "latest"
+  "engine": {
+    "node": "8.12.0"
   },
   "dependencies": {
-    "axios": "^0.16.2",
-    "dotenv": "^4.0.0",
-    "moment-timezone": "^0.5.13"
+    "axios": "0.16.2",
+    "dotenv": "4.0.0",
+    "moment-timezone": "0.5.13"
   },
-  "engine": {
-    "node": ">=5"
+  "devDependencies": {
+    "@babel/cli": "7.1.2",
+    "@babel/core": "7.1.2",
+    "@babel/preset-env": "7.1.0",
+    "babel-plugin-transform-builtin-extend": "1.1.2",
+    "babel-preset-env": "1.6.1",
+    "eslint": "5.6.1",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-config-prettier": "3.1.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-node": "7.0.1",
+    "eslint-plugin-prettier": "3.0.0",
+    "prettier": "1.14.3"
   }
 }

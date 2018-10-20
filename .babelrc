@@ -1,14 +1,20 @@
 {
-    "presets": [
-        ["@babel/env", {
-            "targets": {
-                "node": "5.0.0"
-            }
-        }]
-    ],
-    "plugins": [
-        ["babel-plugin-transform-builtin-extend", {
-            globals: ["Error", "Array"]
-        }]
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "node": "5.0.0"
+        }
+      }
     ]
+  ],
+  "plugins": [
+    [
+      "babel-plugin-transform-builtin-extend",
+      {
+        "globals": ["Error", "Array"]
+      }
+    ]
+  ]
 }
