@@ -11,21 +11,24 @@ const mix = (object, ...traits) => {
       configurable: true,
     },
   };
-  for (const trait of traits) {
+  traits.forEach((trait) => {
     if (trait._traits) {
       Array.prototype.push.apply(_traits, trait._traits);
     }
-    for (const name of Object.getOwnPropertyNames(trait)) {
-      if (name !== "_traits" && !object.hasOwnProperty(name)) {
+    Object.getOwnPropertyNames(trait).forEach((name) => {
+      if (
+        name !== "_traits" &&
+        !Object.prototype.hasOwnProperty.call(object, name)
+      ) {
         props[name] = {
           value: trait[name],
           writable: true,
           configurable: true,
         };
       }
-    }
+    });
     _traits.push(trait);
-  }
+  });
   Object.defineProperties(object, props);
   return object;
 };
@@ -40,11 +43,15 @@ const apply = (baseClass, ...traits) => {
 const has = (object, trait) => {
   let _traits;
   if (typeof object === "function") {
+    // eslint-disable-next-line prefer-destructuring
     _traits = object.prototype._traits;
   } else {
+    // eslint-disable-next-line prefer-destructuring
     _traits = object._traits;
   }
   return Array.isArray(_traits) && _traits.indexOf(trait) >= 0;
 };
 
-export { mix, apply, has };
+module.exports.mix = mix;
+module.exports.apply = apply;
+module.exports.has = has;

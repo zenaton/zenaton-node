@@ -20,14 +20,16 @@ const Parallel = require("./v1/Parallel/Parallel");
 
 // Parallel dispatchs
 if (!Array.prototype.dispatch) {
-  Array.prototype.dispatch = function() {
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.dispatch = function dispatch() {
     new Engine().dispatch(this);
   };
 }
 
 // Parallel executions
 if (!Array.prototype.execute) {
-  Array.prototype.execute = function() {
+  // eslint-disable-next-line no-extend-native
+  Array.prototype.execute = function execute() {
     return new Engine().execute(this);
   };
 }

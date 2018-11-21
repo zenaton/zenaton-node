@@ -7,7 +7,8 @@ module.exports = {
       return null;
     }
 
-    let [now, then] = this._initNowThen();
+    const now = this._initNow();
+    let then = moment(now);
 
     this._buffer.forEach((call) => {
       then = this._applyDuration(call[0], call[1], then);
@@ -58,7 +59,7 @@ module.exports = {
     return this;
   },
 
-  _initNowThen() {
+  _initNow() {
     // get setted or current time zone
     const tz =
       undefined !== this.constructor._timezone
@@ -66,9 +67,8 @@ module.exports = {
         : moment.tz.guess();
 
     const now = moment().tz(tz);
-    const then = moment(now);
 
-    return [now, then];
+    return now;
   },
 
   _push(data) {

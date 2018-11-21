@@ -15,7 +15,7 @@ const getError = (e) => {
       ? "Unknown error"
       : e.response.statusText;
   // get status code
-  if (e.response.status !== parseInt(e.response.status)) {
+  if (e.response.status !== parseInt(e.response.status, 10)) {
     return new ZenatonError(`${message} - please contact Zenaton support`);
   }
   // Internal Server Error
@@ -58,4 +58,6 @@ const put = (url, body, options) =>
       throw getError(error);
     });
 
-export { get, post, put };
+module.exports.get = get;
+module.exports.post = post;
+module.exports.put = put;

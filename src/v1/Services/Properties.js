@@ -1,13 +1,14 @@
 module.exports = new class {
   getNewInstanceWithoutProperties(name) {
-    return new ReflectionClass($name).newInstanceWithoutConstructor();
+    // eslint-disable-next-line no-undef
+    return new ReflectionClass(name).newInstanceWithoutConstructor();
   }
 
   getPropertiesFromObject(o) {
-    const properties = {};
-    Object.keys(o).forEach((key) => (properties[key] = o.key));
-
-    return properties;
+    return Object.keys(o).reduce((acc, key) => {
+      acc[key] = o[key];
+      return acc;
+    }, {});
   }
 
   getNameClassFromObject(o) {
@@ -27,10 +28,9 @@ module.exports = new class {
     if (constructor) {
       return constructor.prototype;
     }
+    // eslint-disable-next-line no-undef
     throw new Resurrect.prototype.Error(`Unknown constructor: ${name}`);
   }
 
-  getClassByName(name) {}
+  getClassByName(/* name */) {}
 }();
-
-// Object.create(Object.getPrototypeOf(c))

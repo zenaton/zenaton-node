@@ -1,20 +1,19 @@
-const { InternalZenatonError } = require("../../Errors");
 // this string prefixs ids that are used to identify objects and Closure
 const ID_PREFIX = "@zenaton#";
 
-const KEY_OBJECT = "o";
+// const KEY_OBJECT = "o";
 const KEY_OBJECT_NAME = "n";
 const KEY_OBJECT_PROPERTIES = "p";
-const KEY_ARRAY = "a";
-const KEY_CLOSURE = "c";
-const KEY_DATA = "d";
-const KEY_STORE = "s";
+// const KEY_ARRAY = "a";
+// const KEY_CLOSURE = "c";
+// const KEY_DATA = "d";
+// const KEY_STORE = "s";
 
 module.exports = new class {
   encode(data) {
     return JSON.stringify(data);
 
-    this.encoded = [];
+    /* this.encoded = [];
     this.decoded = [];
 
     const value = [];
@@ -32,7 +31,7 @@ module.exports = new class {
     //  this.encoded may have been updated by encodeClosure or encodeObject
     value[KEY_STORE] = this.encoded;
 
-    return JSON.stringify(value);
+    return JSON.stringify(value); */
   }
 
   decode(json) {
@@ -40,7 +39,7 @@ module.exports = new class {
 
     return array;
 
-    this.decoded = [];
+    /* this.decoded = [];
     this.encoded = array[KEY_STORE];
 
     if (KEY_OBJECT in array) {
@@ -57,7 +56,7 @@ module.exports = new class {
     if (KEY_DATA in array) {
       return array[KEY_DATA];
     }
-    throw new InternalZenatonError(`Unknown key in: ${json}`);
+    throw new InternalZenatonError(`Unknown key in: ${json}`); */
   }
 
   isObjectId(s) {
@@ -133,12 +132,15 @@ module.exports = new class {
         const encoded = this.encoded[id];
         if (encoded instanceof Array) {
           // object is define by an array [n =>, p=>]
+          // eslint-disable-next-line no-param-reassign
           array[key] = this.decodeObject(id, encoded);
         } else {
           // if it's not an object, then it's a closure
+          // eslint-disable-next-line no-param-reassign
           array[key] = this.decodeClosure(id, encoded);
         }
       } else if (value instanceof Array) {
+        // eslint-disable-next-line no-param-reassign
         array[key] = this.decodeArray(value);
       }
     });

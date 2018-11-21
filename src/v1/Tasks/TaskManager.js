@@ -30,13 +30,13 @@ const TaskManager = class {
     // unserialize data
     const data = serializer.decode(encodedData);
     // get task class
-    const taskClass = this.getClass(name);
+    const TaskClass = this.getClass(name);
     // do not use construct function to set data
-    taskClass._useInit = false;
+    TaskClass._useInit = false;
     // get new task instance
-    const task = new taskClass(data);
+    const task = new TaskClass(data);
     // avoid side effect
-    taskClass._useInit = true;
+    TaskClass._useInit = true;
     // return task
     return task;
   }

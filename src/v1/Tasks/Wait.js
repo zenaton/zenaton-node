@@ -1,8 +1,8 @@
+const moment = require("moment-timezone");
 const { InvalidArgumentError } = require("../../Errors");
 const Task = require("./Task");
 const Trait = require("../Services/Trait");
 const WithTimestamp = require("../Traits/WithTimestamp");
-const moment = require("moment-timezone");
 
 const WaitClass = Task("_Wait", {
   init(event = null) {
@@ -19,7 +19,7 @@ const WaitClass = Task("_Wait", {
 });
 
 // 	static method can not be defined by trait :(
-WaitClass.timezone = function(timezone) {
+WaitClass.timezone = function timezoneFunc(timezone) {
   if (moment.tz.names().indexOf(timezone) < 0) {
     throw new InvalidArgumentError("Unknown timezone");
   }

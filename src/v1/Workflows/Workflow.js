@@ -3,7 +3,7 @@ const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 const workflowManager = require("./WorkflowManager");
 const Builder = require("../Query/Builder");
 
-module.exports = function(name, flow) {
+module.exports = function workflowFunc(name, flow) {
   // check that provided data have the right format
   if (typeof name !== "string") {
     throw new InvalidArgumentError(
@@ -81,11 +81,14 @@ module.exports = function(name, flow) {
         });
       }
       // special handle method returning a promise
-      this._promiseHandle = function() {
+      this._promiseHandle = function _promiseHandle() {
         return new Promise((resolve, reject) => {
-          that.handle((err, data) => {
-            if (err) return reject(err);
-            resolve(data);
+          that.handle((err, data2) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve(data2);
           });
         });
       };

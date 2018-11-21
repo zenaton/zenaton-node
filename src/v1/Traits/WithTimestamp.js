@@ -15,7 +15,8 @@ module.exports = Trait.mix(
         return [null, null];
       }
 
-      let [now, then] = this._initNowThen();
+      const now = this._initNow();
+      let then = moment(now);
 
       this._mode = null;
       // apply buffered methods
@@ -103,21 +104,25 @@ module.exports = Trait.mix(
       this._setMode(MODE_AT);
 
       const segments = time.split(":");
-      const h = parseInt(segments[0]);
-      const m = segments.length > 1 ? parseInt(segments[1]) : 0;
-      const s = segments.length > 2 ? parseInt(segments[2]) : 0;
+      const h = parseInt(segments[0], 10);
+      const m = segments.length > 1 ? parseInt(segments[1], 10) : 0;
+      const s = segments.length > 2 ? parseInt(segments[2], 10) : 0;
 
+      // eslint-disable-next-line no-param-reassign
       then = then.set({ hour: h, minute: m, second: s });
 
       if (now.isAfter(then)) {
         switch (this._mode) {
           case MODE_AT:
+            // eslint-disable-next-line no-param-reassign
             then = then.add(1, "days");
             break;
           case MODE_WEEK_DAY:
+            // eslint-disable-next-line no-param-reassign
             then = then.add(1, "weeks");
             break;
           case MODE_MONTH_DAY:
+            // eslint-disable-next-line no-param-reassign
             then = then.add(1, "months");
             break;
           default:
@@ -131,9 +136,11 @@ module.exports = Trait.mix(
     _dayOfMonth(day, now, then) {
       this._setMode(MODE_MONTH_DAY);
 
+      // eslint-disable-next-line no-param-reassign
       then = then.set("date", day);
 
       if (now.isAfter(then)) {
+        // eslint-disable-next-line no-param-reassign
         then = then.add(1, "months");
       }
 
@@ -144,7 +151,9 @@ module.exports = Trait.mix(
       this._setMode(MODE_WEEK_DAY);
 
       const d = then.isoWeekday();
+      // eslint-disable-next-line no-param-reassign
       then = then.add(day - d, "days");
+      // eslint-disable-next-line no-param-reassign
       then = d > day ? then.add(n, "weeks") : then.add(n - 1, "weeks");
 
       return then;

@@ -1,4 +1,3 @@
-const util = require("util");
 const serializer = require("../Services/Serializer");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 
@@ -33,18 +32,18 @@ const WorkflowManager = class {
     // unserialize data
     const data = serializer.decode(encodedData);
     // get workflow class
-    let workflowClass = this.getClass(name);
+    let WorkflowClass = this.getClass(name);
     // if Version => the workflow was versioned meanwhile => get the initial class
-    if (workflowClass.name === "VersionClass") {
-      workflowClass = workflowClass.getInitialClass();
+    if (WorkflowClass.name === "VersionClass") {
+      WorkflowClass = WorkflowClass.getInitialClass();
     }
     // do not use init function to set data
-    workflowClass._useInit = false;
+    WorkflowClass._useInit = false;
     // return new workflow instance
     // Object.create(workflowClass);
-    const workflow = new workflowClass(data);
+    const workflow = new WorkflowClass(data);
     // avoid side effect
-    workflowClass._useInit = true;
+    WorkflowClass._useInit = true;
     // return workflow
     return workflow;
   }

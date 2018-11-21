@@ -3,7 +3,7 @@ const workflowManager = require("./WorkflowManager");
 const AbstractWorkflow = require("./AbstractWorkflow");
 const Builder = require("../Query/Builder");
 
-module.exports = function(name, implementation) {
+module.exports = function versionFunc(name, implementation) {
   // check that provided data have the right format
   if (typeof name !== "string") {
     throw new InvalidArgumentError(

@@ -2,7 +2,7 @@ const AbstractTask = require("./AbstractTask");
 const taskManager = require("./TaskManager");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 
-module.exports = function(name, task) {
+module.exports = function taskFunc(name, task) {
   if (typeof name !== "string") {
     throw new InvalidArgumentError(
       "1st parameter (task name) must be a string",
@@ -49,6 +49,7 @@ module.exports = function(name, task) {
 
       // set instance data
       if (_useInit === false || isFn || undefined === task.init) {
+        // eslint-disable-next-line prefer-destructuring
         this.data = data[0];
       } else {
         this.data = {};
@@ -78,11 +79,14 @@ module.exports = function(name, task) {
         });
       }
       // special handle method returning a promise
-      this._promiseHandle = function() {
+      this._promiseHandle = function _promiseHandle() {
         return new Promise((resolve, reject) => {
-          that.handle((err, data) => {
-            if (err) return reject(err);
-            resolve(data);
+          that.handle((err, data2) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve(data2);
           });
         });
       };

@@ -28,7 +28,7 @@ module.exports = class Engine {
     this.checkArguments(jobs);
 
     // local execution
-    if (this.processor === null || jobs.length == 0) {
+    if (this.processor === null || jobs.length === 0) {
       const outputs = [];
       // simply apply handle method
       jobs.forEach((job) => {
@@ -53,7 +53,7 @@ module.exports = class Engine {
     this.checkArguments(jobs);
 
     // local execution
-    if (this.processor === null || jobs.length == 0) {
+    if (this.processor === null || jobs.length === 0) {
       const outputs = [];
       // dispatch works to Zenaton (only workflows by now)
       jobs.forEach((job) => {
