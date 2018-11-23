@@ -1,7 +1,7 @@
 const Engine = require("../Engine/Engine");
 
 module.exports = class Parallel {
-  constructor(items = []) {
+  constructor(...items) {
     this.items = items;
   }
 

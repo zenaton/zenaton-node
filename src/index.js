@@ -1,54 +1,33 @@
-/* global process, __dirname, __filename */
-
 // store path to this file for use by Zenaton worker
 process.env.ZENATON_LIBRARY_PATH = require("path").resolve(
   __dirname,
   __filename,
 );
 
-const { version: appVersion } = require("../package.json");
-
+const { version } = require("./infos");
 const Errors = require("./Errors");
 
-// v1 sources
-const Client = require("./v1/Client");
-const Engine = require("./v1/Engine/Engine");
-const { Task, taskManager, Wait } = require("./v1/Tasks");
-const { Workflow, workflowManager, Version } = require("./v1/Workflows");
-const serializer = require("./v1/Services/Serializer");
-const Parallel = require("./v1/Parallel/Parallel");
+const UP_TO_DATE_CODE_PATH = "async";
 
-// if below functions are already defined, use Parallel class
+/* If 'ZENATON_CODE_PATH_VERSION' is present,
+ * it means we are loading through the agent/boot file.
+ * Otherwise, we load by default 'UP_TO_DATE_CODE_PATH'. */
+const codePath = process.env.ZENATON_CODE_PATH_VERSION || UP_TO_DATE_CODE_PATH;
+// eslint-disable-next-line import/no-dynamic-require
+const dynamicDependencies = require(`./${codePath}`);
 
-// Parallel dispatchs
-if (!Array.prototype.dispatch) {
-  // eslint-disable-next-line no-extend-native
-  Array.prototype.dispatch = function dispatch() {
-    new Engine().dispatch(this);
-  };
-}
-
-// Parallel executions
-if (!Array.prototype.execute) {
-  // eslint-disable-next-line no-extend-native
-  Array.prototype.execute = function execute() {
-    return new Engine().execute(this);
-  };
-}
+/* We always expose the very last version of the client to account
+ * for the special case of old tasks starting new workflows, which
+ * always need to be on the last up-to-date code path */
+// eslint-disable-next-line import/no-dynamic-require
+const LastClient = require(`./${UP_TO_DATE_CODE_PATH}/Client`);
 
 module.exports = {
   infos: {
-    appVersion,
+    appVersion: version,
+    codePath,
   },
-  Client,
-  Engine,
-  serializer,
-  Parallel,
-  Task,
-  Wait,
-  taskManager,
-  Version,
-  Workflow,
-  workflowManager,
   Errors,
+  LastClient,
+  ...dynamicDependencies,
 };

@@ -4,17 +4,12 @@
       "@babel/env",
       {
         "targets": {
-          "node": "5.0.0"
+          "node": "8.12.0"
         }
       }
     ]
   ],
   "plugins": [
-    [
-      "babel-plugin-transform-builtin-extend",
-      {
-        "globals": ["Error", "Array"]
-      }
-    ]
+    "@babel/plugin-transform-runtime"
   ]
 }

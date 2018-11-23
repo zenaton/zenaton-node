@@ -31,5 +31,9 @@ jobs:
           command: "./node_modules/.bin/eslint --color ."
 
       - run:
+          name: test
+          command: "./node_modules/.bin/mocha"
+
+      - run:
           name: build
           command: "npm run build"

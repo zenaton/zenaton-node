@@ -3,6 +3,7 @@ const { ExternalZenatonError, InvalidArgumentError } = require("../Errors");
 const workflowManager = require("./Workflows/WorkflowManager");
 const http = require("./Services/Http");
 const serializer = require("./Services/Serializer");
+const { init, credentials } = require("../client");
 
 const ZENATON_API_URL = "https://api.zenaton.com/v1";
 const ZENATON_WORKER_URL = "http://localhost";
@@ -39,7 +40,7 @@ module.exports = class Client {
     if (instance) {
       if (
         !worker &&
-        (!instance.appId || !instance.apiToken || !instance.appEnv)
+        (!credentials.appId || !credentials.apiToken || !credentials.appEnv)
       ) {
         console.log(
           "Please initialize your Zenaton client with your credentials",
@@ -52,29 +53,10 @@ module.exports = class Client {
   }
 
   static init(appId, apiToken, appEnv) {
-    // store credentials in singleton
-    new Client()
-      .setAppId(appId)
-      .setApiToken(apiToken)
-      .setAppEnv(appEnv);
-  }
-
-  setAppId(appId) {
-    this.appId = appId;
-
-    return this;
-  }
-
-  setApiToken(apiToken) {
-    this.apiToken = apiToken;
-
-    return this;
-  }
-
-  setAppEnv(appEnv) {
-    this.appEnv = appEnv;
-
-    return this;
+    /* This was moved in a singleton module because whatever client is used to
+     * init the credentials, they need to be shared between all code paths
+     * clients */
+    init(appId, apiToken, appEnv);
   }
 
   /**
@@ -220,7 +202,7 @@ module.exports = class Client {
         [ATTR_ID]: customId,
         [ATTR_NAME]: workflowName,
         [ATTR_PROG]: PROG,
-        [API_TOKEN]: this.apiToken,
+        [API_TOKEN]: credentials.apiToken,
       },
       this.getAppEnv(),
     );
@@ -290,12 +272,12 @@ module.exports = class Client {
     // when called from worker, APP_ENV and APP_ID is not defined
     const params = {};
 
-    if (this.appEnv) {
-      params[APP_ENV] = this.appEnv;
+    if (credentials.appEnv) {
+      params[APP_ENV] = credentials.appEnv;
     }
 
-    if (this.appId) {
-      params[APP_ID] = this.appId;
+    if (credentials.appId) {
+      params[APP_ID] = credentials.appId;
     }
 
     return params;

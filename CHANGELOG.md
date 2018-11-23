@@ -14,12 +14,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Added `prettier` for code auto formatting.
 - Added CircleCI configuration.
 - Allow dispatch of single tasks.
+- Added clearer error message when HTTP requests have an `ECONNREFUSED` error.
+- Added MIT license file.
 
 ### Changed
 
 - Updated `eslint` configuration to use `eslint-config-airbnb-base` rules.
 - Updated npm packages.
 - Update Zenaton engine URL to point to the new subdomain.
+- Update the serializer to encode/decode from/to Zenaton format and deal with recursion.
+- Split the code base into two branches: synchronous and asynchronous, to accomodate both old and new workflows.
+- Refactor to make the whole code tree asynchronous.
 
 ### Fixed
 
@@ -27,6 +32,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Fixed code format to comply with `prettier` rules.
 
 ### Deprecated
+
+- Deprecated `[].dispatch()` and `[].execute()` in favor of using `new Parallel().dispatch()` and `new Parallel().execute()`.
+- `Workflow.execute()` is now always asynchronous and returns a `Promise`.
 
 ### Removed
 

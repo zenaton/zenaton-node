@@ -1,0 +1,6 @@
+--exit
+--colors
+--recursive
+--require ./test/setup.js
+./test/bootstrap.js
+./test/**/*.js
