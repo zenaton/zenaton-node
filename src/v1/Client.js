@@ -73,21 +73,31 @@ module.exports = class Client {
 		return this
 	}
 
-	getWorkerUrl(ressources = '', params = '') {
-		let url = (process.env.ZENATON_WORKER_URL ?  process.env.ZENATON_WORKER_URL : ZENATON_WORKER_URL)
-			+ ':' + (process.env.ZENATON_WORKER_PORT ?  process.env.ZENATON_WORKER_PORT : DEFAULT_WORKER_PORT)
-			+ '/api/' + WORKER_API_VERSION
-			+ '/' + ressources + '?'
+	getWorkerUrl(ressources = '', params = {}) {
+		const host = process.env.ZENATON_WORKER_URL ? process.env.ZENATON_WORKER_URL : ZENATON_WORKER_URL
+		const port = process.env.ZENATON_WORKER_PORT ? process.env.ZENATON_WORKER_PORT : DEFAULT_WORKER_PORT
+		const path = `/api/${WORKER_API_VERSION}/${ressources}`
+		const queryString = this.getQueryString(Object.assign(
+			{},
+			params,
+			this.getAppEnv()
+		))
 
-		return this.addAppEnv(url, params)
+		const url = `${host}:${port}${path}?${queryString}`
+		return url
 	}
 
-	getWebsiteUrl(ressources = '', params = '') {
-		let url = (process.env.ZENATON_API_URL ?  process.env.ZENATON_API_URL : ZENATON_API_URL)
-			+ '/' + ressources + '?'
-			+ API_TOKEN + '=' + this.apiToken + '&'
+	getWebsiteUrl(ressources = '', params = {}) {
+		const host = process.env.ZENATON_API_URL ? process.env.ZENATON_API_URL : ZENATON_API_URL
+		const path = `/${ressources}`
+		const queryString = this.getQueryString(Object.assign(
+			{ [API_TOKEN]: this.apiToken },
+			params,
+			this.getAppEnv()
+		))
 
-		return this.addAppEnv(url, params)
+		const url = `${host}${path}?${queryString}`
+		return url
 	}
 
 	/**
@@ -112,12 +122,13 @@ module.exports = class Client {
 		}
 
 		// start workflow
-		const body = {}
-		body[ATTR_PROG] = PROG
-		body[ATTR_CANONICAL] = flow._getCanonical()
-		body[ATTR_NAME] = flow.name
-		body[ATTR_DATA] = serializer.encode(flow.data)
-		body[ATTR_ID] = customId
+		const body = {
+			[ATTR_PROG]: PROG,
+			[ATTR_CANONICAL]: flow._getCanonical(),
+			[ATTR_NAME]: flow.name,
+			[ATTR_DATA]: serializer.encode(flow.data),
+			[ATTR_ID]: customId
+		}
 
 		return http.post(this.getInstanceWorkerUrl(), body)
 	}
@@ -147,10 +158,11 @@ module.exports = class Client {
      * Find a workflow instance
      */
 	findWorkflow(workflowName, customId) {
-		let params =
-			ATTR_ID + '=' + customId + '&' +
-			ATTR_NAME + '=' + workflowName+ '&' +
-			ATTR_PROG + '=' + PROG
+		const params = {
+			[ATTR_ID]: customId,
+			[ATTR_NAME]: workflowName,
+			[ATTR_PROG]: PROG
+		}
 
 		return http.get(this.getInstanceWebsiteUrl(params))
 			.then( body => {
@@ -162,35 +174,39 @@ module.exports = class Client {
      * Send an event to a workflow instance
      */
 	sendEvent(workflowName, customId, eventName, eventData) {
-		let url = this.getSendEventURL()
+		const url = this.getSendEventURL()
 
-		const body = {}
-		body[ATTR_PROG] = PROG
-		body[ATTR_NAME] = workflowName
-		body[ATTR_ID] = customId
-		body[EVENT_NAME] = eventName
-		body[EVENT_INPUT] = serializer.encode(eventData)
+		const body = {
+			[ATTR_PROG]: PROG,
+			[ATTR_NAME]: workflowName,
+			[ATTR_ID]: customId,
+			[EVENT_NAME]: eventName,
+			[EVENT_INPUT]: serializer.encode(eventData)
+		}
 
 		return http.post(url, body)
 	}
 
 
 	updateInstance(workflowName, customId, mode) {
-		let params = ATTR_ID + '=' + customId
+		const params = {
+			[ATTR_ID]: customId,
+		}
 
-		const body = {}
-		body[ATTR_PROG] = PROG
-		body[ATTR_NAME] = workflowName
-		body[ATTR_MODE] = mode
+		const body = {
+			[ATTR_PROG]: PROG,
+			[ATTR_NAME]: workflowName,
+			[ATTR_MODE]: mode
+		}
 
 		return http.put(this.getInstanceWorkerUrl(params), body)
 	}
 
-	getInstanceWebsiteUrl(params = '') {
+	getInstanceWebsiteUrl(params = {}) {
 		return this.getWebsiteUrl('instances', params)
 	}
 
-	getInstanceWorkerUrl(params = '') {
+	getInstanceWorkerUrl(params = {}) {
 		return this.getWorkerUrl('instances', params)
 	}
 
@@ -198,11 +214,24 @@ module.exports = class Client {
 		return this.getWorkerUrl('events')
 	}
 
-	addAppEnv(url, params = '') {
+	getAppEnv() {
 		// when called from worker, APP_ENV and APP_ID is not defined
-		return url
-			+ (this.appEnv ? APP_ENV + '=' + this.appEnv + '&' : '')
-			+ (this.appId ? APP_ID + '=' + this.appId + '&' : '')
-			+ (params ? params + '&' : '')
+		const params = {}
+
+		if (this.appEnv) {
+			params[APP_ENV] = this.appEnv
+		}
+
+		if (this.appId) {
+			params[APP_ID] = this.appId
+		}
+
+		return params
+	}
+
+	getQueryString(params) {
+		return Object.keys(params).map(key =>
+			`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
+		).join('&')
 	}
 }
