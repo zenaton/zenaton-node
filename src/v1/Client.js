@@ -186,7 +186,8 @@ module.exports = class Client {
 			{
 				[ATTR_ID]: customId,
 				[ATTR_NAME]: workflowName,
-				[ATTR_PROG]: PROG
+				[ATTR_PROG]: PROG,
+				[API_TOKEN]: this.apiToken
 			},
 			this.getAppEnv()
 		)
