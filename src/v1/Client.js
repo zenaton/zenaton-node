@@ -73,31 +73,49 @@ module.exports = class Client {
 		return this
 	}
 
-	getWorkerUrl(ressources = '', params = {}) {
+	/**
+	 * Returns the worker url
+	 * This is for legacy purposes
+	 * @param {String} ressources REST Resources
+	 * @param {String} params Query string
+	 * @returns {String} Url
+	 */
+	getWorkerUrl(ressources = '', params = '') {
+		const paramsAsObject = params.split('&').reduce(
+			(acc, param) => {
+				const [key, value] = param.split('=')
+				acc[key] = value
+				return acc
+			},
+			{}
+		)
+
+		const fullParams = Object.assign(
+			paramsAsObject,
+			this.getAppEnv()
+		)
+
+		const queryString = Object.keys(fullParams).map((key) =>
+			`${encodeURIComponent(key)}=${encodeURIComponent(fullParams[key])}`,
+		).join("&")
+
+		const url = this.getWorkerUrlNew(ressources)
+		return `${url}?${queryString}`
+	}
+
+	getWorkerUrlNew(ressources = '') {
 		const host = process.env.ZENATON_WORKER_URL ? process.env.ZENATON_WORKER_URL : ZENATON_WORKER_URL
 		const port = process.env.ZENATON_WORKER_PORT ? process.env.ZENATON_WORKER_PORT : DEFAULT_WORKER_PORT
 		const path = `/api/${WORKER_API_VERSION}/${ressources}`
-		const queryString = this.getQueryString(Object.assign(
-			{},
-			params,
-			this.getAppEnv()
-		))
-
-		const url = `${host}:${port}${path}?${queryString}`
-		return url
+		
+		return `${host}:${port}${path}`
 	}
 
-	getWebsiteUrl(ressources = '', params = {}) {
+	getWebsiteUrl(ressources = '') {
 		const host = process.env.ZENATON_API_URL ? process.env.ZENATON_API_URL : ZENATON_API_URL
 		const path = `/${ressources}`
-		const queryString = this.getQueryString(Object.assign(
-			{ [API_TOKEN]: this.apiToken },
-			params,
-			this.getAppEnv()
-		))
-
-		const url = `${host}${path}?${queryString}`
-		return url
+		
+		return `${host}${path}`
 	}
 
 	/**
@@ -121,6 +139,8 @@ module.exports = class Client {
 			}
 		}
 
+		const url = this.getInstanceWorkerUrl()
+
 		// start workflow
 		const body = {
 			[ATTR_PROG]: PROG,
@@ -130,7 +150,9 @@ module.exports = class Client {
 			[ATTR_ID]: customId
 		}
 
-		return http.post(this.getInstanceWorkerUrl(), body)
+		const params = this.getAppEnv();
+
+		return http.post(url, body, { params })
 	}
 
 	/**
@@ -158,13 +180,18 @@ module.exports = class Client {
      * Find a workflow instance
      */
 	findWorkflow(workflowName, customId) {
-		const params = {
-			[ATTR_ID]: customId,
-			[ATTR_NAME]: workflowName,
-			[ATTR_PROG]: PROG
-		}
+		const url = this.getInstanceWebsiteUrl()
+		
+		const params = Object.assign(
+			{
+				[ATTR_ID]: customId,
+				[ATTR_NAME]: workflowName,
+				[ATTR_PROG]: PROG
+			},
+			this.getAppEnv()
+		)
 
-		return http.get(this.getInstanceWebsiteUrl(params))
+		return http.get(url, { params })
 			.then( body => {
 				return workflowManager.getWorkflow(workflowName, body.data.properties)
 			})
@@ -184,34 +211,40 @@ module.exports = class Client {
 			[EVENT_INPUT]: serializer.encode(eventData)
 		}
 
-		return http.post(url, body)
+		const params = this.getAppEnv();
+
+		return http.post(url, body, { params })
 	}
 
-
 	updateInstance(workflowName, customId, mode) {
-		const params = {
-			[ATTR_ID]: customId,
-		}
+		const url = this.getInstanceWorkerUrl()
 
 		const body = {
 			[ATTR_PROG]: PROG,
 			[ATTR_NAME]: workflowName,
 			[ATTR_MODE]: mode
 		}
+		
+		const params = Object.assign(
+			{
+				[ATTR_ID]: customId,
+			},
+			this.getAppEnv()
+		)
 
-		return http.put(this.getInstanceWorkerUrl(params), body)
+		return http.put(url, body, { params })
 	}
 
-	getInstanceWebsiteUrl(params = {}) {
-		return this.getWebsiteUrl('instances', params)
+	getInstanceWebsiteUrl() {
+		return this.getWebsiteUrl('instances')
 	}
 
-	getInstanceWorkerUrl(params = {}) {
-		return this.getWorkerUrl('instances', params)
+	getInstanceWorkerUrl() {
+		return this.getWorkerUrlNew('instances')
 	}
 
 	getSendEventURL() {
-		return this.getWorkerUrl('events')
+		return this.getWorkerUrlNew('events')
 	}
 
 	getAppEnv() {
@@ -227,11 +260,5 @@ module.exports = class Client {
 		}
 
 		return params
-	}
-
-	getQueryString(params) {
-		return Object.keys(params).map(key =>
-			`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`
-		).join('&')
 	}
 }

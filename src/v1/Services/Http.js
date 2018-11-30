@@ -22,8 +22,8 @@ const getError = (e) => {
 	return new ExternalZenatonError(e.response.data.error)
 }
 
-const get = (url) => {
-	return axios.get(url)
+const get = (url, options) => {
+	return axios.get(url, options)
 		.then( result => {
 			return result.data
 		})
@@ -32,8 +32,8 @@ const get = (url) => {
 		})
 }
 
-const post = (url, body) => {
-	return axios.post(url, body)
+const post = (url, body, options) => {
+	return axios.post(url, body, options)
 		.then( result => {
 			return result.data
 		})
@@ -42,8 +42,8 @@ const post = (url, body) => {
 		})
 }
 
-const put = (url, body) => {
-	return axios.put(url, body)
+const put = (url, body, options) => {
+	return axios.put(url, body, options)
 		.then( result => {
 			return result.data
 		})
