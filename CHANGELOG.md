@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Added `lint-staged` to auto-apply linter and formatter as pre-commit hook.
 - Added `prettier` for code auto formatting.
 - Added CircleCI configuration.
+- Allow dispatch of single tasks.
 
 ### Changed
 

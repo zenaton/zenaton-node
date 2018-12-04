@@ -55,13 +55,18 @@ module.exports = class Engine {
     // local execution
     if (this.processor === null || jobs.length === 0) {
       const outputs = [];
-      // dispatch works to Zenaton (only workflows by now)
+      // dispatch works to Zenaton
       jobs.forEach((job) => {
         if (this.isWorkflow(job)) {
-          outputs.push(this.client.startWorkflow(job));
+          const startWorkflowPromise = this.client
+            .startWorkflow(job)
+            .then(() => undefined);
+          outputs.push(startWorkflowPromise);
         } else if (this.isTask(job)) {
-          // outputs.push(this.client.startTask(job))
-          outputs.push(job._promiseHandle());
+          const startTaskPromise = this.client
+            .startTask(job)
+            .then(() => undefined);
+          outputs.push(startTaskPromise);
         } else {
           throw new InvalidArgumentError();
         }

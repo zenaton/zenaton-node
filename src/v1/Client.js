@@ -1,6 +1,5 @@
 /* global process */
-const ExternalZenatonError = require("../Errors/ExternalZenatonError");
-const InvalidArgumentError = require("../Errors/InvalidArgumentError");
+const { ExternalZenatonError, InvalidArgumentError } = require("../Errors");
 const workflowManager = require("./Workflows/WorkflowManager");
 const http = require("./Services/Http");
 const serializer = require("./Services/Serializer");
@@ -22,6 +21,7 @@ const ATTR_CANONICAL = "canonical_name";
 const ATTR_DATA = "data";
 const ATTR_PROG = "programming_language";
 const ATTR_MODE = "mode";
+const ATTR_MAX_PROCESSING_TIME = "maxProcessingTime";
 
 const PROG = "Javascript";
 
@@ -123,6 +123,28 @@ module.exports = class Client {
     const path = `/${ressources}`;
 
     return `${host}${path}`;
+  }
+
+  /**
+   * Start a task instance
+   */
+  startTask(task) {
+    const url = this.getTaskWorkerUrl();
+
+    // start task
+    const body = {
+      [ATTR_PROG]: PROG,
+      [ATTR_NAME]: task.name,
+      [ATTR_DATA]: serializer.encode(task.data),
+      [ATTR_MAX_PROCESSING_TIME]:
+        typeof task.getMaxProcessingTime === "function"
+          ? task.getMaxProcessingTime()
+          : null,
+    };
+
+    const params = this.getAppEnv();
+
+    return http.post(url, body, { params });
   }
 
   /**
@@ -254,6 +276,10 @@ module.exports = class Client {
 
   getInstanceWorkerUrl() {
     return this.getWorkerUrlNew("instances");
+  }
+
+  getTaskWorkerUrl() {
+    return this.getWorkerUrlNew("tasks");
   }
 
   getSendEventURL() {

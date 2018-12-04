@@ -6,6 +6,8 @@ process.env.ZENATON_LIBRARY_PATH = require("path").resolve(
   __filename,
 );
 
+const { version: appVersion } = require("../package.json");
+
 const Errors = require("./Errors");
 
 // v1 sources
@@ -35,6 +37,9 @@ if (!Array.prototype.execute) {
 }
 
 module.exports = {
+  infos: {
+    appVersion,
+  },
   Client,
   Engine,
   serializer,
