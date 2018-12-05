@@ -1,0 +1,7 @@
+{
+  "concurrent": false,
+  "linters": {
+    "*.{js,json,css,md}": ["prettier --write", "git add"],
+    "*.js": ["eslint --color --fix", "git add"]
+  }
+}

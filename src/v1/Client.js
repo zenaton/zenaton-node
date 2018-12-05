@@ -1,265 +1,277 @@
 /* global process */
-const ExternalZenatonError = require('../Errors/ExternalZenatonError')
-const InvalidArgumentError = require('../Errors/InvalidArgumentError')
-const workflowManager = require('./Workflows/WorkflowManager')
-const http = require('./Services/Http')
-const serializer = require('./Services/Serializer')
+const ExternalZenatonError = require("../Errors/ExternalZenatonError");
+const InvalidArgumentError = require("../Errors/InvalidArgumentError");
+const workflowManager = require("./Workflows/WorkflowManager");
+const http = require("./Services/Http");
+const serializer = require("./Services/Serializer");
 
-const ZENATON_API_URL = 'https://zenaton.com/api/v1'
-const ZENATON_WORKER_URL = 'http://localhost'
-const DEFAULT_WORKER_PORT = 4001
-const WORKER_API_VERSION = 'v_newton'
+const ZENATON_API_URL = "https://zenaton.com/api/v1";
+const ZENATON_WORKER_URL = "http://localhost";
+const DEFAULT_WORKER_PORT = 4001;
+const WORKER_API_VERSION = "v_newton";
 
-const MAX_ID_SIZE = 256
+const MAX_ID_SIZE = 256;
 
-const APP_ENV = 'app_env'
-const APP_ID = 'app_id'
-const API_TOKEN = 'api_token'
+const APP_ENV = "app_env";
+const APP_ID = "app_id";
+const API_TOKEN = "api_token";
 
-const ATTR_ID = 'custom_id'
-const ATTR_NAME = 'name'
-const ATTR_CANONICAL = 'canonical_name'
-const ATTR_DATA = 'data'
-const ATTR_PROG = 'programming_language'
-const ATTR_MODE = 'mode'
+const ATTR_ID = "custom_id";
+const ATTR_NAME = "name";
+const ATTR_CANONICAL = "canonical_name";
+const ATTR_DATA = "data";
+const ATTR_PROG = "programming_language";
+const ATTR_MODE = "mode";
 
-const PROG = 'Javascript'
+const PROG = "Javascript";
 
-const EVENT_INPUT = 'event_input'
-const EVENT_NAME = 'event_name'
+const EVENT_INPUT = "event_input";
+const EVENT_NAME = "event_name";
 
-const WORKFLOW_KILL = 'kill'
-const WORKFLOW_PAUSE = 'pause'
-const WORKFLOW_RUN = 'run'
+const WORKFLOW_KILL = "kill";
+const WORKFLOW_PAUSE = "pause";
+const WORKFLOW_RUN = "run";
 
-let instance
+let instance;
 
 module.exports = class Client {
+  constructor(worker = false) {
+    if (instance) {
+      if (
+        !worker &&
+        (!instance.appId || !instance.apiToken || !instance.appEnv)
+      ) {
+        console.log(
+          "Please initialize your Zenaton client with your credentials",
+        );
+        // throw new ExternalZenatonError('Please initialize your Zenaton client with your credentials')
+      }
+      return instance;
+    }
+    instance = this;
+  }
 
-	constructor(worker = false) {
-		if (instance) {
-			if (! worker && (! instance.appId || ! instance.apiToken || ! instance.appEnv)) {
-				console.log('Please initialize your Zenaton client with your credentials')
-				// throw new ExternalZenatonError('Please initialize your Zenaton client with your credentials')
-			}
-			return instance
-		}
-		instance = this
-	}
+  static init(appId, apiToken, appEnv) {
+    // store credentials in singleton
+    new Client()
+      .setAppId(appId)
+      .setApiToken(apiToken)
+      .setAppEnv(appEnv);
+  }
 
-	static init(appId, apiToken, appEnv) {
-		// store credentials in singleton
-		new Client()
-			.setAppId(appId)
-			.setApiToken(apiToken)
-			.setAppEnv(appEnv)
-	}
+  setAppId(appId) {
+    this.appId = appId;
 
-	setAppId(appId) {
-		this.appId = appId
+    return this;
+  }
 
-		return this
-	}
+  setApiToken(apiToken) {
+    this.apiToken = apiToken;
 
-	setApiToken(apiToken) {
-		this.apiToken = apiToken
+    return this;
+  }
 
-		return this
-	}
+  setAppEnv(appEnv) {
+    this.appEnv = appEnv;
 
-	setAppEnv(appEnv) {
-		this.appEnv = appEnv
+    return this;
+  }
 
-		return this
-	}
+  /**
+   * Returns the worker url
+   * This is for legacy purposes
+   * @param {String} ressources REST Resources
+   * @param {String} params Query string
+   * @returns {String} Url
+   */
+  getWorkerUrl(ressources = "", params = "") {
+    const paramsAsObject = params.split("&").reduce((acc, param) => {
+      const [key, value] = param.split("=");
+      acc[key] = value;
+      return acc;
+    }, {});
 
-	/**
-	 * Returns the worker url
-	 * This is for legacy purposes
-	 * @param {String} ressources REST Resources
-	 * @param {String} params Query string
-	 * @returns {String} Url
-	 */
-	getWorkerUrl(ressources = '', params = '') {
-		const paramsAsObject = params.split('&').reduce(
-			(acc, param) => {
-				const [key, value] = param.split('=')
-				acc[key] = value
-				return acc
-			},
-			{}
-		)
+    const fullParams = Object.assign(paramsAsObject, this.getAppEnv());
 
-		const fullParams = Object.assign(
-			paramsAsObject,
-			this.getAppEnv()
-		)
+    const queryString = Object.keys(fullParams)
+      .map(
+        (key) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(fullParams[key])}`,
+      )
+      .join("&");
 
-		const queryString = Object.keys(fullParams).map((key) =>
-			`${encodeURIComponent(key)}=${encodeURIComponent(fullParams[key])}`,
-		).join("&")
+    const url = this.getWorkerUrlNew(ressources);
+    return `${url}?${queryString}`;
+  }
 
-		const url = this.getWorkerUrlNew(ressources)
-		return `${url}?${queryString}`
-	}
+  getWorkerUrlNew(ressources = "") {
+    const host = process.env.ZENATON_WORKER_URL
+      ? process.env.ZENATON_WORKER_URL
+      : ZENATON_WORKER_URL;
+    const port = process.env.ZENATON_WORKER_PORT
+      ? process.env.ZENATON_WORKER_PORT
+      : DEFAULT_WORKER_PORT;
+    const path = `/api/${WORKER_API_VERSION}/${ressources}`;
 
-	getWorkerUrlNew(ressources = '') {
-		const host = process.env.ZENATON_WORKER_URL ? process.env.ZENATON_WORKER_URL : ZENATON_WORKER_URL
-		const port = process.env.ZENATON_WORKER_PORT ? process.env.ZENATON_WORKER_PORT : DEFAULT_WORKER_PORT
-		const path = `/api/${WORKER_API_VERSION}/${ressources}`
-		
-		return `${host}:${port}${path}`
-	}
+    return `${host}:${port}${path}`;
+  }
 
-	getWebsiteUrl(ressources = '') {
-		const host = process.env.ZENATON_API_URL ? process.env.ZENATON_API_URL : ZENATON_API_URL
-		const path = `/${ressources}`
-		
-		return `${host}${path}`
-	}
+  getWebsiteUrl(ressources = "") {
+    const host = process.env.ZENATON_API_URL
+      ? process.env.ZENATON_API_URL
+      : ZENATON_API_URL;
+    const path = `/${ressources}`;
 
-	/**
-     * Start a workflow instance
-     */
-	startWorkflow(flow) {
-		// custom id management
-		let customId = null
-		if ('function' === typeof flow.id) {
-			// customId can be a value or a function
-			customId = flow.id()
-			// customId should be a string or a number
-			if (('string' !== typeof customId) && ('number' !== typeof customId)) {
-				throw new InvalidArgumentError('Provided id must be a string or a number - current type: ' + (typeof customId))
-			}
-			// at the end, it's a string
-			customId = customId.toString()
-			// should be not more than 256 bytes;
-			if (customId.length >= MAX_ID_SIZE) {
-				throw new ExternalZenatonError('Provided id must not exceed ' + MAX_ID_SIZE + ' bytes')
-			}
-		}
+    return `${host}${path}`;
+  }
 
-		const url = this.getInstanceWorkerUrl()
+  /**
+   * Start a workflow instance
+   */
+  startWorkflow(flow) {
+    // custom id management
+    let customId = null;
+    if (typeof flow.id === "function") {
+      // customId can be a value or a function
+      customId = flow.id();
+      // customId should be a string or a number
+      if (typeof customId !== "string" && typeof customId !== "number") {
+        throw new InvalidArgumentError(
+          `Provided id must be a string or a number - current type: ${typeof customId}`,
+        );
+      }
+      // at the end, it's a string
+      customId = customId.toString();
+      // should be not more than 256 bytes;
+      if (customId.length >= MAX_ID_SIZE) {
+        throw new ExternalZenatonError(
+          `Provided id must not exceed ${MAX_ID_SIZE} bytes`,
+        );
+      }
+    }
 
-		// start workflow
-		const body = {
-			[ATTR_PROG]: PROG,
-			[ATTR_CANONICAL]: flow._getCanonical(),
-			[ATTR_NAME]: flow.name,
-			[ATTR_DATA]: serializer.encode(flow.data),
-			[ATTR_ID]: customId
-		}
+    const url = this.getInstanceWorkerUrl();
 
-		const params = this.getAppEnv();
+    // start workflow
+    const body = {
+      [ATTR_PROG]: PROG,
+      [ATTR_CANONICAL]: flow._getCanonical(),
+      [ATTR_NAME]: flow.name,
+      [ATTR_DATA]: serializer.encode(flow.data),
+      [ATTR_ID]: customId,
+    };
 
-		return http.post(url, body, { params })
-	}
+    const params = this.getAppEnv();
 
-	/**
-     * Kill a workflow instance
-     */
-	killWorkflow(workflowName, customId) {
-		return this.updateInstance(workflowName, customId, WORKFLOW_KILL)
-	}
+    return http.post(url, body, { params });
+  }
 
-	/**
-     * Pause a workflow instance
-     */
-	pauseWorkflow(workflowName, customId) {
-		return this.updateInstance(workflowName, customId, WORKFLOW_PAUSE)
-	}
+  /**
+   * Kill a workflow instance
+   */
+  killWorkflow(workflowName, customId) {
+    return this.updateInstance(workflowName, customId, WORKFLOW_KILL);
+  }
 
-	/**
-     * Resume a workflow instance
-     */
-	resumeWorkflow(workflowName, customId) {
-		return this.updateInstance(workflowName, customId, WORKFLOW_RUN)
-	}
+  /**
+   * Pause a workflow instance
+   */
+  pauseWorkflow(workflowName, customId) {
+    return this.updateInstance(workflowName, customId, WORKFLOW_PAUSE);
+  }
 
-	/**
-     * Find a workflow instance
-     */
-	findWorkflow(workflowName, customId) {
-		const url = this.getInstanceWebsiteUrl()
-		
-		const params = Object.assign(
-			{
-				[ATTR_ID]: customId,
-				[ATTR_NAME]: workflowName,
-				[ATTR_PROG]: PROG,
-				[API_TOKEN]: this.apiToken
-			},
-			this.getAppEnv()
-		)
+  /**
+   * Resume a workflow instance
+   */
+  resumeWorkflow(workflowName, customId) {
+    return this.updateInstance(workflowName, customId, WORKFLOW_RUN);
+  }
 
-		return http.get(url, { params })
-			.then( body => {
-				return workflowManager.getWorkflow(workflowName, body.data.properties)
-			})
-	}
+  /**
+   * Find a workflow instance
+   */
+  findWorkflow(workflowName, customId) {
+    const url = this.getInstanceWebsiteUrl();
 
-	/**
-     * Send an event to a workflow instance
-     */
-	sendEvent(workflowName, customId, eventName, eventData) {
-		const url = this.getSendEventURL()
+    const params = Object.assign(
+      {
+        [ATTR_ID]: customId,
+        [ATTR_NAME]: workflowName,
+        [ATTR_PROG]: PROG,
+        [API_TOKEN]: this.apiToken,
+      },
+      this.getAppEnv(),
+    );
 
-		const body = {
-			[ATTR_PROG]: PROG,
-			[ATTR_NAME]: workflowName,
-			[ATTR_ID]: customId,
-			[EVENT_NAME]: eventName,
-			[EVENT_INPUT]: serializer.encode(eventData)
-		}
+    return http
+      .get(url, { params })
+      .then((body) =>
+        workflowManager.getWorkflow(workflowName, body.data.properties),
+      );
+  }
 
-		const params = this.getAppEnv();
+  /**
+   * Send an event to a workflow instance
+   */
+  sendEvent(workflowName, customId, eventName, eventData) {
+    const url = this.getSendEventURL();
 
-		return http.post(url, body, { params })
-	}
+    const body = {
+      [ATTR_PROG]: PROG,
+      [ATTR_NAME]: workflowName,
+      [ATTR_ID]: customId,
+      [EVENT_NAME]: eventName,
+      [EVENT_INPUT]: serializer.encode(eventData),
+    };
 
-	updateInstance(workflowName, customId, mode) {
-		const url = this.getInstanceWorkerUrl()
+    const params = this.getAppEnv();
 
-		const body = {
-			[ATTR_PROG]: PROG,
-			[ATTR_NAME]: workflowName,
-			[ATTR_MODE]: mode
-		}
-		
-		const params = Object.assign(
-			{
-				[ATTR_ID]: customId,
-			},
-			this.getAppEnv()
-		)
+    return http.post(url, body, { params });
+  }
 
-		return http.put(url, body, { params })
-	}
+  updateInstance(workflowName, customId, mode) {
+    const url = this.getInstanceWorkerUrl();
 
-	getInstanceWebsiteUrl() {
-		return this.getWebsiteUrl('instances')
-	}
+    const body = {
+      [ATTR_PROG]: PROG,
+      [ATTR_NAME]: workflowName,
+      [ATTR_MODE]: mode,
+    };
 
-	getInstanceWorkerUrl() {
-		return this.getWorkerUrlNew('instances')
-	}
+    const params = Object.assign(
+      {
+        [ATTR_ID]: customId,
+      },
+      this.getAppEnv(),
+    );
 
-	getSendEventURL() {
-		return this.getWorkerUrlNew('events')
-	}
+    return http.put(url, body, { params });
+  }
 
-	getAppEnv() {
-		// when called from worker, APP_ENV and APP_ID is not defined
-		const params = {}
+  getInstanceWebsiteUrl() {
+    return this.getWebsiteUrl("instances");
+  }
 
-		if (this.appEnv) {
-			params[APP_ENV] = this.appEnv
-		}
+  getInstanceWorkerUrl() {
+    return this.getWorkerUrlNew("instances");
+  }
 
-		if (this.appId) {
-			params[APP_ID] = this.appId
-		}
+  getSendEventURL() {
+    return this.getWorkerUrlNew("events");
+  }
 
-		return params
-	}
-}
+  getAppEnv() {
+    // when called from worker, APP_ENV and APP_ID is not defined
+    const params = {};
+
+    if (this.appEnv) {
+      params[APP_ENV] = this.appEnv;
+    }
+
+    if (this.appId) {
+      params[APP_ID] = this.appId;
+    }
+
+    return params;
+  }
+};

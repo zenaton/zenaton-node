@@ -1,3 +1,3 @@
-const ZenatonError = require('./ZenatonError')
+const ZenatonError = require("./ZenatonError");
 
-module.exports = class extends ZenatonError {}
+module.exports = class extends ZenatonError {};

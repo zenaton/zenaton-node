@@ -1,3 +1,3 @@
-const ExternalZenatonError = require('./ExternalZenatonError')
+const ExternalZenatonError = require("./ExternalZenatonError");
 
-module.exports = class extends ExternalZenatonError {}
+module.exports = class extends ExternalZenatonError {};
