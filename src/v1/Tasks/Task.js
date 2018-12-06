@@ -49,8 +49,7 @@ module.exports = function taskFunc(name, task) {
 
       // set instance data
       if (_useInit === false || isFn || undefined === task.init) {
-        // eslint-disable-next-line prefer-destructuring
-        this.data = data[0];
+        this.data = data.length > 0 ? data[0] : {};
       } else {
         this.data = {};
         task.init.bind(this.data)(...data);
