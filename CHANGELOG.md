@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Updated `eslint` configuration to use `eslint-config-airbnb-base` rules.
 - Updated npm packages.
+- Update Zenaton engine URL to point to the new subdomain.
 
 ### Fixed
 
