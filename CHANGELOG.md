@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## 0.5.0 - 2019-03-01
+
+### Added
+
 - Added this changelog.
 - Added `.tool-versions` file for `asdf` with NodeJS configuration.
 - Added `lint-staged` to auto-apply linter and formatter as pre-commit hook.
@@ -40,5 +54,3 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Removed some dead code in `/src/v1/Services/Serializer.js`.
 - Removed obsolete file `/src/v1/Services/Properties.js`.
-
-### Security
