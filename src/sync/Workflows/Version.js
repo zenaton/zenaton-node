@@ -16,7 +16,7 @@ module.exports = function versionFunc(name, implementation) {
     versions = implementation;
   } else if (typeof implementation === "object") {
     if (typeof implementation.versions === "function") {
-      versions = versions.versions();
+      versions = implementation.versions();
       if (!Array.isArray(versions)) {
         throw new InvalidArgumentError(
           '"versions" method should return an array',

@@ -1,16 +1,24 @@
+**:warning: The NodeJS Zenaton library has undergone a major overhaul with version 0.5.0. If you are running a previous version, you need to update your Zenaton agent and refer to the [breaking changes](BREAKINGCHANGES.md) page to learn how to properly update your workflows.**
+
 # Zenaton library for Node
 
 This Zenaton library for Node lets you code and launch workflows using Zenaton platform. You can sign up for an account at [https://zenaton.com](https://zenaton.com).
 
+- [What's new](WHATSNEW.md).
+
+- [Changelog](CHANGELOG.md).
+
+- [Breaking changes](BREAKINGCHANGES.md).
+
 ## Requirements
 
-Node 5 and later.
+Node 6 and later.
 
 ## Installation
 
 Install the package with:
 
-```
+```bash
 npm install zenaton --save
 ```
 
@@ -20,24 +28,25 @@ You should have a `.env` file with `ZENATON_APP_ID`, `ZENATON_API_TOKEN` and `ZE
 
 The package needs to be configured with them:
 
-```
+```javascript
 require("dotenv").config();
+const { Client } = require("zenaton");
 
-var app_id = process.env.ZENATON_APP_ID;
-var api_token = process.env.ZENATON_API_TOKEN;
-var app_env = process.env.ZENATON_APP_ENV;
+const app_id = process.env.ZENATON_APP_ID;
+const api_token = process.env.ZENATON_API_TOKEN;
+const app_env = process.env.ZENATON_APP_ENV;
 
-require("zenaton").Client.init(app_id, api_token, app_env);
+Client.init(app_id, api_token, app_env);
 ```
 
 ## Writing Workflows and Tasks
 
 Writing a workflow is as simple as:
 
-```
-var { Workflow } = require("zenaton");
+```javascript
+const { Workflow } = require("zenaton");
 
-module.exports = Workflow("MyWorkflow", function() {
+module.exports = Workflow("MyWorkflow", async function() {
   // workflow implementation
 });
 ```
@@ -47,11 +56,11 @@ see [documentation](https://zenaton.com/app/documentation#workflow-basics-implem
 
 Writing a task is as simple as:
 
-```
-var { Task } = require('zenaton')
+```javascript
+const { Task } = require("zenaton");
 
-module.exports = Task("SimpleTask", function(done) {
-  // task implementation ending by done(error, result)
+module.exports = Task("SimpleTask", async function() {
+  // task implementation returning a promise
 });
 ```
 
@@ -59,7 +68,7 @@ module.exports = Task("SimpleTask", function(done) {
 
 Once your Zenaton client is initialised, you can start a workflow with
 
-```
+```javascript
 new MyWorkflow().dispatch();
 ```
 
@@ -67,13 +76,13 @@ new MyWorkflow().dispatch();
 
 Your workflow's tasks will be executed on your worker servers. Please install a Zenaton worker on it:
 
-```
+```bash
 curl https://install.zenaton.com | sh
 ```
 
 that you configure with
 
-```
+```bash
 zenaton listen --env=.env --boot=boot.js
 ```
 

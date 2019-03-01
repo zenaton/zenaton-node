@@ -9,7 +9,8 @@
     "lint": "eslint --color .",
     "format": "prettier --write '**/*.{js,json,css,md}'",
     "precommit": "lint-staged",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "test:watch": "mocha --watch"
   },
   "repository": {
     "type": "git",
@@ -21,28 +22,35 @@
     "url": "https://github.com/zenaton/zenaton-node/issues"
   },
   "homepage": "https://zenaton.com",
-  "engine": {
-    "node": "8.12.0"
+  "engines": {
+    "node": ">=8.12.0"
   },
   "dependencies": {
+    "@babel/runtime": "7.3.1",
     "axios": "0.18.0",
-    "dotenv": "6.1.0",
+    "dotenv": "6.2.0",
     "moment-timezone": "0.5.23"
   },
   "devDependencies": {
-    "@babel/cli": "7.1.5",
-    "@babel/core": "7.1.6",
-    "@babel/preset-env": "7.1.6",
-    "babel-plugin-transform-builtin-extend": "1.1.2",
-    "babel-preset-env": "1.6.1",
-    "eslint": "5.9.0",
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.2.2",
+    "@babel/plugin-transform-runtime": "7.2.0",
+    "@babel/preset-env": "7.3.1",
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
+    "dirty-chai": "2.0.1",
+    "eslint": "5.13.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-config-prettier": "3.3.0",
-    "eslint-plugin-import": "2.14.0",
-    "eslint-plugin-node": "8.0.0",
-    "eslint-plugin-prettier": "3.0.0",
-    "husky": "1.2.0",
-    "lint-staged": "8.1.0",
-    "prettier": "1.15.2"
+    "eslint-config-prettier": "3.6.0",
+    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-node": "8.0.1",
+    "eslint-plugin-prettier": "3.0.1",
+    "husky": "1.3.1",
+    "lint-staged": "8.1.3",
+    "mocha": "5.2.0",
+    "prettier": "1.16.4",
+    "proxyquire": "2.1.0",
+    "sinon": "7.2.3",
+    "sinon-chai": "3.3.0"
   }
 }

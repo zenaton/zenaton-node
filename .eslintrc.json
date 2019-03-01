@@ -20,10 +20,11 @@
     "class-methods-use-this": ["off"],
     "no-console": ["off"],
     "no-underscore-dangle": ["off"],
+    "no-use-before-define": ["off"],
     "node/no-unsupported-features/es-syntax": [
       "error",
       {
-        "version": "8.12.0"
+        "version": "10.15.2"
       }
     ]
   }
