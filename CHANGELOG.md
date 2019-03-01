@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-## Unreleased
+## 0.5.0 - 2019-03-01
 
 ### Added
 
@@ -40,5 +40,3 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Removed some dead code in `/src/v1/Services/Serializer.js`.
 - Removed obsolete file `/src/v1/Services/Properties.js`.
-
-### Security
