@@ -23,7 +23,7 @@
   },
   "homepage": "https://zenaton.com",
   "engines": {
-    "node": ">=8.12.0"
+    "node": ">=8.0.0"
   },
   "dependencies": {
     "@babel/runtime": "7.3.1",
