@@ -12,7 +12,7 @@ This Zenaton library for Node lets you code and launch workflows using Zenaton p
 
 ## Requirements
 
-Node 6 and later.
+Node 8 and later.
 
 ## Installation
 
