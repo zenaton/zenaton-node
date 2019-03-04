@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Changed
 
+- Update breaking changes to precise how to migrate tasks for old synchronous workflows.
+
 ### Deprecated
 
 ### Removed

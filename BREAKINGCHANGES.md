@@ -123,7 +123,19 @@ module.exports = Workflow("MyWorkflow", function() {
 
 ### Asynchronous tasks + 'done' callback
 
-Tasks `handle` method must now be asynchronous. Besides, usage of the `done` callback to mark tasks termination has been deprecated. You'll get warning messages in your `zenaton.err` file if you keep using it. The easiest way to fix both those requirements is to mark the `handle` method with the `async` keyword.
+Tasks `handle` method should now be asynchronous. Besides, usage of the `done` callback to mark tasks termination has been deprecated. You'll get warning messages in your `zenaton.err` file if you keep using it.
+
+> :warning: **If you are migrating currently running workflows you need to keep using 'done' in the tasks they run.**
+>
+> You have two possibilities:
+>
+> - Keep using the `done` callback until all of your old workflows have come to completion. At this point, you can rewrite your tasks to have them return a promise. In the meantime you will get a deprecation warning every time a new asynchronous wokflow runs a task.
+>
+> - Version your tasks as well and have the new workflows call them instead of the old ones. Create new ones that do the exact same thing than the old ones but return a promise. There is no versioning system for tasks in Zenaton, so you'll have to give them a different name, otherwise you'll get '_"YourTaskName" task can not be defined twice_' errors.
+>
+> We recommend the first solution if your currently running workflows won't last more than a couple of weeks.
+
+The easiest way to fix both those requirements is to mark the `handle` method with the `async` keyword.
 
 ```javascript
 const { Task } = require("zenaton");
