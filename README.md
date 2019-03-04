@@ -90,4 +90,4 @@ where `.env` is the env file containing your credentials, and `boot.js` is a fil
 
 ## Documentation
 
-Please see https://zenaton.com/documentation for complete documentation.
+Please see the [complete documentation](https://zenaton.com/documentation?lang=node).
