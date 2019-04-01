@@ -4,6 +4,7 @@ const http = require("./Services/Http");
 const serializer = require("./Services/Serializer");
 const { version } = require("../infos");
 const { init, credentials } = require("../client");
+const engine = require("./Engine");
 
 const ZENATON_API_URL = "https://api.zenaton.com/v1";
 const ZENATON_WORKER_URL = "http://localhost";
@@ -295,5 +296,11 @@ module.exports = class Client {
     }
 
     return params;
+  }
+
+  getInstanceId() {
+    const processor = new Engine().processor;
+
+    return processor && (typeof processor.microserver.getInstanceId === 'function') ? processor.microserver.getInstanceId() : undefined;
   }
 };
