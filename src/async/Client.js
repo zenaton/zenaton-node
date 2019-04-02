@@ -4,7 +4,7 @@ const http = require("./Services/Http");
 const serializer = require("./Services/Serializer");
 const { version } = require("../infos");
 const { init, credentials } = require("../client");
-const engine = require("./Engine");
+const engine = require("./Engine/Engine");
 
 const ZENATON_API_URL = "https://api.zenaton.com/v1";
 const ZENATON_WORKER_URL = "http://localhost";
