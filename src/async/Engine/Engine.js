@@ -19,6 +19,13 @@ module.exports = class Engine {
     this.processor = null;
   }
 
+  getInstanceId() {
+    return this.processor &&
+      typeof this.processor.microserver.getInstanceId === "function"
+      ? this.processor.microserver.getInstanceId()
+      : undefined;
+  }
+
   setProcessor(processor) {
     this.processor = processor;
   }
