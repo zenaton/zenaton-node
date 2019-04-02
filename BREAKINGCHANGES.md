@@ -86,7 +86,7 @@ const { Workflow } = require("zenaton");
 module.exports = Workflow(
   "MyWorkflow",
   /* HERE */ async function() {
-    const result = /* HERE */ await new TaskA.execute();
+    const result = /* HERE */ await new TaskA().execute();
 
     /* HERE */ await new Wait().seconds(5).execute();
 
@@ -106,7 +106,7 @@ If you're using a version of NodeJS prior to 7.10, and don't have access to the 
 const { Workflow } = require("zenaton");
 
 module.exports = Workflow("MyWorkflow", function() {
-  return new TaskA.execute()
+  return new TaskA().execute()
     .then((result) => {
       return new Wait().seconds(5).execute();
     })
