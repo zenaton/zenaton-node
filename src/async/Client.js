@@ -299,7 +299,7 @@ module.exports = class Client {
   }
 
   getInstanceId() {
-    const processor = new Engine().processor;
+    const processor = new engine().processor;
 
     return processor && (typeof processor.microserver.getInstanceId === 'function') ? processor.microserver.getInstanceId() : undefined;
   }
