@@ -127,4 +127,32 @@ describe("Task builder", () => {
       result,
     );
   });
+
+  it("should use only first argument to set workflow's data", () => {
+    // Arrange
+    const taskName = "TaskA";
+    const task = { handle: () => {} };
+
+    // Act
+    const TaskClass = Task(taskName, task);
+    const instance = new TaskClass(1, 2, 3);
+
+    // Assert
+    expect(instance.data).to.eql(1);
+  });
+
+  it("should use an empty object as 'data' if first argument is nil", () => {
+    // Arrange
+    const taskName = "TaskA";
+    const task = { handle: () => {} };
+
+    // Act
+    const TaskClass = Task(taskName, task);
+    const instance = new TaskClass(null);
+
+    // Assert
+    expect(instance.data)
+      .to.be.an("object")
+      .and.to.be.empty();
+  });
 });
