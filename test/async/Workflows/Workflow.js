@@ -118,4 +118,32 @@ describe("Workflow builder", () => {
       result,
     );
   });
+
+  it("should use only first argument to set workflow's data", () => {
+    // Arrange
+    const workflowName = "TestWorkflow";
+    const workflow = { handle: () => {} };
+
+    // Act
+    const WorkflowClass = Workflow(workflowName, workflow);
+    const instance = new WorkflowClass(1, 2, 3);
+
+    // Assert
+    expect(instance.data).to.eql(1);
+  });
+
+  it("should use an empty object as 'data' if first argument is nil", () => {
+    // Arrange
+    const workflowName = "TestWorkflow";
+    const workflow = { handle: () => {} };
+
+    // Act
+    const WorkflowClass = Workflow(workflowName, workflow);
+    const instance = new WorkflowClass(null);
+
+    // Assert
+    expect(instance.data)
+      .to.be.an("object")
+      .and.to.be.empty();
+  });
 });

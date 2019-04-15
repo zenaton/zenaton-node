@@ -47,7 +47,8 @@ module.exports = function workflowFunc(name, flow) {
 
       // set instance data
       if (_useInit === false || isFn || undefined === flow.init) {
-        this.data = data.length > 0 ? data[0] : {};
+        const firstArgData = data.length ? data[0] : null;
+        this.data = firstArgData || {};
       } else {
         this.data = {};
         flow.init.bind(this.data)(...data);

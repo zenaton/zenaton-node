@@ -49,7 +49,8 @@ module.exports = function taskFunc(name, task) {
 
       // set instance data
       if (_useInit === false || isFn || undefined === task.init) {
-        this.data = data.length > 0 ? data[0] : {};
+        const firstArgData = data.length ? data[0] : null;
+        this.data = firstArgData || {};
       } else {
         this.data = {};
         task.init.bind(this.data)(...data);

@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 
+- Fixed workflow/task init logic so a 'nil' value result in an empty object for property 'data'.
+
 ### Security
 
 ## 0.5.1 - 2019-03-04
