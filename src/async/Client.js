@@ -125,8 +125,8 @@ module.exports = class Client {
       [ATTR_NAME]: task.name,
       [ATTR_DATA]: serializer.encode(task.data),
       [ATTR_MAX_PROCESSING_TIME]:
-        typeof task.getMaxProcessingTime === "function"
-          ? task.getMaxProcessingTime()
+        typeof task.maxProcessingTime === "function"
+          ? task.maxProcessingTime()
           : null,
     };
 
