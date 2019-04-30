@@ -91,7 +91,7 @@ describe("Client", () => {
     const task = {
       name: "TaskName",
       data: "WHATEVER",
-      getMaxProcessingTime: () => 1000,
+      maxProcessingTime: () => 1000,
     };
 
     // Act

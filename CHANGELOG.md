@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 
+- Fixed 'maxProcessingTime' parameter for single tasks.
+
 ### Security
 
 ## 0.5.2 - 2019-04-15
