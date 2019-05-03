@@ -18,6 +18,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Security
 
+## 0.5.4 - 2019-05-03
+
+### Added
+
+- Allowed to send events to workflows by instance id.
+
 ## 0.5.3 - 2019-04-30
 
 ### Fixed
