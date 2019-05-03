@@ -16,6 +16,7 @@ const APP_ENV = "app_env";
 const APP_ID = "app_id";
 const API_TOKEN = "api_token";
 
+const ATTR_INSTANCE_ID = "instance_id";
 const ATTR_ID = "custom_id";
 const ATTR_NAME = "name";
 const ATTR_CANONICAL = "canonical_name";
@@ -236,6 +237,26 @@ module.exports = class Client {
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
       [ATTR_NAME]: workflowName,
       [ATTR_ID]: customId,
+      [EVENT_NAME]: eventName,
+      [EVENT_INPUT]: serializer.encode(eventData),
+    };
+
+    const params = this.getAppEnv();
+
+    return http.post(url, body, { params });
+  }
+
+  /**
+   * * Send an event to a workflow by instance_id
+   */
+  async sendEventByInstanceId(instanceId, eventName, eventData) {
+    const url = this.getSendEventURL();
+
+    const body = {
+      [ATTR_PROG]: PROG,
+      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
+      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
+      [ATTR_INSTANCE_ID]: instanceId,
       [EVENT_NAME]: eventName,
       [EVENT_INPUT]: serializer.encode(eventData),
     };
