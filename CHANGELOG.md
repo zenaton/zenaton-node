@@ -4,19 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-## Unreleased
+## 0.5.4 - 2019-05-03
 
 ### Added
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
+- Allowed to send events to workflows by instance id.
 
 ## 0.5.3 - 2019-04-30
 
