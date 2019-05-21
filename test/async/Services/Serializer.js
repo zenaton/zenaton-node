@@ -45,10 +45,10 @@ describe("Serializer", () => {
     describe("primitives", () => {
       describe("nils", () => {
         it("should encode 'undefined' as 'null'", () => {
-          // Act
+          // Arrange
           const data = undefined;
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -58,10 +58,10 @@ describe("Serializer", () => {
         });
 
         it("should encode 'null' as 'null'", () => {
-          // Act
+          // Arrange
           const data = null;
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -73,10 +73,10 @@ describe("Serializer", () => {
 
       describe("numbers", () => {
         it("should encode a plain number", () => {
-          // Act
+          // Arrange
           const data = 42.25;
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -86,11 +86,11 @@ describe("Serializer", () => {
         });
 
         it("should encode an object number", () => {
-          // Act
+          // Arrange
           // eslint-disable-next-line no-new-wrappers
           const data = new Number(42);
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -100,10 +100,10 @@ describe("Serializer", () => {
         });
 
         it("should encode 'Number.POSITIVE_INFINITY' as 'null'", () => {
-          // Act
+          // Arrange
           const data = Number.POSITIVE_INFINITY;
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -113,10 +113,10 @@ describe("Serializer", () => {
         });
 
         it("should encode 'Number.NEGATIVE_INFINITY' as 'null'", () => {
-          // Act
+          // Arrange
           const data = Number.NEGATIVE_INFINITY;
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -126,10 +126,10 @@ describe("Serializer", () => {
         });
 
         it("should encode 'NaN' as 'null'", () => {
-          // Act
+          // Arrange
           const data = NaN;
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -141,10 +141,10 @@ describe("Serializer", () => {
 
       describe("strings", () => {
         it("should encode a plain string", () => {
-          // Act
+          // Arrange
           const data = "foobar";
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -154,11 +154,11 @@ describe("Serializer", () => {
         });
 
         it("should encode an object string", () => {
-          // Act
+          // Arrange
           // eslint-disable-next-line no-new-wrappers
           const data = new String("foobar");
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -170,10 +170,10 @@ describe("Serializer", () => {
 
       describe("booleans", () => {
         it("should encode a plain boolean", () => {
-          // Act
+          // Arrange
           const data = true;
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -183,11 +183,11 @@ describe("Serializer", () => {
         });
 
         it("should encode an object boolean", () => {
-          // Act
+          // Arrange
           // eslint-disable-next-line no-new-wrappers
           const data = new Boolean("true");
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -201,10 +201,10 @@ describe("Serializer", () => {
     describe("objects", () => {
       describe("dates", () => {
         it("should encode a UTC date as ISO8601", () => {
-          // Act
+          // Arrange
           const data = new Date(Date.UTC(2019, 0, 14, 0, 0, 0));
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -222,10 +222,10 @@ describe("Serializer", () => {
         });
 
         it("should encode a date with a timezone as ISO8601, not keeping the timezone", () => {
-          // Act
+          // Arrange
           const data = new Date("2019-01-14T00:00:00.000+04:00");
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -243,10 +243,10 @@ describe("Serializer", () => {
         });
 
         it("should encode an invalid date", () => {
-          // Act
+          // Arrange
           const data = new Date("Invalid Date");
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -261,7 +261,7 @@ describe("Serializer", () => {
 
       describe("json literals", () => {
         it("should encode hashmaps", () => {
-          // Act
+          // Arrange
           const data = {
             a: undefined,
             b: null,
@@ -270,9 +270,10 @@ describe("Serializer", () => {
             e: true,
             f: new Date(Date.UTC(2019, 0, 14, 0, 0, 0)),
             g: new Date("Invalid Date"),
+            h: () => {},
           };
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -298,7 +299,7 @@ describe("Serializer", () => {
         });
 
         it("should encode arrays", () => {
-          // Act
+          // Arrange
           const data = [
             undefined,
             null,
@@ -309,7 +310,7 @@ describe("Serializer", () => {
             new Date("Invalid Date"),
           ];
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -337,10 +338,10 @@ describe("Serializer", () => {
       describe("typed arrays", () => {
         TYPED_ARRAYS_CLASS_NAMES.forEach((typedArrayClassName) => {
           it(`should encode typed array '${typedArrayClassName}'`, () => {
-            // Act
+            // Arrange
             const data = new global[typedArrayClassName]([1, 2, 3]);
 
-            // Arrange
+            // Act
             const result = encode(data);
 
             // Assert
@@ -361,10 +362,10 @@ describe("Serializer", () => {
 
       describe("sets", () => {
         it("should encode Sets", () => {
-          // Act
+          // Arrange
           const data = new Set([1, 2, 3]);
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -384,10 +385,10 @@ describe("Serializer", () => {
 
       describe("maps", () => {
         it("should encode Maps", () => {
-          // Act
+          // Arrange
           const data = new Map([["a", 1], ["b", 2], ["c", 3]]);
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -408,10 +409,10 @@ describe("Serializer", () => {
 
       describe("prototypal objects", () => {
         it("should encode prototypal objects", () => {
-          // Act
+          // Arrange
           const data = new PrototypalObject();
 
-          // Arrange
+          // Act
           const result = encode(data);
 
           // Assert
@@ -448,14 +449,14 @@ describe("Serializer", () => {
 
     describe("store behavior", () => {
       it("shoud encode deep trees with complex objects of various types", () => {
-        // Act
+        // Arrange
         const data = [
           {
             foo: new PrototypalObject(),
           },
         ];
 
-        // Arrange
+        // Act
         const result = encode(data);
 
         // Assert
@@ -491,11 +492,11 @@ describe("Serializer", () => {
       });
 
       it("should store only once duplicated object", () => {
-        // Act
+        // Arrange
         const duplicatedObject = { foo: "bar" };
         const data = [duplicatedObject, 12, false, duplicatedObject];
 
-        // Arrange
+        // Act
         const result = encode(data);
 
         // Assert
@@ -516,12 +517,12 @@ describe("Serializer", () => {
       });
 
       it("should handle recursion", () => {
-        // Act
+        // Arrange
         const recursiveArray = [42];
         recursiveArray.push(recursiveArray);
         const data = recursiveArray;
 
-        // Arrange
+        // Act
         const result = encode(data);
 
         // Assert
@@ -600,10 +601,10 @@ describe("Serializer", () => {
     describe("primitives", () => {
       describe("nils", () => {
         it("should decode 'null' as 'null'", () => {
-          // Act
+          // Arrange
           const data = { s: [], d: null };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -615,10 +616,10 @@ describe("Serializer", () => {
 
       describe("numbers", () => {
         it("should decode a plain number", () => {
-          // Act
+          // Arrange
           const data = { s: [], d: 123.456 };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -630,10 +631,10 @@ describe("Serializer", () => {
 
       describe("strings", () => {
         it("should decode a plain string", () => {
-          // Act
+          // Arrange
           const data = { s: [], d: "foobar" };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -645,10 +646,10 @@ describe("Serializer", () => {
 
       describe("booleans", () => {
         it("should decode a plain boolean", () => {
-          // Act
+          // Arrange
           const data = { s: [], d: true };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -662,7 +663,7 @@ describe("Serializer", () => {
     describe("objects", () => {
       describe("dates", () => {
         it("should decode an ISO8601 date", () => {
-          // Act
+          // Arrange
           const data = {
             s: [
               {
@@ -673,7 +674,7 @@ describe("Serializer", () => {
             o: "@zenaton#0",
           };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -683,13 +684,13 @@ describe("Serializer", () => {
         });
 
         it("should decode an invalid date", () => {
-          // Act
+          // Arrange
           const data = {
             s: [{ t: "Date", p: { isValid: false } }],
             o: "@zenaton#0",
           };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -701,7 +702,7 @@ describe("Serializer", () => {
 
       describe("json literals", () => {
         it("should decode hashmaps", () => {
-          // Act
+          // Arrange
           const data = {
             s: [
               {
@@ -712,7 +713,7 @@ describe("Serializer", () => {
             o: "@zenaton#0",
           };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -722,7 +723,7 @@ describe("Serializer", () => {
         });
 
         it("should decode arrays", () => {
-          // Act
+          // Arrange
           const data = {
             s: [
               {
@@ -732,7 +733,7 @@ describe("Serializer", () => {
             o: "@zenaton#0",
           };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -745,7 +746,7 @@ describe("Serializer", () => {
       describe("typed arrays", () => {
         TYPED_ARRAYS_CLASS_NAMES.forEach((typedArrayClassName) => {
           it(`should decode typed array '${typedArrayClassName}'`, () => {
-            // Act
+            // Arrange
             const data = {
               s: [
                 {
@@ -756,7 +757,7 @@ describe("Serializer", () => {
               o: "@zenaton#0",
             };
 
-            // Arrange
+            // Act
             const dataAsString = getDataAsString(data);
             const result = decode(dataAsString);
 
@@ -769,7 +770,7 @@ describe("Serializer", () => {
 
       describe("sets", () => {
         it("should decode Sets", () => {
-          // Act
+          // Arrange
           const data = {
             s: [
               {
@@ -780,7 +781,7 @@ describe("Serializer", () => {
             o: "@zenaton#0",
           };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -792,7 +793,7 @@ describe("Serializer", () => {
 
       describe("maps", () => {
         it("should decode Maps", () => {
-          // Act
+          // Arrange
           const data = {
             s: [
               {
@@ -804,7 +805,7 @@ describe("Serializer", () => {
             o: "@zenaton#0",
           };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -816,7 +817,7 @@ describe("Serializer", () => {
 
       describe("prototypal objects", () => {
         it("should decode prototypal objects", () => {
-          // Act
+          // Arrange
           const data = {
             s: [
               {
@@ -827,7 +828,7 @@ describe("Serializer", () => {
             o: "@zenaton#0",
           };
 
-          // Arrange
+          // Act
           const dataAsString = getDataAsString(data);
           const result = decode(dataAsString);
 
@@ -841,7 +842,7 @@ describe("Serializer", () => {
 
     describe("store behavior", () => {
       it("should decode deep trees with complex objects of various types", () => {
-        // Act
+        // Arrange
         const data = {
           o: "@zenaton#0",
           s: [
@@ -862,7 +863,7 @@ describe("Serializer", () => {
           ],
         };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = decode(dataAsString);
 
@@ -882,13 +883,13 @@ describe("Serializer", () => {
       });
 
       it("should create only one instance of a stored object used in two places", () => {
-        // Act
+        // Arrange
         const data = {
           o: "@zenaton#0",
           s: [{ v: ["@zenaton#1", "@zenaton#1"] }, { v: [12] }],
         };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = decode(dataAsString);
 
@@ -899,13 +900,13 @@ describe("Serializer", () => {
       });
 
       it("should decode recursive arrays", () => {
-        // Act
+        // Arrange
         const data = {
           o: "@zenaton#0",
           s: [{ v: [12, "foobar", null, "@zenaton#0"] }],
         };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = decode(dataAsString);
 
@@ -917,7 +918,7 @@ describe("Serializer", () => {
       });
 
       it("should decode recursive hashmaps values", () => {
-        // Act
+        // Arrange
         const data = {
           o: "@zenaton#0",
           s: [
@@ -928,7 +929,7 @@ describe("Serializer", () => {
           ],
         };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = decode(dataAsString);
 
@@ -940,13 +941,13 @@ describe("Serializer", () => {
       });
 
       it("should decode recursive Sets values", () => {
-        // Act
+        // Arrange
         const data = {
           o: "@zenaton#0",
           s: [{ t: "Set", v: [12, "foobar", null, "@zenaton#0"] }],
         };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = decode(dataAsString);
 
@@ -958,7 +959,7 @@ describe("Serializer", () => {
       });
 
       it("should decode recursive Maps keys", () => {
-        // Act
+        // Arrange
         const data = {
           o: "@zenaton#0",
           s: [
@@ -970,7 +971,7 @@ describe("Serializer", () => {
           ],
         };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = decode(dataAsString);
 
@@ -987,7 +988,7 @@ describe("Serializer", () => {
       });
 
       it("should decode recursive prototypal objects values", () => {
-        // Act
+        // Arrange
         const data = {
           s: [
             {
@@ -1004,7 +1005,7 @@ describe("Serializer", () => {
           o: "@zenaton#0",
         };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = decode(dataAsString);
 
@@ -1023,10 +1024,10 @@ describe("Serializer", () => {
 
     describe("forbidden", () => {
       it("should throw when data makes no sense", () => {
-        // Act
+        // Arrange
         const data = { foo: "bar" };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = () => decode(dataAsString);
 
@@ -1035,10 +1036,10 @@ describe("Serializer", () => {
       });
 
       it("should throw if token cannot be decoded", () => {
-        // Act
+        // Arrange
         const data = { o: "@zenaton#0", s: [{ foo: "bar" }] };
 
-        // Arrange
+        // Act
         const dataAsString = getDataAsString(data);
         const result = () => decode(dataAsString);
 
