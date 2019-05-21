@@ -187,6 +187,13 @@ function encodeData(data) {
       Object.keys(object).reduce((acc, key) => {
         const value = object[key];
 
+        /* Functions are ignored and not included.
+         * This is especially important to prevent private functions
+         * added by user from being serialized. */
+        if (isFunction(value)) {
+          return acc;
+        }
+
         const encodedKey = encodeValue(key);
         const encodedValue = encodeValue(value);
 
