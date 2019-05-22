@@ -10,17 +10,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Changed
 
-- Serializer ignores functions when serializing plain JSON object literals to align with the behavior of `JSON.stringify` and fix a bug.
-
 ### Deprecated
 
 ### Removed
 
 ### Fixed
 
-- Fixed false positive error message related to functions serialization when adding private functions to tasks and workflows.
-
 ### Security
+
+## 0.5.5 - 2019-05-22
+
+### Changed
+
+- Serializer ignores functions when serializing plain JSON object literals to align with the behavior of `JSON.stringify` and fix a bug.
+
+### Fixed
+
+- Fixed false positive error message related to functions serialization when adding private functions to tasks and workflows.
 
 ## 0.5.4 - 2019-05-03
 
