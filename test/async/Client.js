@@ -289,7 +289,13 @@ describe("Client", () => {
     // Assert
     await expect(result).to.eventually.be.fulfilled();
 
-    expect(serializer.encode).to.have.been.calledWithExactly("WHATEVER");
+    expect(serializer.encode)
+      .to.have.been.calledTwice()
+      .and.to.have.been.calledWithExactly({
+        name: "MyEvent",
+        data: "WHATEVER",
+      })
+      .and.to.have.been.calledWithExactly("WHATEVER");
 
     expect(http.post).to.have.been.calledWithExactly(
       "http://localhost:4001/api/v_newton/events",
@@ -299,6 +305,7 @@ describe("Client", () => {
         name: "CanonicalWorkflowName",
         programming_language: "Javascript",
         custom_id: customId,
+        event_data: FAKE_ENCODED_DATA,
         event_input: FAKE_ENCODED_DATA,
         event_name: "MyEvent",
       },
