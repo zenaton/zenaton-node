@@ -13,7 +13,9 @@
   <a href="https://app.zenaton.com/tutorial/node" target="_blank"> Tutorial in Node </a>
 </p>
 <p align="center">
+  <a href="https://www.npmjs.com/package/zenaton"><img src="https://img.shields.io/npm/v/zenaton.svg" alt="NPM Version"></a>
   <a href="https://circleci.com/gh/zenaton/zenaton-node/tree/master" rel="nofollow" target="_blank"><img src="https://img.shields.io/circleci/project/github/zenaton/zenaton-node/master.svg" alt="CircleCI" style="max-width:100%;"></a>
+  <a href="/LICENSE" target="_blank"><img src="https://img.shields.io/badge/iicense-MIT-blue.svg" alt="License" style="max-width:100%;"></a>
 </p>
 
 # Zenaton library for Node
@@ -21,7 +23,6 @@
 [Zenaton](https://zenaton.com) helps developers to easily run, monitor and orchestrate background jobs on your workers without managing a queuing system. In addition to this, a monitoring dashboard shows you in real-time tasks executions and helps you to handle errors.
 
 The Zenaton library for Node lets you code and launch tasks using Zenaton platform, as well as write workflows as code. You can sign up for an account on [Zenaton](https://zenaton.com) and go through the [tutorial in Node](https://app.zenaton.com/tutorial/node).
-
 
 - [What's new](WHATSNEW.md).
 
@@ -96,35 +97,25 @@ You can find both on [your Zenaton account](https://app.zenaton.com/api).
 Then, initialize your Zenaton client:
 
 ```javascript
-require("dotenv").config();
 const { Client } = require("zenaton");
 
-const app_id = process.env.ZENATON_APP_ID;
-const api_token = process.env.ZENATON_API_TOKEN;
-const app_env = process.env.ZENATON_APP_ENV;
-
-Client.init(app_id, api_token, app_env);
+Client.init("YourApplicationId", "YourApiToken", "YourApplicationEnv");
 ```
 
 #### Executing a background job
 
-A background job in Zenaton is a class implementing the `Zenaton\Interfaces\TaskInterface` interface.
+A background job in Zenaton is created through the `Task` function.
 
 Let's start by implementing a first task printing something, and returning a value:
 
-```php
-use Zenaton\Interfaces\TaskInterface;
-use Zenaton\Traits\Zenatonable;
+```javascript
+const { Task } = require("zenaton");
 
-class HelloWorldTask implements TaskInterface
-{
-    public function handle()
-    {
-        echo "Hello World\n";
+const HelloWorldTask = Task("HelloWorldTask", async function handle() {
+  console.log("Hello world!");
 
-        return mt_rand(0, 1);
-    }
-}
+  return Math.floor(Math.random() * 10);
+});
 ```
 
 Now, when you want to run this task as a background job, you need to do the following:
@@ -147,7 +138,7 @@ to see how people use job orchestration.
 
 #### Using workflows
 
-A workflow in Zenaton is a class implementing the `Zenaton\Interfaces\WorkflowInterface` interface.
+A workflow in Zenaton is created through the `Workflow` function.
 
 We will implement a very simple workflow:
 
@@ -164,12 +155,12 @@ The implementation looks like this:
 ```javascript
 const { Workflow } = require("zenaton");
 
-module.exports = Workflow("MyFirstWorkflow", async function() {
-  const $n = await new HelloWorldTask().execute();
+const MyFirstWorkflow = Workflow("MyFirstWorkflow", async function handle() {
+  const number = await new HelloWorldTask().execute();
 
-  if ($n > 0) {
+  if (number > 0) {
     await new FinalTask().execute();
-  } 
+  }
 });
 ```
 
@@ -189,5 +180,3 @@ in our [documentation](https://zenaton.com/documentation/node/workflow-basics/#i
 **Need help**? Feel free to contact us by chat on [Zenaton](https://zenaton.com/).
 
 **Found a bug?** You can open a [GitHub issue](https://github.com/zenaton/zenaton-node/issues).
-
-
