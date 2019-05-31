@@ -133,7 +133,7 @@ Job orchestration is what allows you to write complex business workflows in a si
 You can execute jobs sequentially, in parallel, conditionally based on the result of a previous job,
 and you can even use loops to repeat some tasks.
 
-We wrote about some use-cases of job orchestration, you can take a look at [these articles](https://medium.com/zenaton/tagged/php)
+We wrote about some use-cases of job orchestration, you can take a look at [these articles](https://medium.com/zenaton/tagged/nodejs)
 to see how people use job orchestration.
 
 #### Using workflows
@@ -148,7 +148,7 @@ When the returned value will be greater than `0`, we will execute a second task 
 Otherwise, we won't do anything else.
 
 One important thing to remember is that your workflow implementation **must** be idempotent.
-You can read more about that in our [documentation](https://zenaton.com/documentation/php/workflow-basics/#implementation).
+You can read more about that in our [documentation](https://zenaton.com/documentation/node/workflow-basics/#implementation).
 
 The implementation looks like this:
 
