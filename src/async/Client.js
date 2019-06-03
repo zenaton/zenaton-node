@@ -33,6 +33,7 @@ const CODE_PATH_VERSION = "async";
 
 const EVENT_INPUT = "event_input";
 const EVENT_NAME = "event_name";
+const EVENT_DATA = "event_data";
 
 const WORKFLOW_KILL = "kill";
 const WORKFLOW_PAUSE = "pause";
@@ -239,6 +240,10 @@ module.exports = class Client {
       [ATTR_ID]: customId,
       [EVENT_NAME]: eventName,
       [EVENT_INPUT]: serializer.encode(eventData),
+      [EVENT_DATA]: serializer.encode({
+        name: eventName,
+        data: eventData,
+      }),
     };
 
     const params = this.getAppEnv();
@@ -259,6 +264,10 @@ module.exports = class Client {
       [ATTR_INSTANCE_ID]: instanceId,
       [EVENT_NAME]: eventName,
       [EVENT_INPUT]: serializer.encode(eventData),
+      [EVENT_DATA]: serializer.encode({
+        name: eventName,
+        data: eventData,
+      }),
     };
 
     const params = this.getAppEnv();
