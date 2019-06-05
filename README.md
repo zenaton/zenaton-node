@@ -71,14 +71,6 @@ To install the Zenaton agent, run the following command:
 curl https://install.zenaton.com/ | sh
 ```
 
-Then, you need your agent to listen to your application.
-To do this, you need your **Application ID** and **API Token**.
-You can find both on [your Zenaton account](https://app.zenaton.com/api).
-
-```sh
-zenaton listen --app_id=YourApplicationId --api_token=YourApiToken --app_env=YourApplicationEnv
-```
-
 #### Install the library
 
 To add the latest version of the library to your project, run the following command:
@@ -97,9 +89,37 @@ You can find both on [your Zenaton account](https://app.zenaton.com/api).
 Then, initialize your Zenaton client:
 
 ```javascript
+/* client.js */
+
 const { Client } = require("zenaton");
 
-Client.init("YourApplicationId", "YourApiToken", "YourApplicationEnv");
+Client.init(
+  "YourApplicationId",
+  "YourApiToken",
+  "YourApplicationEnv", // Use "dev" as default
+);
+```
+
+#### Boot file
+
+Next step is to have your Zenaton Agent listen to your application.
+
+The Agent needs to be pointed to a `boot` file which will allow him to infer your programming language (here JavaScript) but also to figure out where your jobs are located when the time comes to run them.
+
+```javascript
+/* boot.js */
+
+require("./client");
+
+// Import here your jobs as you go
+// require("./tasks/HelloWorldTask");
+// require("./workflows/MyFirstWorkflow");
+```
+
+To run the `listen` command:
+
+```sh
+zenaton listen --app_id=YourApplicationId --api_token=YourApiToken --app_env=YourApplicationEnv --boot=boot.js
 ```
 
 #### Executing a background job
@@ -109,9 +129,11 @@ A background job in Zenaton is created through the `Task` function.
 Let's start by implementing a first task printing something, and returning a value:
 
 ```javascript
+/* tasks/HelloWorldTask.js */
+
 const { Task } = require("zenaton");
 
-const HelloWorldTask = Task("HelloWorldTask", async function handle() {
+module.exports = Task("HelloWorldTask", async function handle() {
   console.log("Hello world!");
 
   return Math.floor(Math.random() * 10);
@@ -121,7 +143,14 @@ const HelloWorldTask = Task("HelloWorldTask", async function handle() {
 Now, when you want to run this task as a background job, you need to do the following:
 
 ```javascript
-await new HelloWorldTask().dispatch();
+/* launchHelloWorldTask.js */
+
+// Don't forget to import it in the 'boot' file as well
+const HelloWorldTask = require("./tasks/HelloWorldTask");
+
+new HelloWorldTask().dispatch().catch((err) => {
+  console.error(err);
+});
 ```
 
 That's all you need to get started. With this, you can run many background jobs.
@@ -153,9 +182,14 @@ You can read more about that in our [documentation](https://zenaton.com/document
 The implementation looks like this:
 
 ```javascript
+/* workflows/MyFirstWorkflow.js */
+
+const HelloWorldTask = require("../tasks/HelloWorldTask");
+const FinalTask = require("../tasks/FinalTask");
+
 const { Workflow } = require("zenaton");
 
-const MyFirstWorkflow = Workflow("MyFirstWorkflow", async function handle() {
+module.exports = Workflow("MyFirstWorkflow", async function handle() {
   const number = await new HelloWorldTask().execute();
 
   if (number > 0) {
@@ -167,10 +201,17 @@ const MyFirstWorkflow = Workflow("MyFirstWorkflow", async function handle() {
 Now that your workflow is implemented, you can execute it by calling the `dispatch` method:
 
 ```javascript
-await new MyFirstWorkflow().dispatch();
+/* launchMyFirstWorkflow.js */
+
+// Don't forget to import it in the 'boot' file as well
+const MyFirstWorkflow = require("./workflows/MyFirstWorkflow");
+
+new MyFirstWorkflow().dispatch().catch((err) => {
+  console.error(err);
+});
 ```
 
-If you really want to run this example, you will need to implement the `FinalTask` task.
+> If you really want to run this example, you will need to implement the `FinalTask` task.
 
 There are many more features usable in workflows in order to get the orchestration done right. You can learn more
 in our [documentation](https://zenaton.com/documentation/node/workflow-basics/#implementation).
