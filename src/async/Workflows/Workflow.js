@@ -1,7 +1,9 @@
 const workflowManager = require("./WorkflowManager");
 const AbstractWorkflow = require("./AbstractWorkflow");
-const { InvalidArgumentError } = require("../../Errors");
+const { ExternalZenatonError, InvalidArgumentError } = require("../../Errors");
 const Builder = require("../Query/Builder");
+
+const MAX_ID_SIZE = 256;
 
 module.exports = function workflowFunc(name, flow) {
   // check that provided data have the right format
@@ -92,6 +94,33 @@ module.exports = function workflowFunc(name, flow) {
      */
     _getCanonical() {
       return this.canonical;
+    }
+
+    /**
+     * get custom id
+     */
+    _getCustomId() {
+      let customId = null;
+      if (typeof this.id === "function") {
+        // customId can be a value or a function
+        customId = this.id();
+        // customId should be a string or a number
+        if (typeof customId !== "string" && typeof customId !== "number") {
+          throw new InvalidArgumentError(
+            `Provided id must be a string or a number - current type: ${typeof customId}`,
+          );
+        }
+        // at the end, it's a string
+        customId = customId.toString();
+        // should be not more than 256 bytes;
+        if (customId.length >= MAX_ID_SIZE) {
+          throw new ExternalZenatonError(
+            `Provided id must not exceed ${MAX_ID_SIZE} bytes`,
+          );
+        }
+      }
+
+      return customId;
     }
 
     /**

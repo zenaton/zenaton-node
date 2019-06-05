@@ -1,4 +1,3 @@
-const { ExternalZenatonError, InvalidArgumentError } = require("../Errors");
 const workflowManager = require("./Workflows/WorkflowManager");
 const http = require("./Services/Http");
 const serializer = require("./Services/Serializer");
@@ -9,8 +8,6 @@ const ZENATON_API_URL = "https://api.zenaton.com/v1";
 const ZENATON_WORKER_URL = "http://localhost";
 const DEFAULT_WORKER_PORT = 4001;
 const WORKER_API_VERSION = "v_newton";
-
-const MAX_ID_SIZE = 256;
 
 const APP_ENV = "app_env";
 const APP_ID = "app_id";
@@ -26,6 +23,7 @@ const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
 const ATTR_CODE_PATH_VERSION = "code_path_version";
 const ATTR_MODE = "mode";
 const ATTR_MAX_PROCESSING_TIME = "maxProcessingTime";
+const ATTR_SCHEDULING_CRON = "scheduling_cron";
 
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
@@ -117,22 +115,36 @@ module.exports = class Client {
    * Start a task instance
    */
   async startTask(task) {
-    const url = this.getTaskWorkerUrl();
+    if (this.mustBeScheduled(task)) {
+      return this.startScheduledTask(task);
+    }
+
+    return this.startInstantTask(task);
+  }
+
+  async startInstantTask(task) {
+    const url = this.getWorkerUrlNew("tasks");
 
     // start task
-    const body = {
-      [ATTR_PROG]: PROG,
-      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
-      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: task.name,
-      [ATTR_DATA]: serializer.encode(task.data),
-      [ATTR_MAX_PROCESSING_TIME]:
-        typeof task.maxProcessingTime === "function"
-          ? task.maxProcessingTime()
-          : null,
-    };
+    const body = this.getBodyForTask(task);
 
     const params = this.getAppEnv();
+
+    return http.post(url, body, { params });
+  }
+
+  async startScheduledTask(task) {
+    const url = this.getWorkerUrlNew("scheduling/tasks");
+
+    // schedule task
+    const body = this.getBodyForTask(task);
+
+    const params = Object.assign(
+      {
+        [ATTR_SCHEDULING_CRON]: task.scheduling.cron,
+      },
+      this.getAppEnv(),
+    );
 
     return http.post(url, body, { params });
   }
@@ -141,41 +153,36 @@ module.exports = class Client {
    * Start a workflow instance
    */
   async startWorkflow(flow) {
-    // custom id management
-    let customId = null;
-    if (typeof flow.id === "function") {
-      // customId can be a value or a function
-      customId = flow.id();
-      // customId should be a string or a number
-      if (typeof customId !== "string" && typeof customId !== "number") {
-        throw new InvalidArgumentError(
-          `Provided id must be a string or a number - current type: ${typeof customId}`,
-        );
-      }
-      // at the end, it's a string
-      customId = customId.toString();
-      // should be not more than 256 bytes;
-      if (customId.length >= MAX_ID_SIZE) {
-        throw new ExternalZenatonError(
-          `Provided id must not exceed ${MAX_ID_SIZE} bytes`,
-        );
-      }
+    if (this.mustBeScheduled(flow)) {
+      return this.startScheduledWorkflow(flow);
     }
 
-    const url = this.getInstanceWorkerUrl();
+    return this.startInstantWorkflow(flow);
+  }
+
+  async startInstantWorkflow(flow) {
+    const url = this.getWorkerUrlNew("instances");
 
     // start workflow
-    const body = {
-      [ATTR_PROG]: PROG,
-      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
-      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_CANONICAL]: flow._getCanonical(),
-      [ATTR_NAME]: flow.name,
-      [ATTR_DATA]: serializer.encode(flow.data),
-      [ATTR_ID]: customId,
-    };
+    const body = this.getBodyForWorkflow(flow);
 
     const params = this.getAppEnv();
+
+    return http.post(url, body, { params });
+  }
+
+  async startScheduledWorkflow(flow) {
+    const url = this.getWorkerUrlNew("scheduling/instances");
+
+    // schedule workflow
+    const body = this.getBodyForWorkflow(flow);
+
+    const params = Object.assign(
+      {
+        [ATTR_SCHEDULING_CRON]: flow.scheduling.cron,
+      },
+      this.getAppEnv(),
+    );
 
     return http.post(url, body, { params });
   }
@@ -205,7 +212,7 @@ module.exports = class Client {
    * Find a workflow instance
    */
   async findWorkflow(workflowName, customId) {
-    const url = this.getInstanceWebsiteUrl();
+    const url = this.getWebsiteUrl("instances");
 
     const params = Object.assign(
       {
@@ -230,7 +237,7 @@ module.exports = class Client {
    * Send an event to a workflow instance
    */
   async sendEvent(workflowName, customId, eventName, eventData) {
-    const url = this.getSendEventURL();
+    const url = this.getWorkerUrlNew("events");
 
     const body = {
       [ATTR_PROG]: PROG,
@@ -255,7 +262,7 @@ module.exports = class Client {
    * * Send an event to a workflow by instance_id
    */
   async sendEventByInstanceId(instanceId, eventName, eventData) {
-    const url = this.getSendEventURL();
+    const url = this.getWorkerUrlNew("events");
 
     const body = {
       [ATTR_PROG]: PROG,
@@ -276,7 +283,7 @@ module.exports = class Client {
   }
 
   async updateInstance(workflowName, customId, mode) {
-    const url = this.getInstanceWorkerUrl();
+    const url = this.getWorkerUrlNew("instances");
 
     const body = {
       [ATTR_PROG]: PROG,
@@ -296,20 +303,34 @@ module.exports = class Client {
     return http.put(url, body, { params });
   }
 
-  getInstanceWebsiteUrl() {
-    return this.getWebsiteUrl("instances");
+  mustBeScheduled(job) {
+    return job.scheduling && job.scheduling.cron;
   }
 
-  getInstanceWorkerUrl() {
-    return this.getWorkerUrlNew("instances");
+  getBodyForTask(task) {
+    return {
+      [ATTR_PROG]: PROG,
+      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
+      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
+      [ATTR_NAME]: task.name,
+      [ATTR_DATA]: serializer.encode(task.data),
+      [ATTR_MAX_PROCESSING_TIME]:
+        typeof task.maxProcessingTime === "function"
+          ? task.maxProcessingTime()
+          : null,
+    };
   }
 
-  getTaskWorkerUrl() {
-    return this.getWorkerUrlNew("tasks");
-  }
-
-  getSendEventURL() {
-    return this.getWorkerUrlNew("events");
+  getBodyForWorkflow(flow) {
+    return {
+      [ATTR_PROG]: PROG,
+      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
+      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
+      [ATTR_CANONICAL]: flow._getCanonical(),
+      [ATTR_NAME]: flow.name,
+      [ATTR_DATA]: serializer.encode(flow.data),
+      [ATTR_ID]: flow._getCustomId(),
+    };
   }
 
   getAppEnv() {
