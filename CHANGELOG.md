@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 
+- Update dependencies to fix security issues with package `js-yaml`.
+
 ### Security
 
 ## 0.5.6 - 2019-06-03
