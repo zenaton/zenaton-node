@@ -2,7 +2,7 @@ const { expect } = require("chai");
 const sinon = require("sinon");
 
 const { Task, taskManager } = require("../../../src/async/Tasks");
-const { InvalidArgumentError } = require("../../../src/Errors");
+const { InvalidArgumentError, ZenatonError } = require("../../../src/Errors");
 
 describe("Task builder", () => {
   beforeEach(() => {
@@ -154,5 +154,51 @@ describe("Task builder", () => {
     expect(instance.data)
       .to.be.an("object")
       .and.to.be.empty();
+  });
+
+  it("should throw if provided cron is not a string", () => {
+    // Arrange
+    const taskName = "TaskA";
+    const task = { handle: () => {} };
+
+    // Act
+    const TaskClass = Task(taskName, task);
+    const instance = new TaskClass();
+
+    // Assert
+    expect(() => instance.repeat(12)).to.throw(
+      ZenatonError,
+      "Param passed to 'repeat' function must be a string",
+    );
+  });
+
+  it("should throw if provided cron is not a CRON expression", () => {
+    // Arrange
+    const taskName = "TaskA";
+    const task = { handle: () => {} };
+
+    // Act
+    const TaskClass = Task(taskName, task);
+    const instance = new TaskClass();
+
+    // Assert
+    expect(() => instance.repeat("BOOM BOOM")).to.throw(
+      ZenatonError,
+      "Param passed to 'repeat' function is not a proper CRON expression",
+    );
+  });
+
+  it("should correctly set the 'scheduling.cron' property", () => {
+    // Arrange
+    const taskName = "TaskA";
+    const task = { handle: () => {} };
+
+    // Act
+    const TaskClass = Task(taskName, task);
+    const instance = new TaskClass();
+    instance.repeat("* * * * *");
+
+    // Assert
+    expect(instance.scheduling.cron).to.equal("* * * * *");
   });
 });

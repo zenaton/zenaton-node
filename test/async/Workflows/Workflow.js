@@ -6,7 +6,11 @@ const {
   AbstractWorkflow,
   workflowManager,
 } = require("../../../src/async/Workflows");
-const { InvalidArgumentError } = require("../../../src/Errors");
+const {
+  InvalidArgumentError,
+  ExternalZenatonError,
+  ZenatonError,
+} = require("../../../src/Errors");
 
 describe("Workflow builder", () => {
   beforeEach(() => {
@@ -145,5 +149,83 @@ describe("Workflow builder", () => {
     expect(instance.data)
       .to.be.an("object")
       .and.to.be.empty();
+  });
+
+  it("should throw if custom id is not string compatible", () => {
+    // Arrange
+    const workflowName = "TestWorkflow";
+    const workflow = { handle: () => {}, id: () => Symbol.iterator };
+
+    // Act
+    const WorkflowClass = Workflow(workflowName, workflow);
+    const instance = new WorkflowClass();
+
+    // Assert
+    expect(() => instance._getCustomId()).to.throw(
+      InvalidArgumentError,
+      "Provided id must be a string or a number - current type: symbol",
+    );
+  });
+
+  it("should throw if custom id exceed max size", () => {
+    // Arrange
+    const workflowName = "TestWorkflow";
+    const workflow = { handle: () => {}, id: () => "A".repeat(257) };
+
+    // Act
+    const WorkflowClass = Workflow(workflowName, workflow);
+    const instance = new WorkflowClass();
+
+    // Assert
+    expect(() => instance._getCustomId()).to.throw(
+      ExternalZenatonError,
+      "Provided id must not exceed 256 bytes",
+    );
+  });
+
+  it("should throw if provided cron is not a string", () => {
+    // Arrange
+    const workflowName = "TestWorkflow";
+    const workflow = { handle: () => {} };
+
+    // Act
+    const WorkflowClass = Workflow(workflowName, workflow);
+    const instance = new WorkflowClass();
+
+    // Assert
+    expect(() => instance.repeat(12)).to.throw(
+      ZenatonError,
+      "Param passed to 'repeat' function must be a string",
+    );
+  });
+
+  it("should throw if provided cron is not a CRON expression", () => {
+    // Arrange
+    const workflowName = "TestWorkflow";
+    const workflow = { handle: () => {} };
+
+    // Act
+    const WorkflowClass = Workflow(workflowName, workflow);
+    const instance = new WorkflowClass();
+
+    // Assert
+    expect(() => instance.repeat("BOOM BOOM")).to.throw(
+      ZenatonError,
+      "Param passed to 'repeat' function is not a proper CRON expression",
+    );
+  });
+
+  it("should correctly set the 'scheduling.cron' property", () => {
+    // Arrange
+    const workflowName = "TestWorkflow";
+    const workflow = { handle: () => {} };
+
+    // Act
+    const WorkflowClass = Workflow(workflowName, workflow);
+    const instance = new WorkflowClass();
+    instance.repeat("* * * * *");
+
+    // Assert
+    expect(instance.scheduling.cron).to.equal("* * * * *");
   });
 });

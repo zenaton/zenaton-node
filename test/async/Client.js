@@ -5,10 +5,6 @@ const sinon = require("sinon");
 const globalClient = require("../../src/client");
 const { http, serializer } = require("../../src/async/Services");
 const { workflowManager } = require("../../src/async/Workflows");
-const {
-  InvalidArgumentError,
-  ExternalZenatonError,
-} = require("../../src/Errors");
 
 proxyquire.noPreserveCache();
 
@@ -59,6 +55,7 @@ describe("Client", () => {
       name: "WorkflowVersionName",
       data: "WHATEVER",
       _getCanonical: () => "CanonicalWorkflowName",
+      _getCustomId: () => "FAKE CUSTOM ID",
     };
 
     // Act
@@ -83,6 +80,50 @@ describe("Client", () => {
         programming_language: "Javascript",
       },
       { params: { app_env: FAKE_APP_ENV, app_id: FAKE_APP_ID } },
+    );
+  });
+
+  it("should call the agent to schedule a workflow", async () => {
+    // Arrange
+    const workflow = {
+      id: () => "FAKE CUSTOM ID",
+      name: "WorkflowVersionName",
+      data: "WHATEVER",
+      scheduling: {
+        cron: "* * * * *",
+      },
+      _getCanonical: () => "CanonicalWorkflowName",
+      _getCustomId: () => "FAKE CUSTOM ID",
+    };
+
+    // Act
+    Client.init(FAKE_APP_ID, FAKE_API_TOKEN, FAKE_APP_ENV);
+    const client = new Client();
+    const result = client.startWorkflow(workflow);
+
+    // Assert
+    await expect(result).to.eventually.be.fulfilled();
+
+    expect(serializer.encode).to.have.been.calledWithExactly("WHATEVER");
+
+    expect(http.post).to.have.been.calledWithExactly(
+      "http://localhost:4001/api/v_newton/scheduling/instances",
+      {
+        canonical_name: "CanonicalWorkflowName",
+        code_path_version: "async",
+        custom_id: "FAKE CUSTOM ID",
+        data: FAKE_ENCODED_DATA,
+        initial_library_version: FAKE_APP_VERSION,
+        name: "WorkflowVersionName",
+        programming_language: "Javascript",
+      },
+      {
+        params: {
+          app_env: FAKE_APP_ENV,
+          app_id: FAKE_APP_ID,
+          scheduling_cron: "* * * * *",
+        },
+      },
     );
   });
 
@@ -115,6 +156,47 @@ describe("Client", () => {
         programming_language: "Javascript",
       },
       { params: { app_env: FAKE_APP_ENV, app_id: FAKE_APP_ID } },
+    );
+  });
+
+  it("should call the agent to schedule a task", async () => {
+    // Arrange
+    const task = {
+      name: "TaskName",
+      data: "WHATEVER",
+      scheduling: {
+        cron: "* * * * *",
+      },
+      maxProcessingTime: () => 1000,
+    };
+
+    // Act
+    Client.init(FAKE_APP_ID, FAKE_API_TOKEN, FAKE_APP_ENV);
+    const client = new Client();
+    const result = client.startTask(task);
+
+    // Assert
+    await expect(result).to.eventually.be.fulfilled();
+
+    expect(serializer.encode).to.have.been.calledWithExactly("WHATEVER");
+
+    expect(http.post).to.have.been.calledWithExactly(
+      "http://localhost:4001/api/v_newton/scheduling/tasks",
+      {
+        code_path_version: "async",
+        data: FAKE_ENCODED_DATA,
+        initial_library_version: FAKE_APP_VERSION,
+        maxProcessingTime: 1000,
+        name: "TaskName",
+        programming_language: "Javascript",
+      },
+      {
+        params: {
+          app_env: FAKE_APP_ENV,
+          app_id: FAKE_APP_ID,
+          scheduling_cron: "* * * * *",
+        },
+      },
     );
   });
 
@@ -315,48 +397,6 @@ describe("Client", () => {
           app_id: FAKE_APP_ID,
         },
       },
-    );
-  });
-
-  it("should throw if custom id is not string compatible", async () => {
-    // Arrange
-    const workflow = {
-      id: () => Symbol.iterator,
-      name: "WorkflowVersionName",
-      data: "WHATEVER",
-      _getCanonical: () => "CanonicalWorkflowName",
-    };
-
-    // Act
-    Client.init(FAKE_APP_ID, FAKE_API_TOKEN, FAKE_APP_ENV);
-    const client = new Client();
-    const result = client.startWorkflow(workflow);
-
-    // Assert
-    await expect(result).to.eventually.be.rejectedWith(
-      InvalidArgumentError,
-      "Provided id must be a string or a number - current type: symbol",
-    );
-  });
-
-  it("should throw if custom id exceed max size", async () => {
-    // Arrange
-    const workflow = {
-      id: () => "A".repeat(257),
-      name: "WorkflowVersionName",
-      data: "WHATEVER",
-      _getCanonical: () => "CanonicalWorkflowName",
-    };
-
-    // Act
-    Client.init(FAKE_APP_ID, FAKE_API_TOKEN, FAKE_APP_ENV);
-    const client = new Client();
-    const result = client.startWorkflow(workflow);
-
-    // Assert
-    await expect(result).to.eventually.be.rejectedWith(
-      ExternalZenatonError,
-      "Provided id must not exceed 256 bytes",
     );
   });
 });
