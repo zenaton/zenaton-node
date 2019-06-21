@@ -8,7 +8,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
-- Added capacity to schedule workflows and single tasks (CRON based).
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## 0.5.7 - 2019-06-21
+
+### Added
+
+- Prepare capacity to schedule workflows and single tasks (CRON based).
 
 ### Changed
 
@@ -19,6 +33,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Fixed
 
 - Update dependencies to fix security issues with package `js-yaml`.
+- Fix #41 Modification of Wait's parameters during a workflow execution does not trigger a ModifiedDecisionException
 
 ### Security
 
