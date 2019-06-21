@@ -48,7 +48,7 @@ module.exports = {
   },
 
   months(value = 1) {
-    this._push(["weeks", value]);
+    this._push(["months", value]);
 
     return this;
   },
