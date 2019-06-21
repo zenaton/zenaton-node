@@ -3,14 +3,14 @@ const { InternalZenatonError } = require("../../Errors");
 
 module.exports = {
   _getDuration() {
-    if (undefined === this._buffer) {
+    if (undefined === this.data._buffer) {
       return null;
     }
 
     const now = this._initNow();
     let then = moment(now);
 
-    this._buffer.forEach((call) => {
+    this.data._buffer.forEach((call) => {
       then = this._applyDuration(call[0], call[1], then);
     });
 
@@ -71,11 +71,11 @@ module.exports = {
     return now;
   },
 
-  _push(data) {
-    if (undefined === this._buffer) {
-      this._buffer = [];
+  _push(instruction) {
+    if (undefined === this.data._buffer) {
+      this.data._buffer = [];
     }
-    this._buffer.push(data);
+    this.data._buffer.push(instruction);
   },
 
   _applyDuration(method, value, then) {

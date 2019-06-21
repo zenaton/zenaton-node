@@ -11,7 +11,7 @@ const MODE_TIMESTAMP = "TIMESTAMP";
 module.exports = Trait.mix(
   {
     _getTimestampOrDuration() {
-      if (undefined === this._buffer) {
+      if (undefined === this.data._buffer) {
         return [null, null];
       }
 
@@ -20,7 +20,7 @@ module.exports = Trait.mix(
 
       this._mode = null;
       // apply buffered methods
-      this._buffer.forEach((call) => {
+      this.data._buffer.forEach((call) => {
         then = this._apply(call[0], call[1], now, then);
       });
       // has user used a method by timestamp?
