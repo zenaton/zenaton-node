@@ -48,6 +48,7 @@ Node 8 and later.
   - [Installation](#installation)
     - [Install the Zenaton Agent](#install-the-zenaton-agent)
     - [Install the library](#install-the-library)
+    - [Typescript typings](#typescript-typings)
   - [Quick start](#quick-start)
     - [Client Initialization](#client-initialization)
     - [Executing a background job](#executing-a-background-job)
@@ -77,6 +78,14 @@ To add the latest version of the library to your project, run the following comm
 
 ```bash
 npm install zenaton --save
+```
+
+#### TypeScript typings
+
+For Typescript developers:
+
+```bash
+npm install @types/zenaton --save-dev
 ```
 
 ### Quick start
