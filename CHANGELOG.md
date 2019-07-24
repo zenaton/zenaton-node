@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
+- Added a `intent_id` property when dispatching workflows and tasks, sending events to workflows, and
+  pausing/resuming/killing workflows.
+
 ### Changed
 
 ### Deprecated
@@ -24,19 +27,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Prepare capacity to schedule workflows and single tasks (CRON based).
 
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
 
 - Update dependencies to fix security issues with package `js-yaml`.
 - Fix #41 Modification of Wait's parameters during a workflow execution does not trigger a ModifiedDecisionException
 - Fix #45 Wait months method issue
-
-### Security
 
 ## 0.5.6 - 2019-06-03
 
