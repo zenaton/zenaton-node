@@ -56,6 +56,7 @@ module.exports = class AbstractWorkflow {
       "onSuccess",
       "onFailure",
       "onTimeout",
+      "onFailureRetryDelay",
     ];
   }
 };

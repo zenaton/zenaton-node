@@ -48,6 +48,6 @@ module.exports = class AbstractTask {
   }
 
   static methods() {
-    return ["handle", "maxProcessingTime"];
+    return ["handle", "maxProcessingTime", "onFailureRetryDelay"];
   }
 };
