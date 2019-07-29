@@ -23,6 +23,7 @@ describe("Client", () => {
 
   beforeEach(() => {
     Client = proxyquire("../../src/async/Client", {
+      "uuid/v4": () => "statically-generated-intent-id",
       "../infos": { version: FAKE_APP_VERSION },
     });
 
@@ -49,7 +50,8 @@ describe("Client", () => {
   });
 
   it("should call the agent to start a workflow", async () => {
-    // Arrange
+    // Arranges
+
     const workflow = {
       id: () => "FAKE CUSTOM ID",
       name: "WorkflowVersionName",
@@ -78,6 +80,7 @@ describe("Client", () => {
         initial_library_version: FAKE_APP_VERSION,
         name: "WorkflowVersionName",
         programming_language: "Javascript",
+        intent_id: "statically-generated-intent-id",
       },
       { params: { app_env: FAKE_APP_ENV, app_id: FAKE_APP_ID } },
     );
@@ -116,6 +119,7 @@ describe("Client", () => {
         initial_library_version: FAKE_APP_VERSION,
         name: "WorkflowVersionName",
         programming_language: "Javascript",
+        intent_id: "statically-generated-intent-id",
       },
       {
         params: {
@@ -154,6 +158,7 @@ describe("Client", () => {
         maxProcessingTime: 1000,
         name: "TaskName",
         programming_language: "Javascript",
+        intent_id: "statically-generated-intent-id",
       },
       { params: { app_env: FAKE_APP_ENV, app_id: FAKE_APP_ID } },
     );
@@ -189,6 +194,7 @@ describe("Client", () => {
         maxProcessingTime: 1000,
         name: "TaskName",
         programming_language: "Javascript",
+        intent_id: "statically-generated-intent-id",
       },
       {
         params: {
@@ -221,6 +227,7 @@ describe("Client", () => {
         mode: "kill",
         name: "CanonicalWorkflowName",
         programming_language: "Javascript",
+        intent_id: "statically-generated-intent-id",
       },
       {
         params: {
@@ -253,6 +260,7 @@ describe("Client", () => {
         mode: "pause",
         name: "CanonicalWorkflowName",
         programming_language: "Javascript",
+        intent_id: "statically-generated-intent-id",
       },
       {
         params: {
@@ -285,6 +293,7 @@ describe("Client", () => {
         mode: "run",
         name: "CanonicalWorkflowName",
         programming_language: "Javascript",
+        intent_id: "statically-generated-intent-id",
       },
       {
         params: {
@@ -390,6 +399,7 @@ describe("Client", () => {
         event_data: FAKE_ENCODED_DATA,
         event_input: FAKE_ENCODED_DATA,
         event_name: "MyEvent",
+        intent_id: "statically-generated-intent-id",
       },
       {
         params: {

@@ -1,3 +1,4 @@
+const uuidv4 = require("uuid/v4");
 const workflowManager = require("./Workflows/WorkflowManager");
 const http = require("./Services/Http");
 const serializer = require("./Services/Serializer");
@@ -13,6 +14,7 @@ const APP_ENV = "app_env";
 const APP_ID = "app_id";
 const API_TOKEN = "api_token";
 
+const ATTR_INTENT_ID = "intent_id";
 const ATTR_INSTANCE_ID = "instance_id";
 const ATTR_ID = "custom_id";
 const ATTR_NAME = "name";
@@ -240,6 +242,7 @@ module.exports = class Client {
     const url = this.getWorkerUrlNew("events");
 
     const body = {
+      [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
@@ -265,6 +268,7 @@ module.exports = class Client {
     const url = this.getWorkerUrlNew("events");
 
     const body = {
+      [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
@@ -286,6 +290,7 @@ module.exports = class Client {
     const url = this.getWorkerUrlNew("instances");
 
     const body = {
+      [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
@@ -309,6 +314,7 @@ module.exports = class Client {
 
   getBodyForTask(task) {
     return {
+      [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
@@ -323,6 +329,7 @@ module.exports = class Client {
 
   getBodyForWorkflow(flow) {
     return {
+      [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
