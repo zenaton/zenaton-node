@@ -7,7 +7,7 @@ process.env.ZENATON_LIBRARY_PATH = require("path").resolve(
 const { version } = require("./infos");
 const Errors = require("./Errors");
 
-const UP_TO_DATE_CODE_PATH = "async";
+const UP_TO_DATE_CODE_PATH = "2019-08";
 
 /* If 'ZENATON_CODE_PATH_VERSION' is present,
  * it means we are loading through the agent/boot file.
