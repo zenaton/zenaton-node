@@ -1,4 +1,3 @@
-const { serializer } = require("../Services");
 const { InvalidArgumentError } = require("../../Errors");
 
 let instance;
@@ -13,12 +12,19 @@ const TaskManager = class {
     this.tasks = {};
   }
 
+  checkClass(name) {
+    const TaskClass = this.getClass(name);
+    if (undefined === TaskClass) {
+      throw new InvalidArgumentError(`"Task ${name}" is unkwown`);
+    }
+    return TaskClass;
+  }
+
   setClass(name, task) {
     // check that this workflow does not exist yet
     if (undefined !== this.getClass(name)) {
-      throw new InvalidArgumentError(`"${name}" task can not be defined twice`);
+      throw new InvalidArgumentError(`"Task ${name}" can not be defined twice`);
     }
-
     this.tasks[name] = task;
   }
 
@@ -26,19 +32,11 @@ const TaskManager = class {
     return this.tasks[name];
   }
 
-  getTask(name, encodedData) {
-    // unserialize data
-    const data = serializer.decode(encodedData);
-    // get task class
-    const TaskClass = this.getClass(name);
-    // do not use construct function to set data
-    TaskClass._useInit = false;
-    // get new task instance
-    const task = new TaskClass(data);
-    // avoid side effect
-    TaskClass._useInit = true;
-    // return task
-    return task;
+  getInstance(name) {
+    // get Task class
+    const TaskClass = this.checkClass(name);
+    // return new Task instance
+    return new TaskClass();
   }
 };
 

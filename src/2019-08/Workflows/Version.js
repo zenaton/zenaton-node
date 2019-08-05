@@ -1,5 +1,4 @@
 const workflowManager = require("./WorkflowManager");
-const AbstractWorkflow = require("./AbstractWorkflow");
 const { InvalidArgumentError } = require("../../Errors");
 const Builder = require("../Query/Builder");
 
@@ -39,13 +38,15 @@ module.exports = function versionFunc(name, implementation) {
   }
 
   // check type
-  versions.forEach((flow) => {
-    if (
-      typeof flow !== "function" ||
-      !(flow.prototype instanceof AbstractWorkflow)
-    ) {
+  versions.forEach((previous) => {
+    if (typeof previous !== "string") {
       throw new InvalidArgumentError(
-        "element of versions array should be workflow class",
+        `When defining "${name}", element of "versions" array should be string (name of workflow class)`,
+      );
+    }
+    if (!(workflowManager.getClass(previous) !== "function")) {
+      throw new InvalidArgumentError(
+        `When defining "${name}", "${previous}" is not a declared workflow class`,
       );
     }
   });

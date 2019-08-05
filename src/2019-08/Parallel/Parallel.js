@@ -1,4 +1,4 @@
-const Engine = require("../Engine/Engine");
+const Engine = require("../Engine");
 
 module.exports = class Parallel {
   constructor(...items) {

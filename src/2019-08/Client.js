@@ -29,7 +29,7 @@ const ATTR_SCHEDULING_CRON = "scheduling_cron";
 
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
-const CODE_PATH_VERSION = "async";
+const CODE_PATH_VERSION = "2019-08";
 
 const EVENT_INPUT = "event_input";
 const EVENT_NAME = "event_name";
@@ -114,36 +114,29 @@ module.exports = class Client {
   }
 
   /**
-   * Start a task instance
+   * Dispatch a task
    */
-  async startTask(task) {
-    if (this.mustBeScheduled(task)) {
-      return this.startScheduledTask(task);
-    }
-
-    return this.startInstantTask(task);
-  }
-
-  async startInstantTask(task) {
+  async dispatchTask(name, input, options) {
     const url = this.getWorkerUrlNew("tasks");
 
-    // start task
-    const body = this.getBodyForTask(task);
+    const body = this.getBodyForTask(name, input, options);
 
     const params = this.getAppEnv();
 
     return http.post(url, body, { params });
   }
 
-  async startScheduledTask(task) {
+  /**
+   * Schedule a task
+   */
+  async scheduleTask(name, input, scheduling, options) {
     const url = this.getWorkerUrlNew("scheduling/tasks");
 
-    // schedule task
-    const body = this.getBodyForTask(task);
+    const body = this.getBodyForTask(name, input, options);
 
     const params = Object.assign(
       {
-        [ATTR_SCHEDULING_CRON]: task.scheduling.cron,
+        [ATTR_SCHEDULING_CRON]: scheduling.cron,
       },
       this.getAppEnv(),
     );
@@ -152,36 +145,29 @@ module.exports = class Client {
   }
 
   /**
-   * Start a workflow instance
+   * Dispatch a workflow
    */
-  async startWorkflow(flow) {
-    if (this.mustBeScheduled(flow)) {
-      return this.startScheduledWorkflow(flow);
-    }
-
-    return this.startInstantWorkflow(flow);
-  }
-
-  async startInstantWorkflow(flow) {
+  async dispatchWorkflow(name, input, options) {
     const url = this.getWorkerUrlNew("instances");
 
-    // start workflow
-    const body = this.getBodyForWorkflow(flow);
+    const body = this.getBodyForWorkflow(name, input, options);
 
     const params = this.getAppEnv();
 
     return http.post(url, body, { params });
   }
 
-  async startScheduledWorkflow(flow) {
+  /**
+   * Schedule a workflow
+   */
+  async scheduleWorkflow(name, input, scheduling, options) {
     const url = this.getWorkerUrlNew("scheduling/instances");
 
-    // schedule workflow
-    const body = this.getBodyForWorkflow(flow);
+    const body = this.getBodyForWorkflow(name, input, options);
 
     const params = Object.assign(
       {
-        [ATTR_SCHEDULING_CRON]: flow.scheduling.cron,
+        [ATTR_SCHEDULING_CRON]: scheduling.cron,
       },
       this.getAppEnv(),
     );
@@ -308,35 +294,34 @@ module.exports = class Client {
     return http.put(url, body, { params });
   }
 
-  mustBeScheduled(job) {
-    return job.scheduling && job.scheduling.cron;
-  }
-
-  getBodyForTask(task) {
+  getBodyForTask(name, input, options) {
     return {
       [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: task.name,
-      [ATTR_DATA]: serializer.encode(task.data),
-      [ATTR_MAX_PROCESSING_TIME]:
-        typeof task.maxProcessingTime === "function"
-          ? task.maxProcessingTime()
-          : null,
+      [ATTR_NAME]: name,
+      [ATTR_DATA]: serializer.encode(input),
+      // TODO : maxProcessingTime should be managed from Agent
+      [ATTR_MAX_PROCESSING_TIME]: null,
+      // typeof options.maxProcessingTime === "function"
+      //   ? options.maxProcessingTime()
+      //   : null,
     };
   }
 
-  getBodyForWorkflow(flow) {
+  getBodyForWorkflow(name, input, options) {
     return {
       [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_CANONICAL]: flow._getCanonical(),
-      [ATTR_NAME]: flow.name,
-      [ATTR_DATA]: serializer.encode(flow.data),
-      [ATTR_ID]: flow._getCustomId(),
+      // TODO : manage canonical
+      [ATTR_CANONICAL]: name, // flow._getCanonical(),
+      [ATTR_NAME]: name,
+      [ATTR_DATA]: serializer.encode(input),
+      // TODO : add optional customId
+      [ATTR_ID]: null, // flow._getCustomId(),
     };
   }
 

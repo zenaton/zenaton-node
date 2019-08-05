@@ -5,16 +5,13 @@ const { Trait } = require("../Services");
 const WithTimestamp = require("../Traits/WithTimestamp");
 
 const WaitClass = Task("_Wait", {
-  init(event = null) {
+  handle(event = null) {
     if (event !== null && typeof event !== "string") {
       throw new InvalidArgumentError(
         "1st parameter, if any, must be a string (event name)",
       );
     }
     this.event = event;
-  },
-  handle() {
-    // No waiting when executed locally
   },
 });
 

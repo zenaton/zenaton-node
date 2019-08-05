@@ -30,6 +30,49 @@ module.exports = class Engine {
     this.processor = processor;
   }
 
+  async dispatchTask(name, input, options) {
+    // processing from outside an Agent
+    if (this.processor == null) {
+      return this.client.dispatchTask(name, input, options);
+    }
+
+    // processing from inside the Agent
+    return this.processor.dispatchTask(name, input, options);
+  }
+
+  async dispatchWorkflow(name, input, options) {
+    // processing from outside an Agent
+    if (this.processor == null) {
+      return this.client.dispatchWorkflow(name, input, options);
+    }
+
+    // processing from inside the Agent
+    return this.processor.dispatchWorkflow(name, input, options);
+  }
+
+  async executeTask(name, input, options) {
+    // processing from outside an Agent
+    if (this.processor == null) {
+      console.warn(
+        `Warning - using Execute.task("${name}") syntax locally is for dev only`,
+      );
+      return taskManager.getInstance(name).handle(input);
+    }
+
+    // processing from inside the Agent
+    return this.processor.executeTask(name, input, options);
+  }
+
+  async executeWorkflow(name, input, options) {
+    // processing from outside an Agent
+    if (this.processor == null) {
+      return this.client.executeWorkflow(name, input, options);
+    }
+
+    // processing from inside the Agent
+    return this.processor.executeWorkflow(name, input, options);
+  }
+
   async execute(jobs) {
     if (!jobs.length) {
       return [];

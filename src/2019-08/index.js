@@ -1,5 +1,6 @@
 const Client = require("./Client");
-const Engine = require("./Engine/Engine");
+const Engine = require("./Engine");
+const Dispatch = require("./Dispatch");
 const { Task, taskManager, Wait } = require("./Tasks");
 const { Workflow, workflowManager, Version } = require("./Workflows");
 const { serializer } = require("./Services");
@@ -31,6 +32,7 @@ if (!Array.prototype.execute) {
 
 module.exports = {
   Client,
+  Dispatch,
   Engine,
   Task,
   taskManager,

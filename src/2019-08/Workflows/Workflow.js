@@ -1,81 +1,103 @@
 const workflowManager = require("./WorkflowManager");
-const AbstractWorkflow = require("./AbstractWorkflow");
 const { ExternalZenatonError, InvalidArgumentError } = require("../../Errors");
 const Builder = require("../Query/Builder");
+const execute = require("../Execute");
 
 const MAX_ID_SIZE = 256;
 
-module.exports = function workflowFunc(name, flow) {
+module.exports = function createWorkflowFunc(name, definition) {
+  const reservedMethods = [
+    "execute",
+    "id",
+    "parent",
+    "history",
+    "skip",
+    "pause",
+    "resume",
+    "complete",
+    "kill",
+    "send",
+  ];
+
+  const allowedMethods = [
+    "handle",
+    "id",
+    "onEvent",
+    "onStart",
+    "onSuccess",
+    "onFailure",
+    "onTimeout",
+    "onFailureRetryDelay",
+  ];
+
   // check that provided data have the right format
   if (typeof name !== "string") {
     throw new InvalidArgumentError(
-      "1st parameter must be a string (workflow name)",
+      "When getting or creating a workflow, 1st parameter must be a string (workflow name)",
     );
   }
 
   // workflow getter
-  if (undefined === flow) {
+  if (undefined === definition) {
     return workflowManager.getClass(name);
   }
 
   // check definition
-  if (typeof flow !== "function" && typeof flow !== "object") {
+  if (typeof definition !== "function" && typeof definition !== "object") {
     throw new InvalidArgumentError(
-      "2nd parameter (workflow implemention) must be a function or an object",
+      `When creating worflow "${name}", 2nd parameter (workflow implemention) must be a function or an object`,
     );
   }
-  if (typeof flow === "object") {
-    if (undefined === flow.handle) {
+  if (typeof definition === "object") {
+    if (undefined === definition.handle) {
       throw new InvalidArgumentError(
-        'Your workflow MUST define a "handle" method',
+        `When creating worflow "${name}", 2nd parameter (workflow definition) must have a "handle" method`,
       );
     }
-    AbstractWorkflow.methods().forEach((method) => {
-      if (undefined !== flow[method] && typeof flow[method] !== "function") {
-        throw new InvalidArgumentError(`"${method}" method must be a function`);
+    Object.keys(definition).forEach((method) => {
+      if (allowedMethods.indexOf(method) < 0) {
+        // reserved method
+        throw new InvalidArgumentError(
+          `When creating worflow "${name}", "${method}" is not an authorized method name ("${allowedMethods}")`,
+        );
+      }
+      if (typeof definition[method] !== "function") {
+        throw new InvalidArgumentError(
+          `When creating worflow "${name}", "${method}" must be a function`,
+        );
       }
     });
   }
 
-  let _useInit = true;
-
   // WARNING "WorkflowClass" is used in Version.js, do not change it in isolation
-  const WorkflowClass = class extends AbstractWorkflow {
-    constructor(...data) {
-      super(name);
+  const WorkflowClass = class WorkflowClass {
+    constructor(properties = {}) {
+      // this in allowed methods = properties + reserved methods
+      const obj = Object.assign(properties, { execute });
 
-      // if this workflow defined by a simple function?
-      const isFn = typeof flow === "function";
-
-      // set instance data
-      if (_useInit === false || isFn || undefined === flow.init) {
-        const firstArgData = data.length ? data[0] : null;
-        this.data = firstArgData || {};
-      } else {
-        this.data = {};
-        flow.init.bind(this.data)(...data);
-      }
-
-      const that = this;
-      // set and bind instance methods
-      if (isFn) {
-        this.handle = flow.bind(this.data);
-      } else {
-        Object.keys(flow).forEach((method) => {
-          if (method !== "init") {
-            if (AbstractWorkflow.methods().indexOf(method) < 0) {
-              // private method
-              if (undefined !== that.data[method]) {
-                throw new InvalidArgumentError(
-                  `"${method}" is defined more than once in "${name}" workflow`,
-                );
-              }
-              that.data[method] = flow[method].bind(that.data);
-            } else {
-              // zenaton method
-              that[method] = flow[method].bind(that.data);
-            }
+      // build a watcher to check that reserved methods are not overrided
+      const watcher = {
+        set(target, key, value) {
+          if (reservedMethods.indexOf(key) >= 0) {
+            throw new InvalidArgumentError(
+              `In worflow "${name}", "this.${key}" is a reserved method and can not be overrided`,
+            );
           }
+          // eslint-disable-next-line no-param-reassign
+          target[key] = value;
+          return true;
+        },
+      };
+      this.data = new Proxy(obj, watcher);
+
+      // set and bind instance methods
+      if (typeof definition === "function") {
+        this.handle = definition.bind(this.data);
+      } else {
+        const that = this;
+
+        Object.keys(definition).forEach((method) => {
+          that[method] = definition[method].bind(that.data);
         });
       }
     }
@@ -128,18 +150,6 @@ module.exports = function workflowFunc(name, flow) {
      */
     static whereId(id) {
       return new Builder(name).whereId(id);
-    }
-
-    /**
-     * static methods used to tell class to
-     * not use construct method to inject data
-     */
-    static get _useInit() {
-      return _useInit;
-    }
-
-    static set _useInit(value) {
-      _useInit = value;
     }
   };
 
