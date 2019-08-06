@@ -6,7 +6,7 @@ module.exports = class Dispatch {
     this.options = {};
   }
 
-  static async task(name, input) {
+  static async task(name, ...input) {
     if (typeof name !== "string") {
       throw new InvalidArgumentError(
         "First parameter of 'Dispatch.task' must be a string (task's name)",
@@ -15,7 +15,7 @@ module.exports = class Dispatch {
     return new Engine().dispatchTask(name, input, this.options);
   }
 
-  static async workflow(name, input) {
+  static async workflow(name, ...input) {
     if (typeof name !== "string") {
       throw new InvalidArgumentError(
         "First parameter of 'Dispatch.workflow' must be a string (workflow's name)",

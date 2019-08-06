@@ -73,7 +73,7 @@ module.exports = function createWorkflowFunc(name, definition) {
   const WorkflowClass = class WorkflowClass {
     constructor(properties = {}) {
       // this in allowed methods = properties + reserved methods
-      const obj = Object.assign(properties, { execute });
+      const obj = Object.assign({}, properties, { execute });
 
       // build a watcher to check that reserved methods are not overrided
       const watcher = {
