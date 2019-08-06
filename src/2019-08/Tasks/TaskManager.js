@@ -1,4 +1,4 @@
-const { InvalidArgumentError } = require("../../Errors");
+const { ExternalZenatonError } = require("../../Errors");
 
 let instance;
 
@@ -14,8 +14,11 @@ const TaskManager = class {
 
   checkClass(name) {
     const TaskClass = this.getClass(name);
+    // check that we know task definition
     if (undefined === TaskClass) {
-      throw new InvalidArgumentError(`"Task ${name}" is unkwown`);
+      throw new ExternalZenatonError(
+        `Unknown task "${name}", please add it to your --boot file`,
+      );
     }
     return TaskClass;
   }
@@ -23,7 +26,7 @@ const TaskManager = class {
   setClass(name, task) {
     // check that this workflow does not exist yet
     if (undefined !== this.getClass(name)) {
-      throw new InvalidArgumentError(`"Task ${name}" can not be defined twice`);
+      throw new ExternalZenatonError(`"Task ${name}" can not be defined twice`);
     }
     this.tasks[name] = task;
   }

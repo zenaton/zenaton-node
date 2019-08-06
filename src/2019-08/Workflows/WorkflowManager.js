@@ -1,5 +1,5 @@
 const { serializer } = require("../Services");
-const { InvalidArgumentError } = require("../../Errors");
+const { ExternalZenatonError } = require("../../Errors");
 
 let instance;
 
@@ -16,7 +16,9 @@ const WorkflowManager = class {
   checkClass(name) {
     const WorkflowClass = this.getClass(name);
     if (undefined === WorkflowClass) {
-      throw new InvalidArgumentError(`Workflow "${name}" is unkwown`);
+      throw new ExternalZenatonError(
+        `Unknown workflow "${name}", please add it to your --boot file`,
+      );
     }
     return WorkflowClass;
   }
@@ -24,7 +26,7 @@ const WorkflowManager = class {
   setClass(name, workflow) {
     // check that this workflow does not exist yet
     if (undefined !== this.getClass(name)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Workflow "${name}" can not be defined twice`,
       );
     }
