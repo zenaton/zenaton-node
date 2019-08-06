@@ -8,11 +8,15 @@ const { version } = require("./infos");
 const Errors = require("./Errors");
 
 const LAST_CODE_PATH = "2019-08";
+/* We set this for helping the Agent
+ * to check if is able to manage this version. */
+process.env.ZENATON_LAST_CODE_PATH = LAST_CODE_PATH;
 
-/* If 'ZENATON_CODE_PATH_VERSION' is present,
- * it means we are loading through the agent/boot file.
+/* If 'ZENATON_CODE_PATH_VERSION' is present, it means
+ * we are loading a specific code for processing an old workflow.
  * Otherwise, we load by default 'LAST_CODE_PATH'. */
 const codePath = process.env.ZENATON_CODE_PATH_VERSION || LAST_CODE_PATH;
+
 // eslint-disable-next-line import/no-dynamic-require
 const dynamicDependencies = require(`./${codePath}`);
 
