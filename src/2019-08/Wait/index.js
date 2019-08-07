@@ -1,21 +1,19 @@
-const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
-const Engine = require("../Engine");
+const WaitDefinition = require("./WaitDefinition");
 
 module.exports = class Wait {
-  constructor() {
-    this.options = {};
+  static forever() {
+    return WaitDefinition().forever();
   }
 
-  static async for(duration) {
-    if (!Number.isInteger(duration)) {
-      throw new InvalidArgumentError(
-        "First parameter of 'wait.for' must be an integer (wait's duration)",
-      );
-    }
-    return new Engine().executeTask(
-      "zenaton:wait",
-      { event: null, duration },
-      this.options,
-    );
+  static for(duration) {
+    return WaitDefinition().for(duration);
+  }
+
+  static until(timestamp) {
+    return WaitDefinition().until(timestamp);
+  }
+
+  static event(event) {
+    return WaitDefinition().event(event);
   }
 };
