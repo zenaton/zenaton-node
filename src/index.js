@@ -20,6 +20,10 @@ const codePath = process.env.ZENATON_CODE_PATH_VERSION || LAST_CODE_PATH;
 // eslint-disable-next-line import/no-dynamic-require
 const dynamicDependencies = require(`./${codePath}`);
 
+// eslint-disable-next-line import/no-dynamic-require
+const async = require(`./async`);
+const sync = require(`./sync`);
+
 /* We always expose the very last version of the client to account
  * for the special case of old tasks starting new workflows, which
  * always need to be on the last up-to-date code path */
@@ -31,6 +35,8 @@ module.exports = {
     appVersion: version,
     codePath,
   },
+  async,
+  sync,
   Errors,
   LastClient,
   ...dynamicDependencies,
