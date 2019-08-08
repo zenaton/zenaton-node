@@ -6,7 +6,7 @@ module.exports = class Execute {
     this.options = {};
   }
 
-  static async task(name, input) {
+  static async task(name, ...input) {
     if (typeof name !== "string") {
       throw new InvalidArgumentError(
         "First parameter of 'Execute.task' must be a string (task's name)",

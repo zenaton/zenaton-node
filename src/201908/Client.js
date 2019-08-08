@@ -29,7 +29,7 @@ const ATTR_SCHEDULING_CRON = "scheduling_cron";
 
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
-const CODE_PATH_VERSION = "2019-08";
+const CODE_PATH_VERSION = "201908";
 
 const EVENT_INPUT = "event_input";
 const EVENT_NAME = "event_name";
