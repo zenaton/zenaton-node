@@ -1,5 +1,5 @@
 const uuidv4 = require("uuid/v4");
-const workflowManager = require("./Workflows/WorkflowManager");
+const workflowManager = require("./Workflows/Manager");
 const http = require("./Services/Http");
 const serializer = require("./Services/Serializer");
 const { version } = require("../infos");
@@ -16,7 +16,7 @@ const API_TOKEN = "api_token";
 
 const ATTR_INTENT_ID = "intent_id";
 const ATTR_INSTANCE_ID = "instance_id";
-const ATTR_ID = "custom_id";
+const ATTR_CUSTOM_ID = "custom_id";
 const ATTR_NAME = "name";
 const ATTR_CANONICAL = "canonical_name";
 const ATTR_DATA = "data";
@@ -29,7 +29,7 @@ const ATTR_SCHEDULING_CRON = "scheduling_cron";
 
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
-const CODE_PATH_VERSION = "2019-08";
+const CODE_PATH_VERSION = "201908";
 
 const EVENT_INPUT = "event_input";
 const EVENT_NAME = "event_name";
@@ -178,34 +178,38 @@ module.exports = class Client {
   /**
    * Kill a workflow instance
    */
-  async killWorkflow(workflowName, customId) {
-    return this.updateInstance(workflowName, customId, WORKFLOW_KILL);
+  async killWorkflow(query) {
+    return this.updateInstance(query._name(), query._customId(), WORKFLOW_KILL);
   }
 
   /**
    * Pause a workflow instance
    */
-  async pauseWorkflow(workflowName, customId) {
-    return this.updateInstance(workflowName, customId, WORKFLOW_PAUSE);
+  async pauseWorkflow(query) {
+    return this.updateInstance(
+      query._name(),
+      query._customId(),
+      WORKFLOW_PAUSE,
+    );
   }
 
   /**
    * Resume a workflow instance
    */
-  async resumeWorkflow(workflowName, customId) {
-    return this.updateInstance(workflowName, customId, WORKFLOW_RUN);
+  async resumeWorkflow(query) {
+    return this.updateInstance(query._name(), query._customId(), WORKFLOW_RUN);
   }
 
   /**
    * Find a workflow instance
    */
-  async findWorkflow(workflowName, customId) {
+  async findWorkflow(query) {
     const url = this.getWebsiteUrl("instances");
 
     const params = Object.assign(
       {
-        [ATTR_ID]: customId,
-        [ATTR_NAME]: workflowName,
+        [ATTR_CUSTOM_ID]: query._customId(),
+        [ATTR_NAME]: query._name(),
         [ATTR_PROG]: PROG,
         [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
         [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
@@ -217,14 +221,14 @@ module.exports = class Client {
     return http
       .get(url, { params })
       .then((body) =>
-        workflowManager.getWorkflow(workflowName, body.data.properties),
+        workflowManager.getWorkflow(query._name(), body.data.properties),
       );
   }
 
   /**
    * Send an event to a workflow instance
    */
-  async sendEvent(workflowName, customId, eventName, eventData) {
+  async sendEvent(query, eventName, eventData) {
     const url = this.getWorkerUrlNew("events");
 
     const body = {
@@ -232,8 +236,8 @@ module.exports = class Client {
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: workflowName,
-      [ATTR_ID]: customId,
+      [ATTR_NAME]: query._name(),
+      [ATTR_CUSTOM_ID]: query._customId(),
       [EVENT_NAME]: eventName,
       [EVENT_INPUT]: serializer.encode(eventData),
       [EVENT_DATA]: serializer.encode({
@@ -272,7 +276,7 @@ module.exports = class Client {
     return http.post(url, body, { params });
   }
 
-  async updateInstance(workflowName, customId, mode) {
+  async updateInstance(name, customId, mode) {
     const url = this.getWorkerUrlNew("instances");
 
     const body = {
@@ -280,13 +284,13 @@ module.exports = class Client {
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: workflowName,
+      [ATTR_NAME]: name,
       [ATTR_MODE]: mode,
     };
 
     const params = Object.assign(
       {
-        [ATTR_ID]: customId,
+        [ATTR_CUSTOM_ID]: customId,
       },
       this.getAppEnv(),
     );
@@ -294,7 +298,7 @@ module.exports = class Client {
     return http.put(url, body, { params });
   }
 
-  getBodyForTask(name, input, options) {
+  getBodyForTask(name, input) {
     return {
       [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
@@ -310,7 +314,7 @@ module.exports = class Client {
     };
   }
 
-  getBodyForWorkflow(name, input, options) {
+  getBodyForWorkflow(name, input) {
     return {
       [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
@@ -321,7 +325,7 @@ module.exports = class Client {
       [ATTR_NAME]: name,
       [ATTR_DATA]: serializer.encode(input),
       // TODO : add optional customId
-      [ATTR_ID]: null, // flow._getCustomId(),
+      [ATTR_CUSTOM_ID]: null, // flow._getCustomId(),
     };
   }
 

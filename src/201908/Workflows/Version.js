@@ -1,8 +1,8 @@
-const workflowManager = require("./WorkflowManager");
+const workflowManager = require("./Manager");
 const { InvalidArgumentError } = require("../../Errors");
-const Builder = require("../Query/Builder");
+const Query = require("./Query");
 
-module.exports = function versionFunc(name, implementation) {
+const WorkflowVersion = function WorkflowVersion(name, implementation) {
   // check that provided data have the right format
   if (typeof name !== "string") {
     throw new InvalidArgumentError(
@@ -67,7 +67,7 @@ module.exports = function versionFunc(name, implementation) {
     }
 
     static whereId(id) {
-      return new Builder(name).whereId(id);
+      return new Query(name).whereId(id);
     }
   };
 
@@ -76,3 +76,5 @@ module.exports = function versionFunc(name, implementation) {
 
   return VersionClass;
 };
+
+module.exports = WorkflowVersion;

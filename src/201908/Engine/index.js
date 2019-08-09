@@ -1,7 +1,7 @@
 const Client = require("../Client");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
-const workflowManager = require("../Workflows/WorkflowManager");
-const taskManager = require("../Tasks/TaskManager");
+const workflowManager = require("../Workflows/Manager");
+const taskManager = require("../Tasks/Manager");
 
 let instance = null;
 

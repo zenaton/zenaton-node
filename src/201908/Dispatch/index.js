@@ -12,7 +12,7 @@ module.exports = class Dispatch {
         "First parameter of 'Dispatch.task' must be a string (task's name)",
       );
     }
-    return new Engine().dispatchTask(name, input, this.options);
+    return new Engine().dispatchTask(name, input);
   }
 
   static async workflow(name, ...input) {
@@ -22,6 +22,6 @@ module.exports = class Dispatch {
       );
     }
 
-    return new Engine().dispatchWorkflow(name, input, this.options);
+    return new Engine().dispatchWorkflow(name, input);
   }
 };

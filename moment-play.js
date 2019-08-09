@@ -1,13 +1,13 @@
 const moment = require("moment-timezone");
 // eslint-disable-next-line node/no-unpublished-require
-const duration = require("./src/2019-08/Wait/DurationDefinition");
+const duration = require("./src/201908/Wait/DurationDefinition");
 // eslint-disable-next-line node/no-unpublished-require
-const timeDef = require("./src/2019-08/Wait/TimeDefinition");
+const timeDef = require("./src/201908/Wait/TimeDefinition");
 
 // eslint-disable-next-line node/no-unpublished-require
-const time = require("./src/2019-08/Wait/Time");
+const time = require("./src/201908/Wait/Time");
 
-// const trait = require("./src/2019-08/Traits/WithTimestamp");
+// const trait = require("./src/201908/Traits/WithTimestamp");
 
 const m1 = moment();
 const m2 = m1.clone();

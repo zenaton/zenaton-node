@@ -1,6 +1,6 @@
-const workflowManager = require("./WorkflowManager");
+const workflowManager = require("./Manager");
 const { ExternalZenatonError, InvalidArgumentError } = require("../../Errors");
-const Builder = require("../Query/Builder");
+const Query = require("./Query");
 const execute = require("../Execute");
 const wait = require("../Wait");
 
@@ -32,6 +32,11 @@ module.exports = function createWorkflowFunc(name, definition) {
     "onFailureRetryDelay",
   ];
 
+  // General workflow query
+  if (undefined === name && undefined === definition) {
+    return new Query();
+  }
+
   // check that provided data have the right format
   if (typeof name !== "string") {
     throw new InvalidArgumentError(
@@ -39,9 +44,9 @@ module.exports = function createWorkflowFunc(name, definition) {
     );
   }
 
-  // workflow getter
+  // Specific workflow query
   if (undefined === definition) {
-    return workflowManager.getClass(name);
+    return new Query(name);
   }
 
   // check definition
@@ -145,13 +150,6 @@ module.exports = function createWorkflowFunc(name, definition) {
       }
 
       return customId;
-    }
-
-    /**
-     * ORM begin
-     */
-    static whereId(id) {
-      return new Builder(name).whereId(id);
     }
   };
 
