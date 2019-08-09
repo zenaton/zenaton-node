@@ -66,7 +66,10 @@ module.exports = class Engine {
   async executeWorkflow(name, input, options) {
     // processing from outside an Agent
     if (this.processor == null) {
-      return this.client.executeWorkflow(name, input, options);
+      console.warn(
+        `Warning - using Execute.workflow("${name}") syntax locally is for dev only`,
+      );
+      return workflowManager.getInstance(name).handle(input);
     }
 
     // processing from inside the Agent
