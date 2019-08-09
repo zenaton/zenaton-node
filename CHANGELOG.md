@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Changed
 
+- Default timezone with new syntax is now UTC.
+- Time/Duration methods don't have anymore `1` as default value.
+- Time/Duration methods can't be stacked, works now like mutators.
+
 ### Deprecated
 
 ### Removed

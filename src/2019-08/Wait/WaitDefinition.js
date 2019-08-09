@@ -11,44 +11,50 @@ class WaitDefinition {
   }
 
   forever() {
-    this.duration = 60 * 60 * 24 * 365 * 100 + 7734;
+    this.duration = null;
 
     return this.apply();
   }
 
   for(duration) {
-    if (!Number.isInteger(duration)) {
+    if (
+      !Number.isInteger(duration) &&
+      typeof duration !== "object" &&
+      duration.constructor.name !== "DurationDefinition"
+    ) {
       throw new InvalidArgumentError(
-        "First parameter of 'wait.for' must be an integer (wait's duration)",
+        "First parameter of 'wait.for' must be an integer or a Duration object",
       );
     }
-    this.duration = duration;
+    this.duration = Number.isInteger(duration) ? duration : duration.get();
 
     return this.apply();
   }
 
   until(timestamp) {
-    if (!Number.isInteger(timestamp)) {
+    if (
+      !Number.isInteger(timestamp) &&
+      typeof duration !== "object" &&
+      timestamp.constructor.name !== "TimeDefinition"
+    ) {
       throw new InvalidArgumentError(
-        "First parameter of 'wait.until' must be an integer (wait's timestamp",
+        "First parameter of 'wait.for' must be an integer or a Date object",
       );
     }
-    this.timestamp = timestamp;
+    this.timestamp = Number.isInteger(timestamp) ? timestamp : timestamp.get();
 
     return this.apply();
   }
 
-  event(event, filter = null) {
-    this.events.push([event, filter]);
+  event(event) {
+    this.event = event;
 
     return this;
   }
 
   async apply() {
-    const event = this.events.length > 0 ? this.events[0][0] : null;
-
     return new Engine().executeTask("zenaton:wait", {
-      event,
+      event: this.event,
       duration: this.duration,
       timestamp: this.timestamp,
     });
