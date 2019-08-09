@@ -3,7 +3,7 @@ const { ExternalZenatonError } = require("../../Errors");
 
 let instance;
 
-const WorkflowManager = class {
+const WorkflowManager = class WorkflowManager {
   constructor() {
     if (instance) {
       return instance;

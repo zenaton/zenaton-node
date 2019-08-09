@@ -1,3 +1,4 @@
 module.exports.Task = require("./Task");
 module.exports.Wait = require("./Wait");
-module.exports.taskManager = require("./TaskManager");
+module.exports.TaskInstance = require("./Instance");
+module.exports.taskManager = require("./Manager");

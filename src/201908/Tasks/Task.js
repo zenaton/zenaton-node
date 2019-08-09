@@ -1,4 +1,4 @@
-const taskManager = require("./TaskManager");
+const taskManager = require("./Manager");
 const { InvalidArgumentError } = require("../../Errors");
 
 module.exports = function createTaskFunc(name, definition) {
