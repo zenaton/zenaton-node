@@ -2,12 +2,14 @@ const workflowManager = require("./Manager");
 const { ExternalZenatonError, InvalidArgumentError } = require("../../Errors");
 const Query = require("./Query");
 const execute = require("../Execute");
+const wait = require("../Wait");
 
 const MAX_ID_SIZE = 256;
 
 module.exports = function createWorkflowFunc(name, definition) {
   const reservedMethods = [
     "execute",
+    "wait",
     "id",
     "parent",
     "history",
@@ -78,7 +80,7 @@ module.exports = function createWorkflowFunc(name, definition) {
   const WorkflowClass = class WorkflowClass {
     constructor(properties = {}) {
       // this in allowed methods = properties + reserved methods
-      const obj = Object.assign({}, properties, { execute });
+      const obj = Object.assign({}, properties, { execute, wait });
 
       // build a watcher to check that reserved methods are not overrided
       const watcher = {

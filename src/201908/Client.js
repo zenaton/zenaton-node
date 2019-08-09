@@ -298,7 +298,7 @@ module.exports = class Client {
     return http.put(url, body, { params });
   }
 
-  getBodyForTask(name, input, options) {
+  getBodyForTask(name, input) {
     return {
       [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
@@ -314,7 +314,7 @@ module.exports = class Client {
     };
   }
 
-  getBodyForWorkflow(name, input, options) {
+  getBodyForWorkflow(name, input) {
     return {
       [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
