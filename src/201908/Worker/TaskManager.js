@@ -12,9 +12,8 @@ const TaskManager = class {
     this.tasks = {};
   }
 
-  checkClass(name) {
-    const TaskClass = this.getClass(name);
-    // check that we know task definition
+  check(name) {
+    const TaskClass = this.get(name);
     if (undefined === TaskClass) {
       throw new ExternalZenatonError(
         `Unknown task "${name}", please add it to your --boot file`,
@@ -23,22 +22,19 @@ const TaskManager = class {
     return TaskClass;
   }
 
-  setClass(name, task) {
-    // check that this workflow does not exist yet
-    if (undefined !== this.getClass(name)) {
+  set(name, task) {
+    if (undefined !== this.get(name)) {
       throw new ExternalZenatonError(`"Task ${name}" can not be defined twice`);
     }
     this.tasks[name] = task;
   }
 
-  getClass(name) {
+  get(name) {
     return this.tasks[name];
   }
 
   getInstance(name) {
-    // get Task class
-    const TaskClass = this.checkClass(name);
-    // return new Task instance
+    const TaskClass = this.check(name);
     return new TaskClass();
   }
 };

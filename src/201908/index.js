@@ -1,25 +1,24 @@
-const Client = require("./Client");
-const Engine = require("./Engine");
-const Dispatch = require("./Dispatch");
-const { Task, taskManager, Wait } = require("./Tasks");
-const { Workflow, workflowManager, Version } = require("./Workflows");
-const { serializer } = require("./Services");
-const Duration = require("./Wait/Duration");
-const Time = require("./Wait/Time");
-const Parallel = require("./Parallel/Parallel");
+const client = require("./Client/Client");
+const objectify = require("./Services/Objectify");
+const dispatch = objectify(require("./Client/Dispatch"));
+const select = objectify(require("./Client/Select"));
+const workflow = require("./Decider/Workflow");
+const workflowManager = require("./Decider/WorkflowManager");
+const task = require("./Worker/Task");
+const taskManager = require("./Worker/TaskManager");
+const serializer = require("./Services/Serializer");
+const duration = require("./Services/Duration");
+const datetime = require("./Services/DateTime");
 
 module.exports = {
-  Client,
-  Dispatch,
-  Duration,
-  Time,
-  Engine,
-  Task,
-  taskManager,
-  Wait,
-  Workflow,
+  client,
+  select,
+  dispatch,
+  workflow,
   workflowManager,
-  Version,
+  task,
+  taskManager,
+  duration,
+  datetime,
   serializer,
-  Parallel,
 };

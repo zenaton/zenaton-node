@@ -1,7 +1,7 @@
-const taskManager = require("./Manager");
 const { InvalidArgumentError } = require("../../Errors");
+const taskManager = require("./TaskManager");
 
-module.exports = function createTaskFunc(name, definition) {
+const task = function task(name, definition) {
   const reservedMethods = [
     "handle",
     "maxProcessingTime",
@@ -10,13 +10,8 @@ module.exports = function createTaskFunc(name, definition) {
 
   if (typeof name !== "string") {
     throw new InvalidArgumentError(
-      "When getting or creating a task, 1st parameter (task name) must be a string",
+      "When creating a task, 1st parameter (task name) must be a string",
     );
-  }
-
-  // task getter
-  if (undefined === definition) {
-    return taskManager.getClass(name);
   }
 
   // check task definition
@@ -66,8 +61,10 @@ module.exports = function createTaskFunc(name, definition) {
   // define name of this class
   Object.defineProperty(TaskClass, "name", { value: name });
 
-  // store this fonction in a singleton to retrieve it later
-  taskManager.setClass(name, TaskClass);
+  // register this new task
+  taskManager.set(name, TaskClass);
 
   return TaskClass;
 };
+
+module.exports = task;
