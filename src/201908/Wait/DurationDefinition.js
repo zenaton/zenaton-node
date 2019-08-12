@@ -95,7 +95,7 @@ class DurationDefinition {
 
 module.exports = () => new DurationDefinition();
 
-module.exports.compute = (durationDefinition) =>
+module.exports.compute = (durationDefinition, baseDate) =>
   Number.isInteger(durationDefinition)
     ? durationDefinition
     : (() => {
@@ -107,7 +107,7 @@ module.exports.compute = (durationDefinition) =>
 
         const duration = durationDefinition.split(":");
 
-        const now = moment();
+        const now = moment(baseDate);
         const date = now.clone();
 
         // eslint-disable-next-line no-plusplus

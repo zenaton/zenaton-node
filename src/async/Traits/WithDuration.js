@@ -61,12 +61,15 @@ module.exports = {
 
   _initNow() {
     // get setted or current time zone
+
+    const baseDate = this.data._$baseDate ? this.data._$baseDate : undefined;
+
     const tz =
       undefined !== this.constructor._timezone
         ? this.constructor._timezone
         : moment.tz.guess();
 
-    const now = moment().tz(tz);
+    const now = moment(baseDate).tz(tz);
 
     return now;
   },

@@ -6,7 +6,7 @@ class TimeDefinition {
   constructor() {
     this.Duration = DurationDefinition();
 
-    this.timestamp = null;
+    this.ts = null;
     this.definition = {};
 
     return this;
@@ -19,7 +19,7 @@ class TimeDefinition {
       );
     }
 
-    this.timestamp = timestamp;
+    this.ts = timestamp;
     return this;
   }
 
@@ -163,17 +163,17 @@ class TimeDefinition {
   }
 
   get() {
-    return this.timestamp ? this.timestamp : this.definition;
+    return this.ts ? this.ts : this.definition;
   }
 }
 
 module.exports = () => new TimeDefinition();
 
-module.exports.compute = (timeDefinition) =>
+module.exports.compute = (timeDefinition, baseDate) =>
   Number.isInteger(timeDefinition)
     ? timeDefinition
     : (() => {
-        const now = moment();
+        const now = moment(baseDate);
         const date = now.clone();
 
         // we add a duration to current date if specified
