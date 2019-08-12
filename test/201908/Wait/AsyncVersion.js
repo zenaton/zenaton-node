@@ -58,22 +58,3 @@ it("wait duration at time", () => {
   const wait = new Wait().weeks(3).at("7:00");
   expect(wait._getTimestampOrDuration()).to.be.deep.equals([1567141200, null]);
 });
-
-/* ********  Euh ????  */
-it("wait day of month at time", () => {
-  // 1567951200 = Sunday 8 September 2019 14:00:00
-  const wait = new Wait()
-    .dayOfMonth(8)
-    .weeks(3)
-    .at("12:00");
-  expect(wait._getTimestampOrDuration()).to.be.deep.equals([1567951200, null]);
-});
-
-it("wait day of month at time", () => {
-  // 1567951200 = Sunday 8 September 2019 14:00:00
-  const wait = new Wait()
-    .weeks(3)
-    .dayOfMonth(8)
-    .at("12:00");
-  expect(wait._getTimestampOrDuration()).to.be.deep.equals([1567951200, null]);
-});

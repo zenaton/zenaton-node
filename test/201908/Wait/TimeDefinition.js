@@ -30,49 +30,49 @@ describe("DateTime Definition methods", () => {
     const time = Time()
       .monday()
       .get();
-    expect(time).to.be.deep.equals({ dayOfWeek: [1, 0] });
+    expect(time).to.be.deep.equals({ dayOfWeek: [1, 1] });
   });
 
   it("set tuesday", () => {
     const time = Time()
       .tuesday()
       .get();
-    expect(time).to.be.deep.equals({ dayOfWeek: [2, 0] });
+    expect(time).to.be.deep.equals({ dayOfWeek: [2, 1] });
   });
 
   it("set thursday", () => {
     const time = Time()
       .wednesday()
       .get();
-    expect(time).to.be.deep.equals({ dayOfWeek: [3, 0] });
+    expect(time).to.be.deep.equals({ dayOfWeek: [3, 1] });
   });
 
   it("set thursday", () => {
     const time = Time()
       .thursday()
       .get();
-    expect(time).to.be.deep.equals({ dayOfWeek: [4, 0] });
+    expect(time).to.be.deep.equals({ dayOfWeek: [4, 1] });
   });
 
   it("set friday", () => {
     const time = Time()
       .friday()
       .get();
-    expect(time).to.be.deep.equals({ dayOfWeek: [5, 0] });
+    expect(time).to.be.deep.equals({ dayOfWeek: [5, 1] });
   });
 
   it("set saturday", () => {
     const time = Time()
       .saturday()
       .get();
-    expect(time).to.be.deep.equals({ dayOfWeek: [6, 0] });
+    expect(time).to.be.deep.equals({ dayOfWeek: [6, 1] });
   });
 
   it("set sunday", () => {
     const time = Time()
       .sunday()
       .get();
-    expect(time).to.be.deep.equals({ dayOfWeek: [7, 0] });
+    expect(time).to.be.deep.equals({ dayOfWeek: [7, 1] });
   });
 
   it("set monday with count", () => {
@@ -139,7 +139,7 @@ describe("Duration Definition compute", () => {
       .at("08:00");
     expect(Time.compute(time.get(), baseDate)).to.be.equals(1565589600);
   });
-
+  /*
   it.only("compute duration at time 1", () => {
     // 1567141200 = Friday 30 August 2019 05:00:00
     const time = Time()
@@ -156,5 +156,5 @@ describe("Duration Definition compute", () => {
       .dayOfMonth(8)
       .at("12:00");
     expect(Time.compute(time.get(), baseDate)).to.be.equals(1567141200);
-  });
+  }); */
 });

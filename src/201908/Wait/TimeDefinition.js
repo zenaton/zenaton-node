@@ -2,6 +2,14 @@ const moment = require("moment-timezone");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 const DurationDefinition = require("./DurationDefinition");
 
+const MONDAY = 1;
+const TUESDAY = 2;
+const WEDNESDAY = 3;
+const THURSDAY = 4;
+const FRIDAY = 5;
+const SATURDAY = 6;
+const SUNDAY = 7;
+
 class TimeDefinition {
   constructor() {
     this.Duration = DurationDefinition();
@@ -43,80 +51,80 @@ class TimeDefinition {
     return this;
   }
 
-  monday(count = 0) {
+  monday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'Date.monday' must be an integer",
       );
     }
 
-    this.definition.dayOfWeek = [1, count];
+    this.definition.dayOfWeek = [MONDAY, count];
     return this;
   }
 
-  tuesday(count = 0) {
+  tuesday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'Date.monday' must be an integer",
       );
     }
 
-    this.definition.dayOfWeek = [2, count];
+    this.definition.dayOfWeek = [TUESDAY, count];
     return this;
   }
 
-  wednesday(count = 0) {
+  wednesday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'Date.monday' must be an integer",
       );
     }
 
-    this.definition.dayOfWeek = [3, count];
+    this.definition.dayOfWeek = [WEDNESDAY, count];
     return this;
   }
 
-  thursday(count = 0) {
+  thursday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'Date.monday' must be an integer",
       );
     }
 
-    this.definition.dayOfWeek = [4, count];
+    this.definition.dayOfWeek = [THURSDAY, count];
     return this;
   }
 
-  friday(count = 0) {
+  friday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'Date.monday' must be an integer",
       );
     }
 
-    this.definition.dayOfWeek = [5, count];
+    this.definition.dayOfWeek = [FRIDAY, count];
     return this;
   }
 
-  saturday(count = 0) {
+  saturday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'Date.monday' must be an integer",
       );
     }
 
-    this.definition.dayOfWeek = [6, count];
+    this.definition.dayOfWeek = [SATURDAY, count];
     return this;
   }
 
-  sunday(count = 0) {
+  sunday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'Date.monday' must be an integer",
       );
     }
 
-    this.definition.dayOfWeek = [7, count];
+    this.definition.dayOfWeek = [SUNDAY, count];
     return this;
   }
 

@@ -4,6 +4,14 @@ const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 const durationChecker = /^\d+:\d+:\d+:\d+:\d+:\d+:\d+$/;
 const periodsForCompute = ["s", "m", "h", "d", "w", "M", "y"];
 
+const SECONDS_INDEX = 0;
+const MINUTES_INDEX = 1;
+const HOURS_INDEX = 2;
+const DAYS_INDEX = 3;
+const WEEKS_INDEX = 4;
+const MONTHS_INDEX = 5;
+const YEARS_INDEX = 6;
+
 class DurationDefinition {
   constructor() {
     this.duration = [0, 0, 0, 0, 0, 0, 0];
@@ -18,7 +26,7 @@ class DurationDefinition {
       );
     }
 
-    this.duration[0] = seconds;
+    this.duration[SECONDS_INDEX] = seconds;
     return this;
   }
 
@@ -29,7 +37,7 @@ class DurationDefinition {
       );
     }
 
-    this.duration[1] = minutes;
+    this.duration[MINUTES_INDEX] = minutes;
     return this;
   }
 
@@ -40,7 +48,7 @@ class DurationDefinition {
       );
     }
 
-    this.duration[2] = hours;
+    this.duration[HOURS_INDEX] = hours;
     return this;
   }
 
@@ -51,7 +59,7 @@ class DurationDefinition {
       );
     }
 
-    this.duration[3] = days;
+    this.duration[DAYS_INDEX] = days;
     return this;
   }
 
@@ -62,7 +70,7 @@ class DurationDefinition {
       );
     }
 
-    this.duration[4] = weeks;
+    this.duration[WEEKS_INDEX] = weeks;
     return this;
   }
 
@@ -73,7 +81,7 @@ class DurationDefinition {
       );
     }
 
-    this.duration[5] = months;
+    this.duration[MONTHS_INDEX] = months;
     return this;
   }
 
@@ -84,7 +92,7 @@ class DurationDefinition {
       );
     }
 
-    this.duration[6] = years;
+    this.duration[YEARS_INDEX] = years;
     return this;
   }
 
