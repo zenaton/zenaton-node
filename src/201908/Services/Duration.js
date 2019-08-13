@@ -1,7 +1,7 @@
 const moment = require("moment-timezone");
+const objectify = require("../Services/Objectify");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 
-const durationChecker = /^\d+:\d+:\d+:\d+:\d+:\d+:\d+$/;
 const periodsForCompute = ["s", "m", "h", "d", "w", "M", "y"];
 
 const SECONDS_INDEX = 0;
@@ -12,7 +12,7 @@ const WEEKS_INDEX = 4;
 const MONTHS_INDEX = 5;
 const YEARS_INDEX = 6;
 
-class DurationDefinition {
+class Duration {
   constructor() {
     this.duration = [0, 0, 0, 0, 0, 0, 0];
 
@@ -96,32 +96,17 @@ class DurationDefinition {
     return this;
   }
 
-  get() {
-    return this.duration.join(":");
+  _get(baseDate) {
+    const now = moment(baseDate);
+    const date = now.clone();
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < this.duration.length; i++) {
+      date.add(parseInt(this.duration[i], 10), periodsForCompute[i]);
+    }
+
+    return date.diff(now, "seconds");
   }
 }
 
-module.exports = () => new DurationDefinition();
-
-module.exports.compute = (durationDefinition, baseDate) =>
-  Number.isInteger(durationDefinition)
-    ? durationDefinition
-    : (() => {
-        if (!durationChecker.test(durationDefinition)) {
-          throw new InvalidArgumentError(
-            "Parameter of 'Duration.compute' must be an integer or a well formated string",
-          );
-        }
-
-        const duration = durationDefinition.split(":");
-
-        const now = moment(baseDate);
-        const date = now.clone();
-
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < duration.length; i++) {
-          date.add(parseInt(duration[i], 10), periodsForCompute[i]);
-        }
-
-        return date.diff(now, "seconds");
-      })();
+module.exports = objectify(Duration);
