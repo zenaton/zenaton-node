@@ -97,8 +97,7 @@ class Duration {
   }
 
   get(definition, baseDate) {
-    const durationDefinition =
-      undefined !== definition ? definition : this._getDefinition();
+    const durationDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(durationDefinition)) {
       return durationDefinition;

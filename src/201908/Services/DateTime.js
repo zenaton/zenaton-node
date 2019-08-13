@@ -124,42 +124,48 @@ class DateTime {
 
   seconds(seconds) {
     this.duration.seconds(seconds);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   minutes(minutes) {
     this.duration.minutes(minutes);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   hours(hours) {
     this.duration.hours(hours);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   days(days) {
     this.duration.days(days);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   weeks(weeks) {
     this.duration.weeks(weeks);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   months(months) {
     this.duration.months(months);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   years(years) {
     this.duration.years(years);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   get(definition, baseDate) {
-    const timeDefinition =
-      undefined !== definition ? definition : this._getDefinition();
+    const timeDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(timeDefinition)) {
       return timeDefinition;
@@ -170,7 +176,7 @@ class DateTime {
 
     // we add a duration to current date if specified
     if (timeDefinition.duration) {
-      const duration = Duration.compute(timeDefinition.duration);
+      const duration = Duration.get(timeDefinition.duration);
       date.add(duration, "s");
     }
 

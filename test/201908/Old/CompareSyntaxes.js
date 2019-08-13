@@ -19,58 +19,58 @@ const Wait = Trait.apply(WaitDummyClass, WithTimestamp);
 describe("Wait/DateTime old/new implementation simple", () => {
   it("Timestamp", () => {
     const Old = new Wait().timestamp(1234567)._getTimestampOrDuration()[0];
-    const New = DateTime.timestamp(1234567)._get();
+    const New = DateTime.timestamp(1234567)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Seconds", () => {
     const Old = new Wait(baseDate).seconds(30)._getTimestampOrDuration()[1];
-    const New = Duration.seconds(30)._get(baseDate);
+    const New = Duration.seconds(30)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Minutes", () => {
     const Old = new Wait(baseDate).minutes(15)._getTimestampOrDuration()[1];
-    const New = Duration.minutes(15)._get(baseDate);
+    const New = Duration.minutes(15)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Hours", () => {
     const Old = new Wait(baseDate).hours(2)._getTimestampOrDuration()[1];
-    const New = Duration.hours(2)._get(baseDate);
+    const New = Duration.hours(2)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Days", () => {
     const Old = new Wait(baseDate).days(1)._getTimestampOrDuration()[1];
-    const New = Duration.days(1)._get(baseDate);
+    const New = Duration.days(1)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Weeks", () => {
     const Old = new Wait(baseDate).weeks(1)._getTimestampOrDuration()[1];
-    const New = Duration.weeks(1)._get(baseDate);
+    const New = Duration.weeks(1)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Months", () => {
     const Old = new Wait(baseDate).months(2)._getTimestampOrDuration()[1];
-    const New = Duration.months(2)._get(baseDate);
+    const New = Duration.months(2)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Years", () => {
     const Old = new Wait(baseDate).years(10)._getTimestampOrDuration()[1];
-    const New = Duration.years(10)._get(baseDate);
+    const New = Duration.years(10)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Combine durations", () => {
@@ -90,72 +90,72 @@ describe("Wait/DateTime old/new implementation simple", () => {
       .weeks(1)
       .months(2)
       .years(10)
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(Duration.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("At", () => {
     const Old = new Wait(baseDate).at("15:10:23")._getTimestampOrDuration()[0];
-    const New = DateTime.at("15:10:23")._get(baseDate);
+    const New = DateTime.at("15:10:23")._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("DayOfMonth", () => {
     const Old = new Wait(baseDate).dayOfMonth(12)._getTimestampOrDuration()[0];
-    const New = DateTime.dayOfMonth(12)._get(baseDate);
+    const New = DateTime.dayOfMonth(12)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Monday", () => {
     const Old = new Wait(baseDate).monday()._getTimestampOrDuration()[0];
-    const New = DateTime.monday()._get(baseDate);
+    const New = DateTime.monday()._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Tuesday", () => {
     const Old = new Wait(baseDate).tuesday(1)._getTimestampOrDuration()[0];
-    const New = DateTime.tuesday(1)._get(baseDate);
+    const New = DateTime.tuesday(1)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Wednesday", () => {
     const Old = new Wait(baseDate).wednesday(2)._getTimestampOrDuration()[0];
-    const New = DateTime.wednesday(2)._get(baseDate);
+    const New = DateTime.wednesday(2)._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Thursday", () => {
     const Old = new Wait(baseDate).thursday()._getTimestampOrDuration()[0];
-    const New = DateTime.thursday()._get(baseDate);
+    const New = DateTime.thursday()._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Friday", () => {
     const Old = new Wait(baseDate).friday()._getTimestampOrDuration()[0];
-    const New = DateTime.friday()._get(baseDate);
+    const New = DateTime.friday()._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Saturday", () => {
     const Old = new Wait(baseDate).saturday()._getTimestampOrDuration()[0];
-    const New = DateTime.saturday()._get(baseDate);
+    const New = DateTime.saturday()._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Sunday", () => {
     const Old = new Wait(baseDate).sunday()._getTimestampOrDuration()[0];
-    const New = DateTime.sunday()._get(baseDate);
+    const New = DateTime.sunday()._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 });
 
@@ -167,9 +167,9 @@ describe("Wait/DateTime old/new implementation complex", () => {
       ._getTimestampOrDuration()[0];
     const New = DateTime.monday()
       .at("8:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("In 2 weeks at 8 am", () => {
@@ -179,9 +179,9 @@ describe("Wait/DateTime old/new implementation complex", () => {
       ._getTimestampOrDuration()[0];
     const New = DateTime.weeks(2)
       .at("8:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("In 2 weeks, next mondays at 8 am", () => {
@@ -193,9 +193,9 @@ describe("Wait/DateTime old/new implementation complex", () => {
     const New = DateTime.weeks(2)
       .monday()
       .at("8:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("In 2 weeks, next 12 of month at 8 am", () => {
@@ -207,9 +207,9 @@ describe("Wait/DateTime old/new implementation complex", () => {
     const New = DateTime.weeks(2)
       .dayOfMonth(12)
       .at("8:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("In 2 weeks, next 12 of month, next monday at 8 am", () => {
@@ -223,9 +223,9 @@ describe("Wait/DateTime old/new implementation complex", () => {
       .dayOfMonth(12)
       .monday()
       .at("8:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("At 8 am, next monday, or today if monday before 8 am", () => {
@@ -235,9 +235,9 @@ describe("Wait/DateTime old/new implementation complex", () => {
       ._getTimestampOrDuration()[0];
     const New = DateTime.at("8:00")
       .monday()
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it("Next monday after 2 weeks, at 8 am", () => {
@@ -249,9 +249,9 @@ describe("Wait/DateTime old/new implementation complex", () => {
     const New = DateTime.monday()
       .weeks(2)
       .at("8:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 });
 
@@ -265,9 +265,9 @@ describe("Wait/DateTime old/new implementation special cases 1", () => {
     const New = DateTime.weeks(3)
       .dayOfMonth(8)
       .at("12:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it.skip("dayOfMonth -> weeks -> at", () => {
@@ -279,9 +279,9 @@ describe("Wait/DateTime old/new implementation special cases 1", () => {
     const New = DateTime.dayOfMonth(8)
       .weeks(3)
       .at("12:00")
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 });
 
@@ -295,9 +295,9 @@ describe("Wait/DateTime old/new implementation special cases 2", () => {
       ._getTimestampOrDuration()[0];
     const New = DateTime.monday()
       .at("8:00")
-      ._get(date);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, date)).to.be.equals(Old);
   });
 
   it("Next mondays at 8 am, or today if monday before 8 am", () => {
@@ -307,9 +307,9 @@ describe("Wait/DateTime old/new implementation special cases 2", () => {
       ._getTimestampOrDuration()[0];
     const New = DateTime.at("8:00")
       .monday()
-      ._get(date);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, date)).to.be.equals(Old);
   });
 
   it("Next mondays at 8 am, or today if monday before 8 am", () => {
@@ -321,9 +321,9 @@ describe("Wait/DateTime old/new implementation special cases 2", () => {
     const New = DateTime.weeks(2)
       .at("8:00")
       .monday()
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 
   it.skip("Next mondays at 8 am, or today if monday before 8 am", () => {
@@ -335,8 +335,8 @@ describe("Wait/DateTime old/new implementation special cases 2", () => {
     const New = DateTime.at("8:00")
       .weeks(2)
       .monday()
-      ._get(baseDate);
+      ._getDefinition();
 
-    expect(New).to.be.equals(Old);
+    expect(DateTime.get(New, baseDate)).to.be.equals(Old);
   });
 });
