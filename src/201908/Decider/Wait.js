@@ -29,7 +29,9 @@ const Wait = class Wait {
       }
     }
 
-    this.duration = Number.isInteger(duration) ? duration : duration._get();
+    this.duration = Number.isInteger(duration)
+      ? duration
+      : duration._getDefinition();
 
     return this._apply();
   }
@@ -46,7 +48,9 @@ const Wait = class Wait {
       }
     }
 
-    this.timestamp = Number.isInteger(timestamp) ? timestamp : timestamp._get();
+    this.timestamp = Number.isInteger(timestamp)
+      ? timestamp
+      : timestamp._getDefinition();
 
     return this._apply();
   }

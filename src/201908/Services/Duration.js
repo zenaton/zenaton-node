@@ -96,17 +96,48 @@ class Duration {
     return this;
   }
 
-  _get(baseDate) {
+  get(definition, baseDate) {
+    const durationDefinition =
+      undefined !== definition ? definition : this._getDefinition();
+
+    if (Number.isInteger(durationDefinition)) {
+      return durationDefinition;
+    }
+
+    const duration = durationDefinition.split(":");
+
     const now = moment(baseDate);
     const date = now.clone();
 
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < this.duration.length; i++) {
-      date.add(parseInt(this.duration[i], 10), periodsForCompute[i]);
+    for (let i = 0; i < duration.length; i++) {
+      date.add(parseInt(duration[i], 10), periodsForCompute[i]);
     }
 
     return date.diff(now, "seconds");
   }
+
+  _getDefinition() {
+    return this.duration.join(":");
+  }
 }
 
 module.exports = objectify(Duration);
+
+module.exports.compute = (durationDefinition, baseDate) => {
+  if (Number.isInteger(durationDefinition)) {
+    return durationDefinition;
+  }
+
+  const duration = durationDefinition.split(":");
+
+  const now = moment(baseDate);
+  const date = now.clone();
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < duration.length; i++) {
+    date.add(parseInt(duration[i], 10), periodsForCompute[i]);
+  }
+
+  return date.diff(now, "seconds");
+};

@@ -1,7 +1,7 @@
 const moment = require("moment-timezone");
 const objectify = require("../Services/Objectify");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
-const duration = require("./Duration");
+const Duration = require("./Duration");
 
 const MONDAY = 1;
 const TUESDAY = 2;
@@ -13,7 +13,7 @@ const SUNDAY = 7;
 
 class DateTime {
   constructor() {
-    this.duration = duration.seconds(0);
+    this.duration = Duration.seconds(0);
     this.ts = null;
     this.definition = {};
 
@@ -157,20 +157,26 @@ class DateTime {
     return this;
   }
 
-  _get(baseDate) {
-    if (Number.isInteger(this.ts)) {
-      return this.ts;
+  get(definition, baseDate) {
+    const timeDefinition =
+      undefined !== definition ? definition : this._getDefinition();
+
+    if (Number.isInteger(timeDefinition)) {
+      return timeDefinition;
     }
 
     const now = moment(baseDate);
     const date = now.clone();
 
     // we add a duration to current date if specified
-    date.add(this.duration._get(), "s");
+    if (timeDefinition.duration) {
+      const duration = Duration.compute(timeDefinition.duration);
+      date.add(duration, "s");
+    }
 
     // we set time to execute if specified
-    if (this.definition.at) {
-      const segments = this.definition.at.split(":");
+    if (timeDefinition.at) {
+      const segments = timeDefinition.at.split(":");
 
       const h = parseInt(segments[0], 10);
       const m = segments.length > 1 ? parseInt(segments[1], 10) : 0;
@@ -180,16 +186,16 @@ class DateTime {
     }
 
     // if day of month, we compute and return timestamp
-    if (this.definition.dayOfMonth) {
-      date.set("date", this.definition.dayOfMonth);
+    if (timeDefinition.dayOfMonth) {
+      date.set("date", timeDefinition.dayOfMonth);
 
       return now.isAfter(date) ? date.add(1, "M").unix() : date.unix();
     }
 
     // if day of week, we compute and return timestamp
-    if (this.definition.dayOfWeek) {
-      const dayToProcess = this.definition.dayOfWeek[0];
-      const numberOfWeeks = this.definition.dayOfWeek[1];
+    if (timeDefinition.dayOfWeek) {
+      const dayToProcess = timeDefinition.dayOfWeek[0];
+      const numberOfWeeks = timeDefinition.dayOfWeek[1];
       const d = date.isoWeekday();
 
       date.add(dayToProcess - d, "days");
@@ -204,6 +210,10 @@ class DateTime {
 
     // else, we return timestamps
     return now.isAfter(date) ? date.add(1, "d").unix() : date.unix();
+  }
+
+  _getDefinition() {
+    return this.ts ? this.ts : this.definition;
   }
 }
 
