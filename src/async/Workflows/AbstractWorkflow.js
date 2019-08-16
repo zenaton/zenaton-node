@@ -1,4 +1,5 @@
 const CronParser = require("cron-parser");
+const WorkflowContext = require("../Runtime/Contexts/WorkflowContext");
 
 const Engine = require("../Engine/Engine");
 const { ZenatonError } = require("../../Errors");
@@ -7,6 +8,22 @@ module.exports = class AbstractWorkflow {
   constructor(name) {
     // class name
     this.name = name;
+    this._context = null;
+  }
+
+  setContext(context) {
+    if (this._context !== null) {
+      throw new ZenatonError("Context is already set and cannot be mutated.");
+    }
+    this._context = context;
+  }
+
+  getContext() {
+    if (this._context === null) {
+      return new WorkflowContext();
+    }
+
+    return this._context;
   }
 
   // asynchronous execution within a workflow

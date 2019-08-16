@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Added a `intent_id` property when dispatching workflows and tasks, sending events to workflows, and
   pausing/resuming/killing workflows.
+- Added a `getContext()` method in `Task` and `Workflow` abstract class that is able to retrieve the runtime context
+  of the workflow or task currently being executed.
 
 ### Changed
 
