@@ -120,7 +120,7 @@ module.exports = class Client {
       ? process.env.ZENATON_ALFRED_URL
       : ZENATON_ALFRED_URL;
 
-    return `${host}`;
+    return host;
   }
 
   /**
