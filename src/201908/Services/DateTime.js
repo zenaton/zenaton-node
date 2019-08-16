@@ -1,12 +1,20 @@
 const moment = require("moment-timezone");
 const objectify = require("../Services/Objectify");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
-const duration = require("./Duration");
+const Duration = require("./Duration");
+
+const MONDAY = 1;
+const TUESDAY = 2;
+const WEDNESDAY = 3;
+const THURSDAY = 4;
+const FRIDAY = 5;
+const SATURDAY = 6;
+const SUNDAY = 7;
 
 class DateTime {
   constructor() {
-    this.duration = duration.seconds(0);
-    this.timestamp = null;
+    this.duration = Duration.seconds(0);
+    this.ts = null;
     this.definition = {};
 
     return this;
@@ -19,7 +27,7 @@ class DateTime {
       );
     }
 
-    this.timestamp = timestamp;
+    this.ts = timestamp;
     return this;
   }
 
@@ -44,125 +52,137 @@ class DateTime {
     return this;
   }
 
-  monday(count = 0) {
+  monday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         `Parameter of "DateTime.monday()" must be an integer`,
       );
     }
-    this.definition.dayOfWeek = [1, count];
+    this.definition.dayOfWeek = [MONDAY, count];
     return this;
   }
 
-  tuesday(count = 0) {
+  tuesday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         `Parameter of "DateTime.tuesday()" must be an integer`,
       );
     }
-    this.definition.dayOfWeek = [2, count];
+    this.definition.dayOfWeek = [TUESDAY, count];
     return this;
   }
 
-  wednesday(count = 0) {
+  wednesday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         `Parameter of "DateTime.wednesday()" must be an integer`,
       );
     }
-    this.definition.dayOfWeek = [3, count];
+    this.definition.dayOfWeek = [WEDNESDAY, count];
     return this;
   }
 
-  thursday(count = 0) {
+  thursday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         `Parameter of "DateTime.thursday()" must be an integer`,
       );
     }
-    this.definition.dayOfWeek = [4, count];
+    this.definition.dayOfWeek = [THURSDAY, count];
     return this;
   }
 
-  friday(count = 0) {
+  friday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         `Parameter of "DateTime.friday()" must be an integer`,
       );
     }
-    this.definition.dayOfWeek = [5, count];
+    this.definition.dayOfWeek = [FRIDAY, count];
     return this;
   }
 
-  saturday(count = 0) {
+  saturday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'DateTime.saturday' must be an integer",
       );
     }
-    this.definition.dayOfWeek = [6, count];
+    this.definition.dayOfWeek = [SATURDAY, count];
     return this;
   }
 
-  sunday(count = 0) {
+  sunday(count = 1) {
     if (!Number.isInteger(count)) {
       throw new InvalidArgumentError(
         "Parameter of 'DateTime.sunday' must be an integer",
       );
     }
-    this.definition.dayOfWeek = [7, count];
+    this.definition.dayOfWeek = [SUNDAY, count];
     return this;
   }
 
   seconds(seconds) {
     this.duration.seconds(seconds);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   minutes(minutes) {
     this.duration.minutes(minutes);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   hours(hours) {
     this.duration.hours(hours);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   days(days) {
     this.duration.days(days);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   weeks(weeks) {
     this.duration.weeks(weeks);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   months(months) {
     this.duration.months(months);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
   years(years) {
     this.duration.years(years);
+    this.definition.duration = this.duration._getDefinition();
     return this;
   }
 
-  _get() {
-    if (Number.isInteger(this.timestamp)) {
-      return this.timestamp;
+  get(definition, baseDate) {
+    const timeDefinition = definition || this._getDefinition();
+
+    if (Number.isInteger(timeDefinition)) {
+      return timeDefinition;
     }
 
-    const now = moment();
+    const now = moment(baseDate);
     const date = now.clone();
 
     // we add a duration to current date if specified
-    date.add(this.duration._get(), "s");
+    if (timeDefinition.duration) {
+      const duration = Duration.get(timeDefinition.duration);
+      date.add(duration, "s");
+    }
 
     // we set time to execute if specified
-    if (this.definition.at) {
-      const segments = this.definition.at.split(":");
+    if (timeDefinition.at) {
+      const segments = timeDefinition.at.split(":");
 
       const h = parseInt(segments[0], 10);
       const m = segments.length > 1 ? parseInt(segments[1], 10) : 0;
@@ -172,16 +192,16 @@ class DateTime {
     }
 
     // if day of month, we compute and return timestamp
-    if (this.definition.dayOfMonth) {
-      date.set("date", this.definition.dayOfMonth);
+    if (timeDefinition.dayOfMonth) {
+      date.set("date", timeDefinition.dayOfMonth);
 
       return now.isAfter(date) ? date.add(1, "M").unix() : date.unix();
     }
 
     // if day of week, we compute and return timestamp
-    if (this.definition.dayOfWeek) {
-      const dayToProcess = this.definition.dayOfWeek[0];
-      const numberOfWeeks = this.definition.dayOfWeek[1];
+    if (timeDefinition.dayOfWeek) {
+      const dayToProcess = timeDefinition.dayOfWeek[0];
+      const numberOfWeeks = timeDefinition.dayOfWeek[1];
       const d = date.isoWeekday();
 
       date.add(dayToProcess - d, "days");
@@ -196,6 +216,10 @@ class DateTime {
 
     // else, we return timestamps
     return now.isAfter(date) ? date.add(1, "d").unix() : date.unix();
+  }
+
+  _getDefinition() {
+    return this.ts ? this.ts : this.definition;
   }
 }
 

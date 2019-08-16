@@ -18,31 +18,39 @@ const Wait = class Wait {
   }
 
   for(duration) {
-    if (
-      !Number.isInteger(duration) &&
-      typeof duration !== "object" &&
-      duration.constructor.name !== "Duration"
-    ) {
-      throw new InvalidArgumentError(
-        `Parameter of "wait.for()" must be an integer or a "duration" object`,
-      );
+    if (!Number.isInteger(duration)) {
+      if (
+        typeof duration !== "object" ||
+        duration.constructor.name !== "Duration"
+      ) {
+        throw new InvalidArgumentError(
+          `Parameter of "wait.for()" must be an integer or a "Duration" object`,
+        );
+      }
     }
-    this.duration = Number.isInteger(duration) ? duration : duration._get();
+
+    this.duration = Number.isInteger(duration)
+      ? duration
+      : duration._getDefinition();
 
     return this._apply();
   }
 
   until(timestamp) {
-    if (
-      !Number.isInteger(timestamp) &&
-      typeof duration !== "object" &&
-      timestamp.constructor.name !== "DateTime"
-    ) {
-      throw new InvalidArgumentError(
-        `Parameter of "wait.until()" must be a integer (timestamp) or a DateTime object`,
-      );
+    if (!Number.isInteger(timestamp)) {
+      if (
+        typeof timestamp !== "object" ||
+        timestamp.constructor.name !== "DateTime"
+      ) {
+        throw new InvalidArgumentError(
+          `Parameter of "wait.until()" must be a timestamp or a "DateTime" object`,
+        );
+      }
     }
-    this.timestamp = Number.isInteger(timestamp) ? timestamp : timestamp._get();
+
+    this.timestamp = Number.isInteger(timestamp)
+      ? timestamp
+      : timestamp._getDefinition();
 
     return this._apply();
   }
