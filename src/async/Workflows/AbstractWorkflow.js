@@ -11,19 +11,19 @@ module.exports = class AbstractWorkflow {
     this._context = null;
   }
 
-  setContext(context) {
-    if (this._context !== null) {
-      throw new ZenatonError("Context is already set and cannot be mutated.");
-    }
-    this._context = context;
-  }
-
-  getContext() {
+  get context() {
     if (this._context === null) {
       return new WorkflowContext();
     }
 
     return this._context;
+  }
+
+  set context(context) {
+    if (this._context !== null) {
+      throw new ZenatonError("Context is already set and cannot be mutated.");
+    }
+    this._context = context;
   }
 
   // asynchronous execution within a workflow
