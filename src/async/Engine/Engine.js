@@ -73,9 +73,8 @@ module.exports = class Engine {
           ? this.client.startWorkflow(job)
           : this.client.startTask(job);
 
-        await handler;
-
-        return undefined;
+        const res = await handler;
+        return res;
       });
 
       // return results
