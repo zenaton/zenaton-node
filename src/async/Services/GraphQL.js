@@ -12,9 +12,7 @@ function getError(err) {
     const message = err.response.errors
       .map((graphqlError) => {
         const path = graphqlError.path ? `(${graphqlError.path}) ` : "";
-        const errorMessage = graphqlError.message
-          ? graphqlError.message
-          : "Unknown error";
+        const errorMessage = graphqlError.message || "Unknown error";
         return `${path}${errorMessage}`;
       })
       .join("\n");
@@ -42,8 +40,7 @@ async function request(endpoint, query, variables) {
       },
     });
 
-    const response = await graphQLClient.request(query, variables);
-    return response;
+    return graphQLClient.request(query, variables);
   } catch (err) {
     throw getError(err);
   }
