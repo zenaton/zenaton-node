@@ -17,6 +17,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Changed scheduling requests that pass now through Alfred (GraphQL API).
 
+- Changed scheduling syntax from `x.repeat("* * * * *").schedule()` to `x.shedule("* * * * *")`.
+
 ### Deprecated
 
 ### Removed
