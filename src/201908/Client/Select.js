@@ -48,28 +48,28 @@ const Select = class Select {
    * Send an event to a workflow instance
    */
   async send(eventName, eventData = {}) {
-    return client.sendEvent(this._getQuery(), eventName, eventData);
+    return client._sendEvent(this._getQuery(), eventName, eventData);
   }
 
   /**
    * Kill a workflow instance
    */
   async kill() {
-    return client.killWorkflow(this._getQuery());
+    return client._killWorkflow(this._getQuery());
   }
 
   /**
    * Pause a workflow instance
    */
   async pause() {
-    return client.pauseWorkflow(this._getQuery());
+    return client._pauseWorkflow(this._getQuery());
   }
 
   /**
    * Resume a workflow instance
    */
   async resume() {
-    return client.resumeWorkflow(this._getQuery());
+    return client._resumeWorkflow(this._getQuery());
   }
 
   _getQuery() {

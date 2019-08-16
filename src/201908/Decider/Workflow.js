@@ -9,9 +9,9 @@ const reserved = { dispatch, execute, wait };
 
 const workflow = function workflow(name, definition) {
   // check that provided data have the right format
-  if (typeof name !== "string") {
+  if (typeof name !== "string" || name.length === 0) {
     throw new InvalidArgumentError(
-      "When getting or creating a workflow, 1st parameter must be a string (workflow name)",
+      "When getting or creating a workflow, 1st parameter must be a non-empty string (workflow name)",
     );
   }
 

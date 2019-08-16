@@ -19,7 +19,7 @@ const Execute = class Execute {
     this.type = "task";
     this.name = name;
     this.input = input;
-    return client.executeTask(this._getJob());
+    return client._executeTask(this._getJob());
   }
 
   _getJob() {

@@ -1,6 +1,7 @@
 const uuidv4 = require("uuid/v4");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 const client = require("./Client");
+const versioner = require("../Services/Versioner");
 
 const MAX_ID_SIZE = 256;
 
@@ -47,10 +48,15 @@ const Dispatch = class Dispatch {
         `First parameter of "dispatch.task" should be a string, not a "${typeof name}"`,
       );
     }
+    if (name.length === 0) {
+      throw new InvalidArgumentError(
+        `First parameter of Parameter "dispatch.task" should be a non-empty string`,
+      );
+    }
     this.type = "task";
     this.input = input;
     this.name = name;
-    this.promise = await client.dispatchTask(this._getJob());
+    this.promise = await client._dispatchTask(this._getJob());
 
     return this;
   }
@@ -61,10 +67,17 @@ const Dispatch = class Dispatch {
         `First parameter of Parameter "dispatch.workflow" should be a string, not a "${typeof name}"`,
       );
     }
+    if (name.length === 0) {
+      throw new InvalidArgumentError(
+        `First parameter of Parameter "dispatch.workflow" should be a non-empty string`,
+      );
+    }
+    const { canonical } = versioner(name);
     this.type = "workflow";
     this.input = input;
     this.name = name;
-    this.promise = await client.dispatchWorkflow(this._getJob());
+    this.canonical = canonical;
+    this.promise = await client._dispatchWorkflow(this._getJob());
 
     return this;
   }
@@ -73,6 +86,7 @@ const Dispatch = class Dispatch {
     return {
       type: this.type,
       name: this.name,
+      canonical: this.canonical,
       input: this.input,
       options: this.options,
       customId: this.customId,

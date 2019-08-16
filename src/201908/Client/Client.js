@@ -60,11 +60,11 @@ const Client = class Client {
   /**
    * Short Break calls if done through the Agent
    */
-  setProcessor(processor) {
+  _setProcessor(processor) {
     this.processor = processor;
   }
 
-  getWorkerUrl(ressources = "") {
+  _getWorkerUrl(ressources = "") {
     const host = process.env.ZENATON_WORKER_URL
       ? process.env.ZENATON_WORKER_URL
       : ZENATON_WORKER_URL;
@@ -78,7 +78,7 @@ const Client = class Client {
   /**
    * Execute a task
    */
-  async executeTask(job) {
+  async _executeTask(job) {
     if (this.processor) {
       return this.processor.executeTask(job);
     }
@@ -104,11 +104,11 @@ const Client = class Client {
   /**
    * Dispatch a task
    */
-  async dispatchTask(job, isDeciding = true) {
+  async _dispatchTask(job, isDeciding = true) {
     if (this.processor && isDeciding) {
       return this.processor.dispatchTask(job);
     }
-    const url = this.getWorkerUrl("tasks");
+    const url = this._getWorkerUrl("tasks");
     const body = this._getBodyForTask(job);
     const params = this._getAppEnv();
     return http.post(url, body, { params });
@@ -117,11 +117,11 @@ const Client = class Client {
   /**
    * Schedule a task
    */
-  async scheduleTask(job, isDeciding = true) {
+  async _scheduleTask(job, isDeciding = true) {
     if (this.processor && isDeciding) {
       return this.processor.scheduleTask(job);
     }
-    const url = this.getWorkerUrl("scheduling/tasks");
+    const url = this._getWorkerUrl("scheduling/tasks");
     const body = this._getBodyForTask(job);
     const params = Object.assign(
       {
@@ -135,11 +135,11 @@ const Client = class Client {
   /**
    * Dispatch a workflow
    */
-  async dispatchWorkflow(job, isDeciding = true) {
+  async _dispatchWorkflow(job, isDeciding = true) {
     if (this.processor && isDeciding) {
       return this.processor.dispatchWorkflow(job);
     }
-    const url = this.getWorkerUrl("instances");
+    const url = this._getWorkerUrl("instances");
     const body = this._getBodyForWorkflow(job);
     const params = this._getAppEnv();
     return http.post(url, body, { params });
@@ -148,11 +148,11 @@ const Client = class Client {
   /**
    * Schedule a workflow
    */
-  async scheduleWorkflow(job, isDeciding = true) {
+  async _scheduleWorkflow(job, isDeciding = true) {
     if (this.processor && isDeciding) {
       return this.processor.scheduleWorkflow(job);
     }
-    const url = this.getWorkerUrl("scheduling/instances");
+    const url = this._getWorkerUrl("scheduling/instances");
     const body = this._getBodyForWorkflow(job);
     const params = Object.assign(
       {
@@ -166,7 +166,7 @@ const Client = class Client {
   /**
    * Kill a workflow instance
    */
-  async killWorkflow(query) {
+  async _killWorkflow(query) {
     // if (this.processor) {
     //   return this.processor.killWorkflow(query);
     // }
@@ -176,7 +176,7 @@ const Client = class Client {
   /**
    * Pause a workflow instance
    */
-  async pauseWorkflow(query) {
+  async _pauseWorkflow(query) {
     // if (this.processor) {
     //   return this.processor.pauseWorkflow(query);
     // }
@@ -186,7 +186,7 @@ const Client = class Client {
   /**
    * Resume a workflow instance
    */
-  async resumeWorkflow(query) {
+  async _resumeWorkflow(query) {
     // if (this.processor) {
     //   return this.processor.resumeWorkflow(query);
     // }
@@ -196,11 +196,11 @@ const Client = class Client {
   /**
    * Send an event to a workflow instance
    */
-  async sendEvent(query, eventName, eventData) {
+  async _sendEvent(query, eventName, eventData) {
     // if (this.processor) {
     //   return this.processor.sendEvent(query, eventName, eventData);
     // }
-    const url = this.getWorkerUrl("events");
+    const url = this._getWorkerUrl("events");
     const body = {
       [ATTR_INTENT_ID]: query.intentId,
       [ATTR_PROG]: PROG,
@@ -222,11 +222,11 @@ const Client = class Client {
   /**
    * * Send an event to a workflow by instance_id
    */
-  async sendEventByInstanceId(instanceId, eventName, eventData) {
+  async _sendEventByInstanceId(instanceId, eventName, eventData) {
     // if (this.processor) {
     //   return this.processor.sendEvent(instanceId, eventName, eventData);
     // }
-    const url = this.getWorkerUrl("events");
+    const url = this._getWorkerUrl("events");
     const body = {
       [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
@@ -245,7 +245,7 @@ const Client = class Client {
   }
 
   async _updateInstance(query, mode) {
-    const url = this.getWorkerUrl("instances");
+    const url = this._getWorkerUrl("instances");
     const body = {
       [ATTR_INTENT_ID]: query.intentId,
       [ATTR_PROG]: PROG,
@@ -285,8 +285,7 @@ const Client = class Client {
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      // TODO : manage canonical
-      [ATTR_CANONICAL]: job.name,
+      [ATTR_CANONICAL]: job.canonical,
       [ATTR_NAME]: job.name,
       [ATTR_INPUT]: serializer.encode(job.input),
       [ATTR_CUSTOM_ID]: job.customId,

@@ -62,7 +62,7 @@ const Wait = class Wait {
   }
 
   async _apply() {
-    return client.executeTask(this._getWait());
+    return client._executeTask(this._getWait());
   }
 
   _getWait() {
