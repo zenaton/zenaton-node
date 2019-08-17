@@ -7,7 +7,7 @@ const { version } = require("./infos");
 const Errors = require("./Errors");
 
 const lastCodePath = "async";
-// const lastCodePath = "201809";
+// const lastCodePath = "201908";
 
 // Helping the Agent to check if is able to manage this version
 process.env.ZENATON_LAST_CODE_PATH = `${lastCodePath}`;
