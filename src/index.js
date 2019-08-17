@@ -18,12 +18,17 @@ const pathLast = require(`./${lastCodePath}`);
 // const pathAsync = require(`./async`);
 const pathSync = require(`./sync`);
 
+/* To Remove After Async */
+// eslint-disable-next-line import/no-dynamic-require
+const LastClient = require(`./${lastCodePath}/Client`);
+
 module.exports = {
   Errors,
   infos: {
     appVersion: version,
     codePath: lastCodePath,
   },
+  LastClient,
   // async: pathAsync,
   sync: pathSync,
   ...pathLast,
