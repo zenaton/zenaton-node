@@ -13,7 +13,7 @@ const TaskManager = class {
   }
 
   check(name) {
-    const TaskClass = this.get(name);
+    const TaskClass = this.getClass(name);
     if (undefined === TaskClass) {
       throw new ExternalZenatonError(
         `Unknown task "${name}", please add it to your --boot file`,
@@ -22,18 +22,18 @@ const TaskManager = class {
     return TaskClass;
   }
 
-  set(name, task) {
-    if (undefined !== this.get(name)) {
+  setClass(name, task) {
+    if (undefined !== this.getClass(name)) {
       throw new ExternalZenatonError(`"Task ${name}" can not be defined twice`);
     }
     this.tasks[name] = task;
   }
 
-  get(name) {
+  getClass(name) {
     return this.tasks[name];
   }
 
-  getInstance(name) {
+  getTask(name) {
     const TaskClass = this.check(name);
     return new TaskClass();
   }

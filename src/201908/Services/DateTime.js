@@ -1,5 +1,5 @@
 const moment = require("moment-timezone");
-const objectify = require("../Services/Objectify");
+const objectify = require("./Objectify");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 const Duration = require("./Duration");
 

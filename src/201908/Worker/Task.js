@@ -62,7 +62,7 @@ const task = function task(name, definition) {
   Object.defineProperty(TaskClass, "name", { value: name });
 
   // register this new task
-  taskManager.set(name, TaskClass);
+  taskManager.setClass(name, TaskClass);
 
   return TaskClass;
 };

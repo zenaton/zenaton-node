@@ -79,7 +79,7 @@ const workflow = function workflow(name, definition) {
   }
 
   // register it in our workflow manager
-  workflowManager.set(name, WorkflowClass);
+  workflowManager.setClass(name, WorkflowClass);
 
   return WorkflowClass;
 };

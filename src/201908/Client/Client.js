@@ -27,7 +27,7 @@ const ATTR_SCHEDULING_CRON = "scheduling_cron";
 
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
-const CODE_PATH_VERSION = "201908";
+const CODE_PATH_VERSION = process.env.ZENATON_LAST_CODE_PATH;
 
 const EVENT_INPUT = "event_input";
 const EVENT_NAME = "event_name";
@@ -89,7 +89,7 @@ const Client = class Client {
       case "task":
         // eslint-disable-next-line global-require
         return require("../Worker/TaskManager")
-          .getInstance(job.name)
+          .getTask(job.name)
           .handle(job.input);
       case "wait":
         return new Promise((resolve) => {

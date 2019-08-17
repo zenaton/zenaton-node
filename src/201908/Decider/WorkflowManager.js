@@ -15,7 +15,7 @@ const WorkflowManager = class WorkflowManager {
   }
 
   check(name) {
-    const WorkflowClass = this.get(name);
+    const WorkflowClass = this.getClass(name);
     if (WorkflowClass === null) {
       throw new ExternalZenatonError(
         `Unknown workflow "${name}", please add it to your --boot file`,
@@ -24,8 +24,8 @@ const WorkflowManager = class WorkflowManager {
     return WorkflowClass;
   }
 
-  set(name, workflow) {
-    if (this.get(name) !== null) {
+  setClass(name, workflow) {
+    if (this.getClass(name) !== null) {
       throw new ExternalZenatonError(
         `Workflow "${name}" can not be defined twice`,
       );
@@ -50,7 +50,7 @@ const WorkflowManager = class WorkflowManager {
     });
   }
 
-  get(name) {
+  getClass(name) {
     let ws;
     // search by name
     ws = this.workflows.filter((w) => w.name === name);
@@ -64,7 +64,7 @@ const WorkflowManager = class WorkflowManager {
     ).class;
   }
 
-  getInstance(name, encodedProperties = null) {
+  getWorkflow(name, encodedProperties = null) {
     // unserialize properties
     const properties =
       encodedProperties === null ? {} : serializer.decode(encodedProperties);
