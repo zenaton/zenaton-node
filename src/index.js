@@ -15,7 +15,7 @@ process.env.ZENATON_LAST_CODE_PATH = `${lastCodePath}`;
 
 // eslint-disable-next-line import/no-dynamic-require
 const pathLast = require(`./${lastCodePath}`);
-const pathAsync = require(`./async`);
+// const pathAsync = require(`./async`);
 const pathSync = require(`./sync`);
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
     appVersion: version,
     codePath: lastCodePath,
   },
-  async: pathAsync,
+  // async: pathAsync,
   sync: pathSync,
   ...pathLast,
 };
