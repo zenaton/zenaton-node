@@ -1,19 +1,15 @@
 const { InvalidArgumentError } = require("../../Errors");
 const taskManager = require("./TaskManager");
+const Dispatch = require("../Client/Dispatch");
+const Select = require("../Client/Select");
 
 const task = function task(name, definition) {
-  const reservedMethods = [
-    "handle",
-    "maxProcessingTime",
-    "onFailureRetryDelay",
-  ];
-
-  if (typeof name !== "string") {
+  // check that provided data have the right format
+  if (typeof name !== "string" || name.length === 0) {
     throw new InvalidArgumentError(
-      "When creating a task, 1st parameter (task name) must be a string",
+      "When creating a task, 1st parameter (task name) must be a non-empty string",
     );
   }
-
   // check task definition
   if (typeof definition !== "function" && typeof definition !== "object") {
     throw new InvalidArgumentError(
@@ -26,42 +22,61 @@ const task = function task(name, definition) {
         `When creating "${name}", 2nd parameter (task definition) must have a "handle" method`,
       );
     }
+    const reservedMethods = [
+      "handle",
+      "maxProcessingTime",
+      "onFailureRetryDelay",
+    ];
     Object.keys(definition).forEach((method) => {
-      if (typeof definition[method] !== "function") {
+      if (
+        reservedMethods.indexOf(method) >= 0 &&
+        typeof definition[method] !== "function"
+      ) {
         throw new InvalidArgumentError(
-          `When creating "${name}", methods must be function - check value of "${method}"`,
-        );
-      }
-      if (reservedMethods.indexOf(method) < 0) {
-        // reserved method
-        throw new InvalidArgumentError(
-          `When creating "${name}", allowed methods are "${reservedMethods}", check "${method}"`,
+          `When creating task "${name}",  "${method}" method must be a function, not a "${typeof definition[
+            method
+          ]}"`,
         );
       }
     });
   }
 
   const TaskClass = class TaskClass {
-    constructor() {
-      this.data = {};
-
-      // set and bind instance methods
-      if (typeof definition === "function") {
-        this.handle = definition.bind(this.data);
-      } else {
-        const that = this;
-
-        Object.keys(definition).forEach((method) => {
-          that[method] = definition[method].bind(that.data);
-        });
-      }
+    static set processor(processor) {
+      _dispatch.processor = processor;
+      _select.processor = processor;
     }
   };
 
   // define name of this class
   Object.defineProperty(TaskClass, "name", { value: name });
 
-  // register this new task
+  // reserved dispatch methods
+  const _dispatch = new Dispatch();
+  Object.defineProperty(TaskClass.prototype, "dispatch", {
+    value: _dispatch,
+    writable: false,
+    configurable: false,
+  });
+
+  // reserved select methods
+  const _select = new Select();
+  Object.defineProperty(TaskClass.prototype, "select", {
+    value: _select,
+    writable: false,
+    configurable: false,
+  });
+
+  // user-defined methods
+  if (typeof definition === "function") {
+    TaskClass.prototype.handle = definition;
+  } else {
+    Object.keys(definition).forEach((method) => {
+      TaskClass.prototype[method] = definition[method];
+    });
+  }
+
+  // register it in our task manager
   taskManager.setClass(name, TaskClass);
 
   return TaskClass;

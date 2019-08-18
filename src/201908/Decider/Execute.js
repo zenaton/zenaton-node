@@ -1,13 +1,18 @@
 const uuidv4 = require("uuid/v4");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
-const client = require("../Client/Client");
 
 const Execute = class Execute {
-  constructor() {
+  constructor(processor) {
+    this._processor = processor;
     this.type = null;
     this.name = null;
     this.input = [];
     this.options = {};
+  }
+
+  set processor(processor) {
+    this._processor = processor;
+    return this;
   }
 
   async task(name, ...input) {
@@ -19,7 +24,7 @@ const Execute = class Execute {
     this.type = "task";
     this.name = name;
     this.input = input;
-    return client._executeTask(this._getJob());
+    return this._processor.executeTask(this._getJob());
   }
 
   _getJob() {

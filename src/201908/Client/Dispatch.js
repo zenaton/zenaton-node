@@ -1,18 +1,23 @@
 const uuidv4 = require("uuid/v4");
 const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
-const client = require("./Client");
 const versioner = require("../Services/Versioner");
 
 const MAX_ID_SIZE = 256;
 
 const Dispatch = class Dispatch {
-  constructor() {
+  constructor(processor) {
+    this._processor = processor;
     this.name = null;
     this.input = null;
     this.options = null;
     this.customId = null;
     this.intentId = uuidv4();
     this.promise = null;
+  }
+
+  set processor(processor) {
+    this._processor = processor;
+    return this;
   }
 
   withId(id) {
@@ -56,7 +61,7 @@ const Dispatch = class Dispatch {
     this.type = "task";
     this.input = input;
     this.name = name;
-    this.promise = await client._dispatchTask(this._getJob());
+    this.promise = await this._processor.dispatchTask(this._getJob());
 
     return this;
   }
@@ -77,7 +82,7 @@ const Dispatch = class Dispatch {
     this.input = input;
     this.name = name;
     this.canonical = canonical;
-    this.promise = await client._dispatchWorkflow(this._getJob());
+    this.promise = await this._processor.dispatchWorkflow(this._getJob());
 
     return this;
   }

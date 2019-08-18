@@ -1,13 +1,18 @@
 const uuidv4 = require("uuid/v4");
 const { InvalidArgumentError } = require("../../Errors");
-const client = require("./Client");
 
 const Select = class Select {
-  constructor() {
+  constructor(processor) {
+    this._processor = processor;
     this.type = null;
     this.name = null;
     this.customId = null;
     this.intentId = uuidv4();
+  }
+
+  set processor(processor) {
+    this._processor = processor;
+    return this;
   }
 
   workflow(name) {
@@ -48,28 +53,28 @@ const Select = class Select {
    * Send an event to a workflow instance
    */
   async send(eventName, eventData = {}) {
-    return client._sendEvent(this._getQuery(), eventName, eventData);
+    return this._processor.sendEvent(this._getQuery(), eventName, eventData);
   }
 
   /**
    * Kill a workflow instance
    */
   async kill() {
-    return client._killWorkflow(this._getQuery());
+    return this._processor.killWorkflow(this._getQuery());
   }
 
   /**
    * Pause a workflow instance
    */
   async pause() {
-    return client._pauseWorkflow(this._getQuery());
+    return this._processor.pauseWorkflow(this._getQuery());
   }
 
   /**
    * Resume a workflow instance
    */
   async resume() {
-    return client._resumeWorkflow(this._getQuery());
+    return this._processor.resumeWorkflow(this._getQuery());
   }
 
   _getQuery() {
