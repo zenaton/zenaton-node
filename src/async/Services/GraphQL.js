@@ -52,7 +52,6 @@ const mutations = {
       createWorkflowSchedule(input: $createWorkflowScheduleInput) {
         schedule {
           id
-          intentId
           name
           cron
           insertedAt
@@ -76,7 +75,6 @@ const mutations = {
       createTaskSchedule(input: $createTaskScheduleInput) {
         schedule {
           id
-          intentId
           name
           cron
           insertedAt
