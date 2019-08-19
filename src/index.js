@@ -15,12 +15,10 @@ process.env.ZENATON_LAST_CODE_PATH = `${lastCodePath}_draft`;
 
 // eslint-disable-next-line import/no-dynamic-require
 const pathLast = require(`./${lastCodePath}`);
+
+const path201908 = require(`./201908`);
 const pathAsync = require(`./async`);
 const pathSync = require(`./sync`);
-
-/* To Remove After Async */
-// eslint-disable-next-line import/no-dynamic-require
-// const LastClient = require(`./${lastCodePath}/Client`);
 
 module.exports = {
   Errors,
@@ -28,8 +26,8 @@ module.exports = {
     appVersion: version,
     codePath: lastCodePath,
   },
-  // LastClient,
   async: pathAsync,
   sync: pathSync,
+  "201908": path201908,
   ...pathLast,
 };

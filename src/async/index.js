@@ -31,6 +31,7 @@ if (!Array.prototype.execute) {
 
 module.exports = {
   Client,
+  LastClient: Client,
   Engine,
   Task,
   taskManager,
