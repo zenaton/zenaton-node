@@ -123,6 +123,7 @@ describe("Client", () => {
           programmingLanguage: "JAVASCRIPT",
           properties: FAKE_ENCODED_DATA,
           workflowName: "WorkflowVersionName",
+          canonicalName: "CanonicalWorkflowName",
         },
       },
     );

@@ -151,14 +151,14 @@ module.exports = class Client {
     const mutation = graphQL.mutations.createTaskSchedule;
     const variables = {
       createTaskScheduleInput: {
-        intentId: uuidv4(),
+        intentId: taskBody[ATTR_INTENT_ID],
         environmentName: credentials.appEnv,
         cron: task.scheduling.cron,
-        taskName: taskBody.name,
-        programmingLanguage: taskBody.programming_language.toUpperCase(),
-        properties: taskBody.data,
-        codePathVersion: taskBody.code_path_version,
-        initialLibraryVersion: taskBody.initial_library_version,
+        taskName: taskBody[ATTR_NAME],
+        programmingLanguage: taskBody[ATTR_PROG].toUpperCase(),
+        properties: taskBody[ATTR_DATA],
+        codePathVersion: taskBody[ATTR_CODE_PATH_VERSION],
+        initialLibraryVersion: taskBody[ATTR_INITIAL_LIB_VERSION],
       },
     };
 
@@ -194,14 +194,15 @@ module.exports = class Client {
     const mutation = graphQL.mutations.createWorkflowSchedule;
     const variables = {
       createWorkflowScheduleInput: {
-        intentId: uuidv4(),
+        intentId: workflowBody[ATTR_INTENT_ID],
         environmentName: credentials.appEnv,
         cron: flow.scheduling.cron,
-        workflowName: workflowBody.name,
-        programmingLanguage: workflowBody.programming_language.toUpperCase(),
-        properties: workflowBody.data,
-        codePathVersion: workflowBody.code_path_version,
-        initialLibraryVersion: workflowBody.initial_library_version,
+        workflowName: workflowBody[ATTR_NAME],
+        canonicalName: workflowBody[ATTR_CANONICAL] || workflowBody[ATTR_NAME],
+        programmingLanguage: workflowBody[ATTR_PROG].toUpperCase(),
+        properties: workflowBody[ATTR_DATA],
+        codePathVersion: workflowBody[ATTR_CODE_PATH_VERSION],
+        initialLibraryVersion: workflowBody[ATTR_INITIAL_LIB_VERSION],
       },
     };
 

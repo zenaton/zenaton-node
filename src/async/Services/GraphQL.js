@@ -55,10 +55,12 @@ const mutations = {
           intentId
           name
           cron
-          targetType
+          insertedAt
+          updatedAt
           target {
             ... on WorkflowTarget {
               name
+              type
               canonicalName
               programmingLanguage
               properties
@@ -77,10 +79,12 @@ const mutations = {
           intentId
           name
           cron
-          targetType
+          insertedAt
+          updatedAt
           target {
             ... on TaskTarget {
               name
+              type
               programmingLanguage
               properties
               codePathVersion
