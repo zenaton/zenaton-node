@@ -2,6 +2,8 @@ const { InvalidArgumentError } = require("../../Errors");
 const taskManager = require("./TaskManager");
 const Dispatch = require("../Client/Dispatch");
 const Select = require("../Client/Select");
+const ProcessorInterface = require("./ProcessorInterface");
+const Interface = require("../Services/Interface");
 
 const task = function task(name, definition) {
   // check that provided data have the right format
@@ -43,6 +45,7 @@ const task = function task(name, definition) {
 
   const TaskClass = class TaskClass {
     static set processor(processor) {
+      Interface.check(processor, ProcessorInterface);
       _dispatch.processor = processor;
       _select.processor = processor;
     }

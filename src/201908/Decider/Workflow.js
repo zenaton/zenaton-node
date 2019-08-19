@@ -3,6 +3,8 @@ const workflowManager = require("./WorkflowManager");
 const Dispatch = require("../Client/Dispatch");
 const Execute = require("./Execute");
 const Wait = require("./Wait");
+const ProcessorInterface = require("./ProcessorInterface");
+const Interface = require("../Services/Interface");
 
 const workflow = function workflow(name, definition) {
   // check that provided data have the right format
@@ -56,6 +58,7 @@ const workflow = function workflow(name, definition) {
     }
 
     static set processor(processor) {
+      Interface.check(processor, ProcessorInterface);
       _dispatch.processor = processor;
       _execute.processor = processor;
       _wait.processor = processor;

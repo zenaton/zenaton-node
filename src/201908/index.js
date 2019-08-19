@@ -1,4 +1,5 @@
 const Client = require("./Client/Client");
+const clientManager = require("./Client/ClientManager");
 const dispatch = require("./Client/Dispatch");
 const select = require("./Client/Select");
 const workflow = require("./Decider/Workflow");
@@ -12,6 +13,7 @@ const datetime = require("./Services/DateTime");
 
 module.exports = {
   Client,
+  clientManager,
   select,
   dispatch,
   workflow,

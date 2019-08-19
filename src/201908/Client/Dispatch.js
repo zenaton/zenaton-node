@@ -5,8 +5,7 @@ const versioner = require("../Services/Versioner");
 const MAX_ID_SIZE = 256;
 
 const Dispatch = class Dispatch {
-  constructor(processor) {
-    this._processor = processor;
+  constructor() {
     this.name = null;
     this.input = null;
     this.options = null;

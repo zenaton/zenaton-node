@@ -2,8 +2,7 @@ const uuidv4 = require("uuid/v4");
 const { InvalidArgumentError } = require("../../Errors");
 
 const Select = class Select {
-  constructor(processor) {
-    this._processor = processor;
+  constructor() {
     this.type = null;
     this.name = null;
     this.customId = null;

@@ -3,11 +3,13 @@ const InvalidArgumentError = require("../../Errors/InvalidArgumentError");
 
 const Execute = class Execute {
   constructor(processor) {
-    this._processor = processor;
     this.type = null;
     this.name = null;
     this.input = [];
     this.options = {};
+    if (processor) {
+      this.processor = processor;
+    }
   }
 
   set processor(processor) {
