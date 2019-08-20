@@ -13,13 +13,6 @@ const TaskManager = class {
     this.tasks = [];
   }
 
-  set processor(processor) {
-    this.tasks.forEach((task) => {
-      // eslint-disable-next-line no-param-reassign
-      task.class.processor = processor;
-    });
-  }
-
   check(name) {
     const TaskClass = this.getClass(name);
     if (TaskClass === null) {
