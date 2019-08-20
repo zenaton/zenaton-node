@@ -2,8 +2,7 @@ const uuidv4 = require("uuid/v4");
 const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
 
 const Wait = class Wait {
-  constructor(processor) {
-    this._processor = processor;
+  constructor() {
     this.eventName = null;
     this.timestamp = null;
     this.duration = null;
@@ -67,7 +66,7 @@ const Wait = class Wait {
   }
 
   async _apply() {
-    return this._processor._executeTask(this._getWait());
+    return this._processor.executeTask(this._getWait());
   }
 
   _getWait() {

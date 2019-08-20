@@ -14,13 +14,6 @@ const WorkflowManager = class WorkflowManager {
     this.workflows = [];
   }
 
-  set processor(processor) {
-    this.workflows.forEach((workflow) => {
-      // eslint-disable-next-line no-param-reassign
-      workflow.class.processor = processor;
-    });
-  }
-
   check(name) {
     const WorkflowClass = this.getClass(name);
     if (WorkflowClass === null) {

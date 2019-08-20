@@ -40,6 +40,10 @@ const workflow = function workflow(name, definition) {
     });
   }
 
+  const _dispatch = new Dispatch();
+  const _execute = new Execute();
+  const _wait = new Wait();
+
   const WorkflowClass = class WorkflowClass {
     get _properties() {
       const properties = {};
@@ -57,7 +61,7 @@ const workflow = function workflow(name, definition) {
       return this;
     }
 
-    static set processor(processor) {
+    set _processor(processor) {
       Interface.check(processor, ProcessorInterface);
       _dispatch.processor = processor;
       _execute.processor = processor;
@@ -69,7 +73,6 @@ const workflow = function workflow(name, definition) {
   Object.defineProperty(WorkflowClass, "name", { value: name });
 
   // reserved dispatch methods
-  const _dispatch = new Dispatch();
   Object.defineProperty(WorkflowClass.prototype, "dispatch", {
     value: _dispatch,
     writable: false,
@@ -77,7 +80,6 @@ const workflow = function workflow(name, definition) {
   });
 
   // reserved execute methods
-  const _execute = new Execute();
   Object.defineProperty(WorkflowClass.prototype, "execute", {
     value: _execute,
     writable: false,
@@ -85,7 +87,6 @@ const workflow = function workflow(name, definition) {
   });
 
   // reserved wait methods
-  const _wait = new Wait();
   Object.defineProperty(WorkflowClass.prototype, "wait", {
     value: _wait,
     writable: false,
