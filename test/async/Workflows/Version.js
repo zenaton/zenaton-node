@@ -5,7 +5,7 @@ const {
   Version,
   workflowManager,
   AbstractWorkflow,
-} = require("../../../src/async/Workflows");
+} = require("../../../src/Code/async/Workflows");
 const { InvalidArgumentError } = require("../../../src/Errors");
 
 describe("Version builder", () => {
