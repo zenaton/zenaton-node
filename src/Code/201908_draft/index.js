@@ -10,6 +10,7 @@ const serializer = require("./Services/Serializer");
 const versioner = require("./Services/Versioner");
 const duration = require("./Services/Duration");
 const datetime = require("./Services/DateTime");
+const { taskContext, workflowContext } = require("./Services/Runtime/Contexts");
 
 module.exports = {
   Client,
@@ -24,4 +25,6 @@ module.exports = {
   datetime,
   serializer,
   versioner,
+  taskContext,
+  workflowContext,
 };

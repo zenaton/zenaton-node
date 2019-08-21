@@ -1,9 +1,10 @@
-const { InvalidArgumentError } = require("../../../Errors");
+const { InvalidArgumentError, ZenatonError } = require("../../../Errors");
 const taskManager = require("./TaskManager");
 const Dispatch = require("../Client/Dispatch");
 const Select = require("../Client/Select");
 const ProcessorInterface = require("./ProcessorInterface");
 const Interface = require("../Services/Interface");
+const TaskContext = require("../Services/Runtime/Contexts/TaskContext");
 
 const task = function task(name, definition) {
   // check that provided data have the right format
@@ -48,6 +49,21 @@ const task = function task(name, definition) {
       Interface.check(processor, ProcessorInterface);
       _dispatch.processor = processor;
       _select.processor = processor;
+    }
+
+    get context() {
+      if (this._context === undefined) {
+        return new TaskContext();
+      }
+
+      return this._context;
+    }
+
+    set context(context) {
+      if (this._context !== undefined) {
+        throw new ZenatonError("Context is already set and cannot be mutated.");
+      }
+      this._context = context;
     }
   };
 
