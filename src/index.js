@@ -3,23 +3,23 @@ const { readdirSync, statSync } = require("fs");
 const { version } = require("./infos");
 const Errors = require("./Errors");
 
+const LAST_CODE_PATH = "201908_draft";
 const getDirectories = (source) => readdirSync(source);
 
 // store path to this file for use by Zenaton worker
 process.env.ZENATON_LIBRARY_PATH = path.resolve(__dirname, __filename);
 
 // Helping the Agent to check if is able to manage this version
-const lastCodePath = "async";
-process.env.ZENATON_LAST_CODE_PATH = `${lastCodePath}`;
+process.env.ZENATON_LAST_CODE_PATH = `${LAST_CODE_PATH}`;
 // eslint-disable-next-line import/no-dynamic-require
-const pathLast = require(`./Code/${lastCodePath}`);
+const pathLast = require(`./Code/${LAST_CODE_PATH}`);
 
 // Define main version
 const index = {
   Errors,
   infos: {
     appVersion: version,
-    codePath: lastCodePath,
+    codePath: LAST_CODE_PATH,
   },
   ...pathLast,
 };
