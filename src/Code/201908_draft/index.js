@@ -14,8 +14,8 @@ const datetime = require("./Services/DateTime");
 module.exports = {
   Client,
   clientManager,
-  select,
   dispatch,
+  select,
   workflow,
   workflowManager,
   task,

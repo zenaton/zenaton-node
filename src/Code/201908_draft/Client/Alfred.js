@@ -27,9 +27,9 @@ const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
 const CODE_PATH_VERSION = process.env.ZENATON_LAST_CODE_PATH;
 
-const EVENT_INPUT = "event_input";
+const EVENT_DATA = "event_input";
 const EVENT_NAME = "event_name";
-const EVENT_DATA = "event_data";
+const EVENT_COMPLET = "event_data";
 
 const WORKFLOW_KILL = "kill";
 const WORKFLOW_PAUSE = "pause";
@@ -165,8 +165,8 @@ const Alfred = class Alfred {
       [ATTR_NAME]: query.name,
       [ATTR_CUSTOM_ID]: query.customId,
       [EVENT_NAME]: eventName,
-      [EVENT_INPUT]: serializer.encode(eventData),
-      [EVENT_DATA]: serializer.encode({
+      [EVENT_DATA]: serializer.encode(eventData),
+      [EVENT_COMPLET]: serializer.encode({
         name: eventName,
         data: eventData,
       }),
