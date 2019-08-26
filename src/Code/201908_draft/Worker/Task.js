@@ -4,14 +4,18 @@ const Dispatch = require("../Client/Dispatch");
 const Select = require("../Client/Select");
 const ProcessorInterface = require("./ProcessorInterface");
 const Interface = require("../Services/Interface");
-const TaskContext = require("../Services/Runtime/Contexts/TaskContext");
+const TaskContext = require("./TaskContext");
 
 const task = function task(name, definition) {
   // check that provided data have the right format
   if (typeof name !== "string" || name.length === 0) {
     throw new InvalidArgumentError(
-      "When creating a task, 1st parameter (task name) must be a non-empty string",
+      "When getting or creating a task, 1st parameter (task name) must be a non-empty string",
     );
+  }
+  //  task getter
+  if (typeof definition === "undefined") {
+    return taskManager.get(name);
   }
   // check task definition
   if (typeof definition !== "function" && typeof definition !== "object") {
@@ -96,7 +100,7 @@ const task = function task(name, definition) {
   }
 
   // register it in our task manager
-  taskManager.setClass(name, TaskClass);
+  taskManager.add(name, TaskClass);
 
   return TaskClass;
 };

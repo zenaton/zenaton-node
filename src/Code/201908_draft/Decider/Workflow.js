@@ -5,7 +5,7 @@ const Execute = require("./Execute");
 const Wait = require("./Wait");
 const ProcessorInterface = require("./ProcessorInterface");
 const Interface = require("../Services/Interface");
-const WorkflowContext = require("../Services/Runtime/Contexts/TaskContext");
+const WorkflowContext = require("./WorkflowContext");
 
 const workflow = function workflow(name, definition) {
   // check that provided data have the right format
@@ -13,6 +13,10 @@ const workflow = function workflow(name, definition) {
     throw new InvalidArgumentError(
       "When getting or creating a workflow, 1st parameter (workflow name) must be a non-empty string",
     );
+  }
+  //  workflow getter
+  if (typeof definition === "undefined") {
+    return workflowManager.get(name);
   }
   // check workflow definition
   if (typeof definition !== "function" && typeof definition !== "object") {
@@ -46,7 +50,7 @@ const workflow = function workflow(name, definition) {
   const _wait = new Wait();
 
   const WorkflowClass = class WorkflowClass {
-    get _properties() {
+    get properties() {
       const properties = {};
       Object.keys(this).forEach((prop) => {
         properties[prop] = this[prop];
@@ -54,7 +58,7 @@ const workflow = function workflow(name, definition) {
       return properties;
     }
 
-    set _properties(properties) {
+    set properties(properties) {
       // delete existing values
       Object.keys(this).forEach((prop) => delete this[prop]);
       // fill with new values
@@ -119,7 +123,7 @@ const workflow = function workflow(name, definition) {
   }
 
   // register it in our workflow manager
-  workflowManager.setClass(name, WorkflowClass);
+  workflowManager.add(name, WorkflowClass);
 
   return WorkflowClass;
 };

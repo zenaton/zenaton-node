@@ -51,7 +51,7 @@ const Select = class Select {
   /**
    * Send an event to a workflow instance
    */
-  async send(eventName, eventData = {}) {
+  async send(eventName, ...eventData) {
     return this._processor.sendEvent(this._getQuery(), eventName, eventData);
   }
 

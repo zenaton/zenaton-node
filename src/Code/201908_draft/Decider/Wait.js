@@ -1,4 +1,3 @@
-const uuidv4 = require("uuid/v4");
 const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
 
 const Wait = class Wait {
@@ -78,7 +77,6 @@ const Wait = class Wait {
         duration: this.duration,
         timestamp: this.timestamp,
       },
-      intentId: uuidv4(),
     };
   }
 };

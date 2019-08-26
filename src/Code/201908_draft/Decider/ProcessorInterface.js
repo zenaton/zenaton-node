@@ -1,3 +1,3 @@
 const Interface = require("../Services/Interface");
 
-module.exports = new Interface("executeTask");
+module.exports = new Interface("executeTask", "dispatchTask");

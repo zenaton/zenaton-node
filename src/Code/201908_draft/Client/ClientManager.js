@@ -12,15 +12,8 @@ const ClientManager = class ClientManager {
     this.clients = [];
   }
 
-  set processor(processor) {
-    this.clients.forEach((client) => {
-      // eslint-disable-next-line no-param-reassign
-      client.processor = processor;
-    });
-  }
-
   add(client) {
-    if (this.get(client.name) !== null) {
+    if (this.get(client.name) !== undefined) {
       throw new ExternalZenatonError(
         client.name
           ? `Client "${client.name}" can not be defined twice`
@@ -30,11 +23,12 @@ const ClientManager = class ClientManager {
     this.clients.push(client);
   }
 
-  // search by name
   get(name) {
-    const cs = this.clients.filter((c) => c.name === name);
-    if (cs.length > 0) return cs[0];
-    return null;
+    return this.clients.find((c) => c.name === name);
+  }
+
+  all() {
+    return this.clients;
   }
 };
 
