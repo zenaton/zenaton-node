@@ -13,6 +13,10 @@ const workflow = function workflow(name, definition) {
       "When getting or creating a workflow, 1st parameter (workflow name) must be a non-empty string",
     );
   }
+  //  workflow getter
+  if (typeof definition === "undefined") {
+    return workflowManager.get(name);
+  }
   // check workflow definition
   if (typeof definition !== "function" && typeof definition !== "object") {
     throw new InvalidArgumentError(
@@ -45,7 +49,7 @@ const workflow = function workflow(name, definition) {
   const _wait = new Wait();
 
   const WorkflowClass = class WorkflowClass {
-    get _properties() {
+    get properties() {
       const properties = {};
       Object.keys(this).forEach((prop) => {
         properties[prop] = this[prop];
@@ -53,7 +57,7 @@ const workflow = function workflow(name, definition) {
       return properties;
     }
 
-    set _properties(properties) {
+    set properties(properties) {
       // delete existing values
       Object.keys(this).forEach((prop) => delete this[prop]);
       // fill with new values
@@ -61,7 +65,7 @@ const workflow = function workflow(name, definition) {
       return this;
     }
 
-    set _processor(processor) {
+    set processor(processor) {
       Interface.check(processor, ProcessorInterface);
       _dispatch.processor = processor;
       _execute.processor = processor;
@@ -103,7 +107,7 @@ const workflow = function workflow(name, definition) {
   }
 
   // register it in our workflow manager
-  workflowManager.setClass(name, WorkflowClass);
+  workflowManager.add(name, WorkflowClass);
 
   return WorkflowClass;
 };

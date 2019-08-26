@@ -1,4 +1,3 @@
-const serializer = require("../Services/Serializer");
 const versioner = require("../Services/Versioner");
 const { ExternalZenatonError } = require("../../../Errors");
 
@@ -14,18 +13,8 @@ const WorkflowManager = class WorkflowManager {
     this.workflows = [];
   }
 
-  check(name) {
-    const WorkflowClass = this.getClass(name);
-    if (WorkflowClass === null) {
-      throw new ExternalZenatonError(
-        `Unknown workflow "${name}", please add it to your --boot file`,
-      );
-    }
-    return WorkflowClass;
-  }
-
-  setClass(name, workflow) {
-    if (this.getClass(name) !== null) {
+  add(name, workflow) {
+    if (this.get(name) !== undefined) {
       throw new ExternalZenatonError(
         `Workflow "${name}" can not be defined twice`,
       );
@@ -50,30 +39,17 @@ const WorkflowManager = class WorkflowManager {
     });
   }
 
-  getClass(name) {
-    let ws;
+  get(name) {
     // search by name
-    ws = this.workflows.filter((w) => w.name === name);
-    if (ws.length > 0) return ws[0].class;
+    const workflow = this.workflows.find((w) => w.name === name);
+    if (workflow) return workflow.class;
     // search per canonical
-    ws = this.workflows.filter((w) => w.canonical === name);
-    if (ws.length === 0) return null;
+    const ws = this.workflows.filter((w) => w.canonical === name);
+    if (ws.length === 0) return undefined;
     // return last version
     return ws.reduce((acc, current) =>
       acc.version > current.version ? acc : current,
     ).class;
-  }
-
-  getWorkflow(name, encodedProperties = null) {
-    // unserialize properties
-    const properties =
-      encodedProperties === null ? {} : serializer.decode(encodedProperties);
-    // get workflow class
-    const WorkflowClass = this.check(name);
-    // return instance with properties
-    const w = new WorkflowClass();
-    w._properties = properties;
-    return w;
   }
 };
 

@@ -22,6 +22,14 @@ const Client = class Client {
     clientManager.add(this);
   }
 
+  static all() {
+    return clientManager.all();
+  }
+
+  static get(name) {
+    return clientManager.get(name);
+  }
+
   set processor(processor) {
     Interface.check(processor, ProcessorInterface);
     this.dispatch.processor = processor;

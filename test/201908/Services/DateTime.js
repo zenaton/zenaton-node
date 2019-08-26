@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 const { expect } = require("chai");
-const DateTime = require("../../../src/201908/Services/DateTime");
+const DateTime = require("../../../src/Code/201908_draft/Services/DateTime");
 
 const baseDate = "2019-08-09T16:26:44.929Z";
 
@@ -63,7 +63,6 @@ describe("DateTime Definition methods", () => {
 
   it("set a duration in seconds", () => {
     const time = DateTime.seconds(3)._getDefinition();
-    console.log("DEFINITION", time);
     expect(DateTime.get(time, baseDate)).to.be.deep.equals(1565368007);
   });
 
