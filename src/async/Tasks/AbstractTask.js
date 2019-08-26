@@ -36,7 +36,7 @@ module.exports = class AbstractTask {
     this.scheduling.cron = cron;
 
     const result = await new Engine().dispatch([this]);
-    return result[0].then((res) => res);
+    return result[0].then(() => undefined);
   }
 
   // asynchronous execution within a workflow
