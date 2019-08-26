@@ -60,9 +60,15 @@ const TaskManager = class {
     ).class;
   }
 
-  getTask(name) {
+  getTask(name, context = null) {
     const TaskClass = this.check(name);
-    return new TaskClass();
+    const t = new TaskClass();
+
+    if (context) {
+      t.context = context;
+    }
+
+    return t;
   }
 };
 

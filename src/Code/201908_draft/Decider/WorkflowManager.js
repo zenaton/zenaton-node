@@ -64,7 +64,7 @@ const WorkflowManager = class WorkflowManager {
     ).class;
   }
 
-  getWorkflow(name, encodedProperties = null) {
+  getWorkflow(name, encodedProperties = null, context = null) {
     // unserialize properties
     const properties =
       encodedProperties === null ? {} : serializer.decode(encodedProperties);
@@ -73,6 +73,11 @@ const WorkflowManager = class WorkflowManager {
     // return instance with properties
     const w = new WorkflowClass();
     w._properties = properties;
+
+    if (context) {
+      w.context = context;
+    }
+
     return w;
   }
 };
