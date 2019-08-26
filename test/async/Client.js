@@ -111,7 +111,7 @@ describe("Client", () => {
     expect(serializer.encode).to.have.been.calledWithExactly("WHATEVER");
 
     expect(graphQL.request).to.have.been.calledWithExactly(
-      "https://alfred.zenaton.com/api",
+      "https://gateway.zenaton.com/api",
       graphQL.mutations.createWorkflowSchedule,
       {
         createWorkflowScheduleInput: {
@@ -184,7 +184,7 @@ describe("Client", () => {
     expect(serializer.encode).to.have.been.calledWithExactly("WHATEVER");
 
     expect(graphQL.request).to.have.been.calledWithExactly(
-      "https://alfred.zenaton.com/api",
+      "https://gateway.zenaton.com/api",
       graphQL.mutations.createTaskSchedule,
       {
         createTaskScheduleInput: {

@@ -11,7 +11,7 @@ const ZENATON_WORKER_URL = "http://localhost";
 const DEFAULT_WORKER_PORT = 4001;
 const WORKER_API_VERSION = "v_newton";
 
-const ZENATON_ALFRED_URL = "https://alfred.zenaton.com/api";
+const ZENATON_GATEWAY_URL = "https://gateway.zenaton.com/api";
 
 const APP_ENV = "app_env";
 const APP_ID = "app_id";
@@ -115,10 +115,10 @@ module.exports = class Client {
     return `${host}${path}`;
   }
 
-  getAlfredUrl() {
-    const host = process.env.ZENATON_ALFRED_URL
-      ? process.env.ZENATON_ALFRED_URL
-      : ZENATON_ALFRED_URL;
+  getGatewayUrl() {
+    const host = process.env.ZENATON_GATEWAY_URL
+      ? process.env.ZENATON_GATEWAY_URL
+      : ZENATON_GATEWAY_URL;
 
     return host;
   }
@@ -146,7 +146,7 @@ module.exports = class Client {
   }
 
   async startScheduledTask(task) {
-    const endpoint = this.getAlfredUrl();
+    const endpoint = this.getGatewayUrl();
     const taskBody = this.getBodyForTask(task);
     const mutation = graphQL.mutations.createTaskSchedule;
     const variables = {
@@ -189,7 +189,7 @@ module.exports = class Client {
   }
 
   async startScheduledWorkflow(flow) {
-    const endpoint = this.getAlfredUrl();
+    const endpoint = this.getGatewayUrl();
     const workflowBody = this.getBodyForWorkflow(flow);
     const mutation = graphQL.mutations.createWorkflowSchedule;
     const variables = {
