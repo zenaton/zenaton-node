@@ -1,4 +1,3 @@
-const uuidv4 = require("uuid/v4");
 const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
 
 const Execute = class Execute {
@@ -32,7 +31,6 @@ const Execute = class Execute {
       name: this.name,
       input: this.input,
       options: this.options,
-      intentId: uuidv4(),
     };
   }
 };
