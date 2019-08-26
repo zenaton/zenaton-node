@@ -1,6 +1,4 @@
-const CronParser = require("cron-parser");
 const WorkflowContext = require("../Runtime/Contexts/WorkflowContext");
-
 const Engine = require("../Engine/Engine");
 const { ZenatonError } = require("../../Errors");
 
@@ -27,41 +25,30 @@ module.exports = class AbstractWorkflow {
   }
 
   // asynchronous execution within a workflow
-  async schedule() {
-    const result = await new Engine().dispatch([this]);
-    return result[0].then(() => undefined);
-  }
-
-  // asynchronous execution within a workflow
-  async dispatch(...args) {
-    return this.schedule(...args);
-  }
-
-  // synchronous execution within a workflow
-  async execute() {
-    const result = await new Engine().execute([this]);
-    return result[0];
-  }
-
-  repeat(cron) {
-    if (typeof cron !== "string") {
+  async schedule(cron) {
+    if (typeof cron !== "string" || cron === "") {
       throw new ZenatonError(
-        "Param passed to 'repeat' function must be a string",
-      );
-    }
-
-    try {
-      CronParser.parseExpression(cron);
-    } catch (err) {
-      throw new ZenatonError(
-        "Param passed to 'repeat' function is not a proper CRON expression",
+        "Param passed to 'schedule' function must be a non empty string",
       );
     }
 
     this.scheduling = this.scheduling || {};
     this.scheduling.cron = cron;
 
-    return this;
+    const result = await new Engine().dispatch([this]);
+    return result[0].then((res) => res);
+  }
+
+  // asynchronous execution within a workflow
+  async dispatch() {
+    const result = await new Engine().dispatch([this]);
+    return result[0].then(() => undefined);
+  }
+
+  // synchronous execution within a workflow
+  async execute() {
+    const result = await new Engine().execute([this]);
+    return result[0];
   }
 
   static methods() {

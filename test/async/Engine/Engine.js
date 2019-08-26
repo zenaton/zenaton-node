@@ -172,7 +172,7 @@ describe("Engine", () => {
         .and.to.be.an("array");
       await expect(Promise.all(content))
         .to.eventually.be.fulfilled()
-        .and.to.eql([undefined, undefined]);
+        .and.to.eql(["Result Workflow", "Result Task"]);
 
       expect(startTaskFake).to.have.been.calledOnceWithExactly(jobTask);
       expect(startWorkflowFake).to.have.been.calledOnceWithExactly(jobWorkflow);
