@@ -53,7 +53,9 @@ const workflow = function workflow(name, definition) {
     get properties() {
       const properties = {};
       Object.keys(this).forEach((prop) => {
-        properties[prop] = this[prop];
+        if (prop !== "_context") {
+          properties[prop] = this[prop];
+        }
       });
       return properties;
     }
@@ -81,7 +83,7 @@ const workflow = function workflow(name, definition) {
       this._context = context;
     }
 
-    set _processor(processor) {
+    set processor(processor) {
       Interface.check(processor, ProcessorInterface);
       _dispatch.processor = processor;
       _execute.processor = processor;
