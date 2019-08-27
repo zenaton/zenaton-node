@@ -2,8 +2,8 @@ const proxyquire = require("proxyquire");
 const { expect } = require("chai");
 const sinon = require("sinon");
 
-const { workflowManager } = require("../../../src/async/Workflows");
-const { taskManager } = require("../../../src/async/Tasks");
+const { workflowManager } = require("../../../src/Code/async/Workflows");
+const { taskManager } = require("../../../src/Code/async/Tasks");
 const { InvalidArgumentError } = require("../../../src/Errors");
 
 proxyquire.noPreserveCache();
@@ -26,7 +26,7 @@ describe("Engine", () => {
       this.startWorkflow = startWorkflowFake;
     };
 
-    Engine = proxyquire("../../../src/async/Engine/Engine", {
+    Engine = proxyquire("../../../src/Code/async/Engine/Engine", {
       "../Client": clientStub,
     });
 

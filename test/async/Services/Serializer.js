@@ -5,7 +5,7 @@ const {
   encode,
   decode,
   CURRENT_VERSION,
-} = require("../../../src/async/Services/Serializer");
+} = require("../../../src/Code/async/Services/Serializer");
 
 const TYPED_ARRAYS_CLASS_NAMES = [
   "Int8Array",

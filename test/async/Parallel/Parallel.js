@@ -27,7 +27,7 @@ describe("Parallel", () => {
       this.execute = executeFake;
     };
 
-    Parallel = proxyquire("../../../src/async/Parallel/Parallel", {
+    Parallel = proxyquire("../../../src/Code/async/Parallel/Parallel", {
       "../Engine/Engine": engineStub,
     });
   });
