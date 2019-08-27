@@ -8,9 +8,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
-- Added a `intent_id` property when dispatching workflows and tasks, sending events to workflows, and
-  pausing/resuming/killing workflows.
-
 ### Changed
 
 - Default timezone with new syntax is now UTC.
@@ -28,6 +25,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Fixed
 
 ### Security
+
+## 0.6.0 - 2019-08-26
+
+### Added
+
+- Added a `intent_id` property when dispatching workflows and tasks, sending events to workflows, and
+  pausing/resuming/killing workflows.
+- Added `context` setter and getter in `Task` and `Workflow` abstract class that is able to retrieve the runtime context
+  of the workflow or task currently being executed.
+
+### Changed
+
+- Changed scheduling requests that pass now through Alfred (GraphQL API).
+- Changed scheduling syntax from `x.repeat("* * * * *").schedule()` to `x.shedule("* * * * *")`.
+- Remove scheduling output.
 
 ## 0.5.7 - 2019-06-21
 

@@ -4,7 +4,7 @@ const { Task, taskManager, Wait } = require("./Tasks");
 const { Workflow, workflowManager, Version } = require("./Workflows");
 const { serializer } = require("./Services");
 const Parallel = require("./Parallel/Parallel");
-
+const { TaskContext, WorkflowContext } = require("./Runtime/Contexts");
 // if below functions are already defined, use Parallel class
 
 // Parallel dispatchs
@@ -41,4 +41,6 @@ module.exports = {
   Version,
   serializer,
   Parallel,
+  TaskContext,
+  WorkflowContext,
 };

@@ -3,8 +3,8 @@ const { expect } = require("chai");
 const sinon = require("sinon");
 
 const globalClient = require("../../src/client");
-const { http, serializer } = require("../../src/async/Services");
-const { workflowManager } = require("../../src/async/Workflows");
+const { http, serializer, graphQL } = require("../../src/Code/async/Services");
+const { workflowManager } = require("../../src/Code/async/Workflows");
 
 proxyquire.noPreserveCache();
 
@@ -29,6 +29,7 @@ describe("Client", () => {
 
     sinon.stub(http, "post").resolves();
     sinon.stub(http, "put").resolves();
+    sinon.stub(graphQL, "request").resolves({});
 
     sinon.stub(serializer, "encode").returns(FAKE_ENCODED_DATA);
   });
@@ -109,23 +110,20 @@ describe("Client", () => {
 
     expect(serializer.encode).to.have.been.calledWithExactly("WHATEVER");
 
-    expect(http.post).to.have.been.calledWithExactly(
-      "http://localhost:4001/api/v_newton/scheduling/instances",
+    expect(graphQL.request).to.have.been.calledWithExactly(
+      "https://gateway.zenaton.com/api",
+      graphQL.mutations.createWorkflowSchedule,
       {
-        canonical_name: "CanonicalWorkflowName",
-        code_path_version: "async",
-        custom_id: "FAKE CUSTOM ID",
-        data: FAKE_ENCODED_DATA,
-        initial_library_version: FAKE_APP_VERSION,
-        name: "WorkflowVersionName",
-        programming_language: "Javascript",
-        intent_id: "statically-generated-intent-id",
-      },
-      {
-        params: {
-          app_env: FAKE_APP_ENV,
-          app_id: FAKE_APP_ID,
-          scheduling_cron: "* * * * *",
+        createWorkflowScheduleInput: {
+          codePathVersion: "async",
+          cron: "* * * * *",
+          environmentName: "prod",
+          initialLibraryVersion: FAKE_APP_VERSION,
+          intentId: "statically-generated-intent-id",
+          programmingLanguage: "JAVASCRIPT",
+          properties: FAKE_ENCODED_DATA,
+          workflowName: "WorkflowVersionName",
+          canonicalName: "CanonicalWorkflowName",
         },
       },
     );
@@ -185,22 +183,19 @@ describe("Client", () => {
 
     expect(serializer.encode).to.have.been.calledWithExactly("WHATEVER");
 
-    expect(http.post).to.have.been.calledWithExactly(
-      "http://localhost:4001/api/v_newton/scheduling/tasks",
+    expect(graphQL.request).to.have.been.calledWithExactly(
+      "https://gateway.zenaton.com/api",
+      graphQL.mutations.createTaskSchedule,
       {
-        code_path_version: "async",
-        data: FAKE_ENCODED_DATA,
-        initial_library_version: FAKE_APP_VERSION,
-        maxProcessingTime: 1000,
-        name: "TaskName",
-        programming_language: "Javascript",
-        intent_id: "statically-generated-intent-id",
-      },
-      {
-        params: {
-          app_env: FAKE_APP_ENV,
-          app_id: FAKE_APP_ID,
-          scheduling_cron: "* * * * *",
+        createTaskScheduleInput: {
+          codePathVersion: "async",
+          cron: "* * * * *",
+          environmentName: "prod",
+          initialLibraryVersion: FAKE_APP_VERSION,
+          intentId: "statically-generated-intent-id",
+          programmingLanguage: "JAVASCRIPT",
+          properties: FAKE_ENCODED_DATA,
+          taskName: "TaskName",
         },
       },
     );

@@ -2,8 +2,8 @@ const proxyquire = require("proxyquire");
 const { expect } = require("chai");
 const sinon = require("sinon");
 
-const { workflowManager } = require("../../../src/async/Workflows");
-const { taskManager } = require("../../../src/async/Tasks");
+const { workflowManager } = require("../../../src/Code/async/Workflows");
+const { taskManager } = require("../../../src/Code/async/Tasks");
 const { InvalidArgumentError } = require("../../../src/Errors");
 
 proxyquire.noPreserveCache();
@@ -172,7 +172,7 @@ describe("Engine", () => {
         .and.to.be.an("array");
       await expect(Promise.all(content))
         .to.eventually.be.fulfilled()
-        .and.to.eql([undefined, undefined]);
+        .and.to.eql(["Result Workflow", "Result Task"]);
 
       expect(startTaskFake).to.have.been.calledOnceWithExactly(jobTask);
       expect(startWorkflowFake).to.have.been.calledOnceWithExactly(jobWorkflow);

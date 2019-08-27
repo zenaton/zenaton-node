@@ -5,7 +5,7 @@ const {
   Workflow,
   AbstractWorkflow,
   workflowManager,
-} = require("../../../src/async/Workflows");
+} = require("../../../src/Code/async/Workflows");
 const {
   InvalidArgumentError,
   ExternalZenatonError,
@@ -193,13 +193,13 @@ describe("Workflow builder", () => {
     const instance = new WorkflowClass();
 
     // Assert
-    expect(() => instance.repeat(12)).to.throw(
+    expect(instance.schedule(12)).to.be.rejectedWith(
       ZenatonError,
-      "Param passed to 'repeat' function must be a string",
+      "Param passed to 'schedule' function must be a non empty string",
     );
   });
 
-  it("should throw if provided cron is not a CRON expression", () => {
+  it("should correctly set the 'scheduling.cron' property", async () => {
     // Arrange
     const workflowName = "TestWorkflow";
     const workflow = { handle: () => {} };
@@ -207,23 +207,11 @@ describe("Workflow builder", () => {
     // Act
     const WorkflowClass = Workflow(workflowName, workflow);
     const instance = new WorkflowClass();
-
-    // Assert
-    expect(() => instance.repeat("BOOM BOOM")).to.throw(
-      ZenatonError,
-      "Param passed to 'repeat' function is not a proper CRON expression",
-    );
-  });
-
-  it("should correctly set the 'scheduling.cron' property", () => {
-    // Arrange
-    const workflowName = "TestWorkflow";
-    const workflow = { handle: () => {} };
-
-    // Act
-    const WorkflowClass = Workflow(workflowName, workflow);
-    const instance = new WorkflowClass();
-    instance.repeat("* * * * *");
+    try {
+      await instance.schedule("* * * * *");
+    } catch (e) {
+      // do nothing
+    }
 
     // Assert
     expect(instance.scheduling.cron).to.equal("* * * * *");
