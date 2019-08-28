@@ -18,6 +18,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Security
 
+## 0.6.1 - 2019-08-28
+
+### Security
+
+- Update the version of eslint-utils
+
 ## 0.6.0 - 2019-08-26
 
 ### Added
