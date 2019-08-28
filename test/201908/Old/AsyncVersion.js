@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 const { expect } = require("chai");
-const { Trait } = require("../../../src/async/Services");
-const WithTimestamp = require("../../../src/async/Traits/WithTimestamp");
+const { Trait } = require("../../../src/Code/async/Services");
+const WithTimestamp = require("../../../src/Code/async/Traits/WithTimestamp");
 
 class WaitDummyClass {
   constructor() {

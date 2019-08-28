@@ -17,15 +17,16 @@ const FAKE_ENCODED_DATA = "[ENCODED DATA]";
 const FAKE_APP_VERSION = "0.0.0";
 
 describe("Client", () => {
-  const initSpy = sinon.spy(globalClient, "init");
-
   let Client;
+  let initSpy;
 
   beforeEach(() => {
-    Client = proxyquire("../../src/async/Client", {
+    Client = proxyquire("../../src/Code/async/Client", {
       "uuid/v4": () => "statically-generated-intent-id",
-      "../infos": { version: FAKE_APP_VERSION },
+      "../../infos": { version: FAKE_APP_VERSION },
     });
+
+    initSpy = sinon.spy(Client, "init");
 
     sinon.stub(http, "post").resolves();
     sinon.stub(http, "put").resolves();

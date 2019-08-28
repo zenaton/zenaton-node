@@ -26,7 +26,7 @@ describe("Engine", () => {
       this.startWorkflow = startWorkflowFake;
     };
 
-    Engine = proxyquire("../../../src/async/Engine/Engine", {
+    Engine = proxyquire("../../../src/Code/async/Engine/Engine", {
       "../Client": clientStub,
     });
 
