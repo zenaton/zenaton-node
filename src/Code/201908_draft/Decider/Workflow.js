@@ -1,10 +1,11 @@
-const { InvalidArgumentError } = require("../../../Errors");
+const { InvalidArgumentError, ZenatonError } = require("../../../Errors");
 const workflowManager = require("./WorkflowManager");
 const Dispatch = require("../Client/Dispatch");
 const Execute = require("./Execute");
 const Wait = require("./Wait");
 const ProcessorInterface = require("./ProcessorInterface");
 const Interface = require("../Services/Interface");
+const WorkflowContext = require("./WorkflowContext");
 
 const workflow = function workflow(name, definition) {
   // check that provided data have the right format
@@ -52,7 +53,9 @@ const workflow = function workflow(name, definition) {
     get properties() {
       const properties = {};
       Object.keys(this).forEach((prop) => {
-        properties[prop] = this[prop];
+        if (prop !== "_context") {
+          properties[prop] = this[prop];
+        }
       });
       return properties;
     }
@@ -63,6 +66,21 @@ const workflow = function workflow(name, definition) {
       // fill with new values
       Object.assign(this, properties);
       return this;
+    }
+
+    get context() {
+      if (this._context === undefined) {
+        return new WorkflowContext();
+      }
+
+      return this._context;
+    }
+
+    set context(context) {
+      if (this._context !== undefined) {
+        throw new ZenatonError("Context is already set and cannot be mutated.");
+      }
+      this._context = context;
     }
 
     set processor(processor) {
