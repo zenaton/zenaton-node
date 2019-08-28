@@ -119,6 +119,8 @@ const Alfred = class Alfred {
       },
     };
 
+    console.log("VARIABLES IN TASK", variables);
+
     const res = await graphQL.request(endpoint, mutation, variables);
     return res.createTaskSchedule;
   }
@@ -153,6 +155,8 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
+
+    console.log("VARIABLES IN WORKFLOW", variables);
 
     const res = await graphQL.request(endpoint, mutation, variables);
     return res.createWorkflowSchedule;
