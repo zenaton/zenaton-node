@@ -1,12 +1,13 @@
-const http = require("../Services/Http");
-const serializer = require("../Services/Serializer");
 const { version } = require("../../../infos");
 const { init, credentials } = require("../../../client");
 const InternalZenatonError = require("../../../Errors/InvalidArgumentError");
+const { http, serializer, graphQL } = require("../Services");
 
 const ZENATON_WORKER_URL = "http://localhost";
 const DEFAULT_WORKER_PORT = 4001;
 const WORKER_API_VERSION = "v_newton";
+
+const ZENATON_GATEWAY_URL = "https://gateway.zenaton.com/api";
 
 const APP_ENV = "app_env";
 const APP_ID = "app_id";
@@ -21,7 +22,6 @@ const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
 const ATTR_CODE_PATH_VERSION = "code_path_version";
 const ATTR_MODE = "mode";
 const ATTR_MAX_PROCESSING_TIME = "maxProcessingTime";
-const ATTR_SCHEDULING_CRON = "scheduling_cron";
 
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
@@ -52,6 +52,14 @@ const Alfred = class Alfred {
       : DEFAULT_WORKER_PORT;
 
     return `${host}:${port}/api/${WORKER_API_VERSION}/${ressources}`;
+  }
+
+  _getGatewayUrl() {
+    const host = process.env.ZENATON_GATEWAY_URL
+      ? process.env.ZENATON_GATEWAY_URL
+      : ZENATON_GATEWAY_URL;
+
+    return host;
   }
 
   /**
@@ -95,15 +103,24 @@ const Alfred = class Alfred {
    * Schedule a task
    */
   async scheduleTask(job) {
-    const url = this._getWorkerUrl("scheduling/tasks");
+    const endpoint = this._getGatewayUrl();
     const body = this._getBodyForTask(job);
-    const params = Object.assign(
-      {
-        [ATTR_SCHEDULING_CRON]: job.scheduling.cron,
+    const mutation = graphQL.mutations.createTaskSchedule;
+    const variables = {
+      createTaskScheduleInput: {
+        intentId: body[ATTR_INTENT_ID],
+        environmentName: credentials.appEnv,
+        cron: job.scheduling.cron,
+        taskName: body[ATTR_NAME],
+        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        properties: body[ATTR_INPUT],
+        codePathVersion: body[ATTR_CODE_PATH_VERSION],
+        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
-      this._getAppEnv(),
-    );
-    return http.post(url, body, { params });
+    };
+
+    const res = await graphQL.request(endpoint, mutation, variables);
+    return res.createTaskSchedule;
   }
 
   /**
@@ -120,15 +137,25 @@ const Alfred = class Alfred {
    * Schedule a workflow
    */
   async scheduleWorkflow(job) {
-    const url = this._getWorkerUrl("scheduling/instances");
+    const endpoint = this._getGatewayUrl();
     const body = this._getBodyForWorkflow(job);
-    const params = Object.assign(
-      {
-        [ATTR_SCHEDULING_CRON]: job.scheduling.cron,
+    const mutation = graphQL.mutations.createWorkflowSchedule;
+    const variables = {
+      createWorkflowScheduleInput: {
+        intentId: body[ATTR_INTENT_ID],
+        environmentName: credentials.appEnv,
+        cron: job.scheduling.cron,
+        workflowName: body[ATTR_NAME],
+        canonicalName: body[ATTR_CANONICAL],
+        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        properties: body[ATTR_INPUT],
+        codePathVersion: body[ATTR_CODE_PATH_VERSION],
+        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
-      this._getAppEnv(),
-    );
-    return http.post(url, body, { params });
+    };
+
+    const res = await graphQL.request(endpoint, mutation, variables);
+    return res.createWorkflowSchedule;
   }
 
   /**
