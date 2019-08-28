@@ -119,8 +119,6 @@ const Alfred = class Alfred {
       },
     };
 
-    console.log("VARIABLES IN TASK", variables);
-
     const res = await graphQL.request(endpoint, mutation, variables);
     return res.createTaskSchedule;
   }
@@ -150,13 +148,11 @@ const Alfred = class Alfred {
         workflowName: body[ATTR_NAME],
         canonicalName: body[ATTR_CANONICAL],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
-        data: body[ATTR_INPUT],
+        properties: body[ATTR_INPUT],
         codePathVersion: body[ATTR_CODE_PATH_VERSION],
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-
-    console.log("VARIABLES IN WORKFLOW", variables);
 
     const res = await graphQL.request(endpoint, mutation, variables);
     return res.createWorkflowSchedule;

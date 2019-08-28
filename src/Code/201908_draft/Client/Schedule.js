@@ -94,7 +94,6 @@ const Schedule = class Schedule {
     this.input = input;
     this.name = name;
     this.canonical = canonical;
-    console.log("WORKFLOW", this._getJob());
     this.promise = await this._processor.scheduleWorkflow(this._getJob());
 
     return this;
