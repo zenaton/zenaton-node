@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
+- Tasks and workflows scheduling in new syntax
+
 ### Changed
 
 - Default timezone with new syntax is now UTC.
