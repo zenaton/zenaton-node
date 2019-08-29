@@ -1,5 +1,4 @@
 const { version } = require("../../../infos");
-const { init, credentials } = require("../../../client");
 const InternalZenatonError = require("../../../Errors/InvalidArgumentError");
 const { http, serializer, graphQL } = require("../Services");
 
@@ -36,11 +35,10 @@ const WORKFLOW_PAUSE = "pause";
 const WORKFLOW_RUN = "run";
 
 const Alfred = class Alfred {
-  constructor(appId, apiToken, appEnv) {
-    /* This was moved in a singleton module because whatever client is used to
-     * init the credentials, they need to be shared between all code paths
-     * clients */
-    init(appId, apiToken, appEnv);
+  constructor(credentials) {
+    this.appId = credentials.appId;
+    this.apiToken = credentials.apiToken;
+    this.appEnv = credentials.appEnv;
   }
 
   _getWorkerUrl(ressources = "") {
@@ -109,7 +107,7 @@ const Alfred = class Alfred {
     const variables = {
       createTaskScheduleInput: {
         intentId: body[ATTR_INTENT_ID],
-        environmentName: credentials.appEnv,
+        environmentName: this.appEnv,
         cron: job.scheduling.cron,
         taskName: body[ATTR_NAME],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
@@ -143,7 +141,7 @@ const Alfred = class Alfred {
     const variables = {
       createWorkflowScheduleInput: {
         intentId: body[ATTR_INTENT_ID],
-        environmentName: credentials.appEnv,
+        environmentName: this.appEnv,
         cron: job.scheduling.cron,
         workflowName: body[ATTR_NAME],
         canonicalName: body[ATTR_CANONICAL],
@@ -254,12 +252,12 @@ const Alfred = class Alfred {
     // when called from worker, APP_ENV and APP_ID is not defined
     const params = {};
 
-    if (credentials.appEnv) {
-      params[APP_ENV] = credentials.appEnv;
+    if (this.appEnv) {
+      params[APP_ENV] = this.appEnv;
     }
 
-    if (credentials.appId) {
-      params[APP_ID] = credentials.appId;
+    if (this.appId) {
+      params[APP_ID] = this.appId;
     }
 
     return params;

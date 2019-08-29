@@ -18,7 +18,7 @@ const Client = class Client {
     this.schedule = new Schedule();
 
     // default processor
-    this.processor = new Alfred(appId, apiToken, appEnv);
+    this.processor = new Alfred(this);
 
     // add to manager
     clientManager.add(this);
