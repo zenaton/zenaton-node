@@ -1,10 +1,13 @@
 const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
 
+const defaultTimezone = "UTC";
+
 const Wait = class Wait {
   constructor() {
     this.eventName = null;
     this.timestamp = null;
     this.duration = null;
+    this.timezone = defaultTimezone;
 
     return this;
   }

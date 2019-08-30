@@ -130,7 +130,7 @@ module.exports.compute = (durationDefinition, baseDate) => {
 
   const duration = durationDefinition.split(":");
 
-  const now = moment(baseDate);
+  const now = moment(baseDate).tz("UTC");
   const date = now.clone();
 
   // eslint-disable-next-line no-plusplus

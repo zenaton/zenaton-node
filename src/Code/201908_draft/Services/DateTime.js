@@ -171,7 +171,7 @@ class DateTime {
       return timeDefinition;
     }
 
-    const now = moment(baseDate);
+    const now = moment(baseDate).tz("UTC");
     const date = now.clone();
 
     // we add a duration to current date if specified

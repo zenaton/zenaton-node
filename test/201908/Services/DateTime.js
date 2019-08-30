@@ -13,7 +13,7 @@ describe("DateTime Definition methods", () => {
 
   it("set time", () => {
     const time = DateTime.at("12:00")._getDefinition();
-    expect(DateTime.get(time, baseDate)).to.be.deep.equals(1565431200);
+    expect(DateTime.get(time, baseDate)).to.be.deep.equals(1565438400);
   });
 
   it("set dayOfMonth", () => {
@@ -85,7 +85,7 @@ describe("Duration Definition compute", () => {
     const time = DateTime.dayOfMonth(8)
       .at("16:00")
       ._getDefinition();
-    expect(DateTime.get(time, baseDate)).to.be.equals(1567951200);
+    expect(DateTime.get(time, baseDate)).to.be.equals(1567958400);
   });
 
   it("compute day of week", () => {
@@ -99,6 +99,6 @@ describe("Duration Definition compute", () => {
     const time = DateTime.monday()
       .at("08:00")
       ._getDefinition();
-    expect(DateTime.get(time, baseDate)).to.be.equals(1565589600);
+    expect(DateTime.get(time, baseDate)).to.be.equals(1565596800);
   });
 });
