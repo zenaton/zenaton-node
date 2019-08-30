@@ -164,14 +164,14 @@ class DateTime {
     return this;
   }
 
-  get(definition, baseDate) {
+  get(definition, timezone = "UTC", baseDate) {
     const timeDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(timeDefinition)) {
       return timeDefinition;
     }
 
-    const now = moment(baseDate).tz("UTC");
+    const now = moment(baseDate).tz(timezone);
     const date = now.clone();
 
     // we add a duration to current date if specified
