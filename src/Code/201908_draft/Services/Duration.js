@@ -12,7 +12,7 @@ const WEEKS_INDEX = 4;
 const MONTHS_INDEX = 5;
 const YEARS_INDEX = 6;
 
-const defaultTimezone = "UTC";
+let defaultTimezone = "UTC";
 
 class Duration {
   constructor() {
@@ -128,6 +128,20 @@ class Duration {
     }
 
     return date.diff(now, "seconds");
+  }
+
+  setDefaultTimezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new InvalidArgumentError("Unknown timezone");
+    }
+
+    defaultTimezone = timezone;
+
+    return this;
+  }
+
+  getDefaultTimezone() {
+    return defaultTimezone;
   }
 
   _getDefinition() {

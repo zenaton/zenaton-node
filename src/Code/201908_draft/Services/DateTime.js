@@ -11,7 +11,7 @@ const FRIDAY = 5;
 const SATURDAY = 6;
 const SUNDAY = 7;
 
-const defaultTimezone = "UTC";
+let defaultTimezone = "UTC";
 
 class DateTime {
   constructor() {
@@ -229,6 +229,20 @@ class DateTime {
 
     // else, we return timestamps
     return now.isAfter(date) ? date.add(1, "d").unix() : date.unix();
+  }
+
+  setDefaultTimezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new InvalidArgumentError("Unknown timezone");
+    }
+
+    defaultTimezone = timezone;
+
+    return this;
+  }
+
+  getDefaultTimezone() {
+    return defaultTimezone;
   }
 
   _getDefinition() {
