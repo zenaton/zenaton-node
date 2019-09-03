@@ -237,8 +237,6 @@ class DateTime {
     }
 
     defaultTimezone = timezone;
-
-    return this;
   }
 
   getDefaultTimezone() {

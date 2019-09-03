@@ -136,8 +136,6 @@ class Duration {
     }
 
     defaultTimezone = timezone;
-
-    return this;
   }
 
   getDefaultTimezone() {
