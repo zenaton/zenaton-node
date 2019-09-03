@@ -1,3 +1,5 @@
+/* eslint max-classes-per-file: 0 */
+
 const proxyquire = require("proxyquire");
 const { expect } = require("chai");
 const sinon = require("sinon");

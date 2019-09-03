@@ -1,3 +1,5 @@
+/* eslint prefer-object-spread: 0 */
+
 const uuidv4 = require("uuid/v4");
 const workflowManager = require("./Workflows/WorkflowManager");
 const http = require("./Services/Http");
