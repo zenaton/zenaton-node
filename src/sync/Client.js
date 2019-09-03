@@ -1,3 +1,6 @@
+/* eslint no-redeclare: 0 */
+/* eslint prefer-object-spread: 0 */
+
 /* global process */
 const { ExternalZenatonError, InvalidArgumentError } = require("../Errors");
 const workflowManager = require("./Workflows/WorkflowManager");
