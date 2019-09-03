@@ -18,7 +18,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Security
 
-## 0.6.1 - 2019-08-28
+## 0.6.4 - 2019-09-03
+
+### Added
+
+- Adding a prepublish hook for lint, test and build
+
+### Changed
+
+- Upgrade of all dependencies to major version
+
+### Security
+
+- Update the version of set-value package
+- Update the version of mixin-deep package
+
+## 0.6.3 - 2019-08-28
 
 ### Security
 
