@@ -8,6 +8,7 @@
     "build:watch": "yarn build --watch --verbose",
     "lint": "eslint --color .",
     "format": "prettier --write '**/*.{js,json,css,md}'",
+    "prepublish": "yarn run lint && yarn run test && yarn run build",
     "test": "mocha",
     "test:watch": "mocha --watch"
   },
