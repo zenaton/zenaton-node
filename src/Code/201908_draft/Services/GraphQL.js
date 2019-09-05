@@ -2,7 +2,6 @@ const { GraphQLClient } = require("graphql-request");
 const {
   ExternalZenatonError,
   InternalZenatonError,
-  ZenatonError,
 } = require("../../../Errors");
 const { credentials } = require("../../../client");
 
@@ -26,7 +25,7 @@ function getError(err) {
     );
   }
 
-  return new ZenatonError(err.message);
+  return new InternalZenatonError(err.message);
 }
 
 async function request(endpoint, query, variables) {
