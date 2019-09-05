@@ -1,17 +1,15 @@
-const { InvalidArgumentError, ZenatonError } = require("../../../Errors");
+const { ExternalZenatonError } = require("../../../Errors");
 const workflowManager = require("./WorkflowManager");
 const Dispatch = require("../Client/Dispatch");
 const Execute = require("./Execute");
 const Select = require("../Client/Select");
 const Wait = require("./Wait");
-const ProcessorInterface = require("./ProcessorInterface");
-const Interface = require("../Services/Interface");
-const WorkflowContext = require("./WorkflowContext");
+const objectify = require("../Services/Objectify");
 
 const workflow = function workflow(name, definition) {
   // check that provided data have the right format
   if (typeof name !== "string" || name.length === 0) {
-    throw new InvalidArgumentError(
+    throw new ExternalZenatonError(
       "When getting or creating a workflow, 1st parameter (workflow name) must be a non-empty string",
     );
   }
@@ -21,13 +19,13 @@ const workflow = function workflow(name, definition) {
   }
   // check workflow definition
   if (typeof definition !== "function" && typeof definition !== "object") {
-    throw new InvalidArgumentError(
+    throw new ExternalZenatonError(
       `When creating worflow "${name}", 2nd parameter (workflow definition) must be a function or an object`,
     );
   }
   if (typeof definition === "object") {
     if (definition.handle === undefined) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `When creating worflow "${name}", 2nd parameter (workflow definition) must have a "handle" method`,
       );
     }
@@ -37,7 +35,7 @@ const workflow = function workflow(name, definition) {
         reservedMethods.indexOf(method) >= 0 &&
         typeof definition[method] !== "function"
       ) {
-        throw new InvalidArgumentError(
+        throw new ExternalZenatonError(
           `When creating workflow "${name}",  "${method}" method must be a function, not a "${typeof definition[
             method
           ]}"`,
@@ -46,17 +44,15 @@ const workflow = function workflow(name, definition) {
     });
   }
 
-  const _dispatch = new Dispatch();
-  const _execute = new Execute();
-  const _select = new Select();
-  const _wait = new Wait();
-  const _send = new Select();
-
   const WorkflowClass = class WorkflowClass {
+    set processor(processor) {
+      this._processor = processor;
+    }
+
     get properties() {
       const properties = {};
       Object.keys(this).forEach((prop) => {
-        if (prop !== "_context") {
+        if (prop !== "_context" && prop !== "_processor") {
           properties[prop] = this[prop];
         }
       });
@@ -64,80 +60,77 @@ const workflow = function workflow(name, definition) {
     }
 
     set properties(properties) {
-      // delete existing values
-      Object.keys(this).forEach((prop) => delete this[prop]);
-      // fill with new values
+      Object.keys(this).forEach((prop) => {
+        if (prop !== "_context" && prop !== "_processor") {
+          delete this[prop];
+        }
+      });
       Object.assign(this, properties);
-
-      return this;
     }
 
     get context() {
-      if (this._context === undefined) {
-        return new WorkflowContext();
-      }
-
       return this._context;
     }
 
     set context(context) {
       if (this._context !== undefined) {
-        throw new ZenatonError("Context is already set and cannot be mutated.");
+        throw new ExternalZenatonError(
+          'Sorry, "context" is reserved and can not be mutated',
+        );
       }
       this._context = context;
     }
 
-    set processor(processor) {
-      Interface.check(processor, ProcessorInterface);
-
-      _dispatch.processor = processor;
-      _execute.processor = processor;
-      _select.processor = processor;
-      _send.processor = processor;
-      _wait.processor = processor;
-
-      this.send.processor = processor;
+    async send(eventData, eventName) {
+      return objectify(Select, this._processor)
+        .workflow(name)
+        .whereZenatonId(this.context.id)
+        .send(eventData, eventName);
     }
 
-    async send(eventData, eventName) {
-      const that = this;
-      return _send
-        .workflow(name)
-        .whereZenatonId(that.context.id)
-        .send(eventData, eventName);
+    get select() {
+      return objectify(Select, this._processor);
+    }
+
+    get execute() {
+      return objectify(Execute, this._processor);
+    }
+
+    get dispatch() {
+      return objectify(Dispatch, this._processor);
+    }
+
+    get wait() {
+      return objectify(Wait, this._processor);
+    }
+
+    set select(_e) {
+      throw new ExternalZenatonError(
+        'Sorry, "select" is reserved and can not be mutated',
+      );
+    }
+
+    set execute(_e) {
+      throw new ExternalZenatonError(
+        'Sorry, "execute" is reserved and can not be mutated',
+      );
+    }
+
+    set dispatch(_d) {
+      throw new ExternalZenatonError(
+        'Sorry, "dispatch" is reserved and can not be mutated',
+      );
+    }
+
+    set wait(_w) {
+      throw new ExternalZenatonError(
+        'Sorry, "wait" is reserved and can not be mutated',
+      );
     }
   };
 
   // set class name
   Object.defineProperty(WorkflowClass, "name", { value: name });
-
-  // reserved dispatch methods
-  Object.defineProperty(WorkflowClass.prototype, "dispatch", {
-    value: _dispatch,
-    writable: false,
-    configurable: false,
-  });
-
-  // reserved execute methods
-  Object.defineProperty(WorkflowClass.prototype, "execute", {
-    value: _execute,
-    writable: false,
-    configurable: false,
-  });
-
-  // reserved wait methods
-  Object.defineProperty(WorkflowClass.prototype, "wait", {
-    value: _wait,
-    writable: false,
-    configurable: false,
-  });
-
-  // reserved select methods
-  Object.defineProperty(WorkflowClass.prototype, "select", {
-    value: _select,
-    writable: false,
-    configurable: false,
-  });
 
   // user-defined methods
   if (typeof definition === "function") {

@@ -1,21 +1,18 @@
-const { InvalidArgumentError } = require("../../../Errors");
+const { ExternalZenatonError } = require("../../../Errors");
 
 const Select = class Select {
-  constructor() {
+  constructor(processor) {
     this.type = null;
     this.name = null;
     this.customId = null;
     this.intentId = null;
-  }
 
-  set processor(processor) {
     this._processor = processor;
-    return this;
   }
 
   workflow(name) {
     if (typeof name !== "string") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `In "select.workflow()", parameter should be a string - not a "${typeof name}"`,
       );
     }
@@ -27,7 +24,7 @@ const Select = class Select {
 
   whereId(id) {
     if (typeof id !== "string" && !Number.isInteger(id)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `In "select.whereId()", parameter should be a string or an integer - not a "${typeof id}"`,
       );
     }
@@ -38,7 +35,7 @@ const Select = class Select {
 
   whereZenatonId(intentId) {
     if (typeof intentId !== "string" && !Number.isInteger(intentId)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `In "select.whereZenatonId", parameter should be a string or an integer - not a "${typeof intentId}"`,
       );
     }
@@ -51,6 +48,11 @@ const Select = class Select {
    * Send an event to a workflow instance
    */
   async send(eventName, ...eventData) {
+    if (!this._processor.sendEvent) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "send" syntax from here`,
+      );
+    }
     return this._processor.sendEvent(this._getQuery(), eventName, eventData);
   }
 
@@ -58,6 +60,11 @@ const Select = class Select {
    * Kill a workflow instance
    */
   async kill() {
+    if (!this._processor.killWorkflow) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "kill" syntax from here`,
+      );
+    }
     return this._processor.killWorkflow(this._getQuery());
   }
 
@@ -65,6 +72,11 @@ const Select = class Select {
    * Pause a workflow instance
    */
   async pause() {
+    if (!this._processor.pauseWorkflow) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "pause" syntax from here`,
+      );
+    }
     return this._processor.pauseWorkflow(this._getQuery());
   }
 
@@ -72,6 +84,11 @@ const Select = class Select {
    * Resume a workflow instance
    */
   async resume() {
+    if (!this._processor.resumeWorkflow) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "resume" syntax from here`,
+      );
+    }
     return this._processor.resumeWorkflow(this._getQuery());
   }
 

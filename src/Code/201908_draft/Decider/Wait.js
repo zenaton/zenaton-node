@@ -1,17 +1,12 @@
-const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
+const { ExternalZenatonError } = require("../../../Errors");
 
 const Wait = class Wait {
-  constructor() {
+  constructor(processor) {
     this.eventName = null;
     this.timestamp = null;
     this.duration = null;
 
-    return this;
-  }
-
-  set processor(processor) {
     this._processor = processor;
-    return this;
   }
 
   forever() {
@@ -26,7 +21,7 @@ const Wait = class Wait {
         typeof duration !== "object" ||
         duration.constructor.name !== "Duration"
       ) {
-        throw new InvalidArgumentError(
+        throw new ExternalZenatonError(
           `Parameter of "wait.for()" must be an integer or a "Duration" object`,
         );
       }
@@ -45,7 +40,7 @@ const Wait = class Wait {
         typeof timestamp !== "object" ||
         timestamp.constructor.name !== "DateTime"
       ) {
-        throw new InvalidArgumentError(
+        throw new ExternalZenatonError(
           `Parameter of "wait.until()" must be a timestamp or a "DateTime" object`,
         );
       }
@@ -65,6 +60,11 @@ const Wait = class Wait {
   }
 
   async _apply() {
+    if (!this._processor.executeTask) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "wait" syntax from here`,
+      );
+    }
     return this._processor.executeTask(this._getWait());
   }
 

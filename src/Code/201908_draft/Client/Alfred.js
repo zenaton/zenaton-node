@@ -1,6 +1,6 @@
 const { version } = require("../../../infos");
 const { init, credentials } = require("../../../client");
-const InternalZenatonError = require("../../../Errors/InvalidArgumentError");
+const InternalZenatonError = require("../../../Errors/InternalZenatonError");
 const { http, serializer, graphQL } = require("../Services");
 
 const ZENATON_WORKER_URL = "http://localhost";

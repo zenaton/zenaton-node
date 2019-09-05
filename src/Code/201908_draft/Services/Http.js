@@ -2,13 +2,14 @@ const axios = require("axios");
 const {
   ExternalZenatonError,
   InternalZenatonError,
-  ZenatonError,
 } = require("../../../Errors");
 
 function getError(err) {
   if (undefined === err.response) {
     if (err.message.includes("ECONNREFUSED")) {
-      return new ZenatonError("Zenaton agent does not seem to be started");
+      return new ExternalZenatonError(
+        "Zenaton agent does not seem to be started",
+      );
     }
 
     return err;
@@ -20,7 +21,9 @@ function getError(err) {
       : err.response.statusText;
   // get status code
   if (err.response.status !== parseInt(err.response.status, 10)) {
-    return new ZenatonError(`${message} - please contact Zenaton support`);
+    return new InternalZenatonError(
+      `${message} - please contact Zenaton support`,
+    );
   }
   // Internal Server Error
   if (err.response.status >= 500) {
