@@ -1,4 +1,3 @@
-const uuidv4 = require("uuid/v4");
 const { InvalidArgumentError } = require("../../../Errors");
 
 const Select = class Select {
@@ -6,7 +5,7 @@ const Select = class Select {
     this.type = null;
     this.name = null;
     this.customId = null;
-    this.intentId = uuidv4();
+    this.intentId = null;
   }
 
   set processor(processor) {

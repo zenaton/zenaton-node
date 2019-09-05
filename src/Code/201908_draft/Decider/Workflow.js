@@ -2,6 +2,7 @@ const { InvalidArgumentError, ZenatonError } = require("../../../Errors");
 const workflowManager = require("./WorkflowManager");
 const Dispatch = require("../Client/Dispatch");
 const Execute = require("./Execute");
+const Select = require("../Client/Select");
 const Wait = require("./Wait");
 const ProcessorInterface = require("./ProcessorInterface");
 const Interface = require("../Services/Interface");
@@ -47,7 +48,9 @@ const workflow = function workflow(name, definition) {
 
   const _dispatch = new Dispatch();
   const _execute = new Execute();
+  const _select = new Select();
   const _wait = new Wait();
+  const _send = new Select();
 
   const WorkflowClass = class WorkflowClass {
     get properties() {
@@ -65,6 +68,7 @@ const workflow = function workflow(name, definition) {
       Object.keys(this).forEach((prop) => delete this[prop]);
       // fill with new values
       Object.assign(this, properties);
+
       return this;
     }
 
@@ -85,9 +89,22 @@ const workflow = function workflow(name, definition) {
 
     set processor(processor) {
       Interface.check(processor, ProcessorInterface);
+
       _dispatch.processor = processor;
       _execute.processor = processor;
+      _select.processor = processor;
+      _send.processor = processor;
       _wait.processor = processor;
+
+      this.send.processor = processor;
+    }
+
+    async send(eventData, eventName) {
+      const that = this;
+      return _send
+        .workflow(name)
+        .whereZenatonId(that.context.id)
+        .send(eventData, eventName);
     }
   };
 
@@ -111,6 +128,13 @@ const workflow = function workflow(name, definition) {
   // reserved wait methods
   Object.defineProperty(WorkflowClass.prototype, "wait", {
     value: _wait,
+    writable: false,
+    configurable: false,
+  });
+
+  // reserved select methods
+  Object.defineProperty(WorkflowClass.prototype, "select", {
+    value: _select,
     writable: false,
     configurable: false,
   });
