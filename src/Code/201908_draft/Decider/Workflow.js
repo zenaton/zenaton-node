@@ -81,11 +81,11 @@ const workflow = function workflow(name, definition) {
       this._context = context;
     }
 
-    async send(eventData, eventName) {
-      return objectify(Select, this._processor)
+    async send(eventName, ...eventData) {
+      return new Select(this._processor)
         .workflow(name)
         .whereZenatonId(this.context.id)
-        .send(eventData, eventName);
+        .send(eventName, ...eventData);
     }
 
     get select() {
