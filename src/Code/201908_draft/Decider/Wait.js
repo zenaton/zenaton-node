@@ -60,23 +60,19 @@ const Wait = class Wait {
   }
 
   async _apply() {
-    if (!this._processor.executeTask) {
+    if (!this._processor.executeWait) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "wait" syntax from here`,
       );
     }
-    return this._processor.executeTask(this._getWait());
+    return this._processor.executeWait(this._getWait());
   }
 
   _getWait() {
     return {
-      type: "wait",
-      name: "_Wait",
-      input: {
-        event: this.eventName,
-        duration: this.duration,
-        timestamp: this.timestamp,
-      },
+      event: this.eventName,
+      duration: this.duration,
+      timestamp: this.timestamp,
     };
   }
 };

@@ -2,11 +2,6 @@ const { ExternalZenatonError } = require("../../../Errors");
 
 const Select = class Select {
   constructor(processor) {
-    this.type = null;
-    this.name = null;
-    this.customId = null;
-    this.intentId = null;
-
     this._processor = processor;
   }
 
@@ -16,8 +11,8 @@ const Select = class Select {
         `In "select.workflow()", parameter should be a string - not a "${typeof name}"`,
       );
     }
-    this.type = "workflow";
-    this.name = name;
+    this._type = "workflow";
+    this._name = name;
 
     return this;
   }
@@ -28,18 +23,18 @@ const Select = class Select {
         `In "select.whereId()", parameter should be a string or an integer - not a "${typeof id}"`,
       );
     }
-    this.customId = id.toString();
+    this._customId = id.toString();
 
     return this;
   }
 
-  whereZenatonId(intentId) {
-    if (typeof intentId !== "string" && !Number.isInteger(intentId)) {
+  whereZenatonId(zId) {
+    if (typeof zId !== "string" && !Number.isInteger(zId)) {
       throw new ExternalZenatonError(
-        `In "select.whereZenatonId", parameter should be a string or an integer - not a "${typeof intentId}"`,
+        `In "select.whereZenatonId", parameter should be a string or an integer - not a "${typeof zId}"`,
       );
     }
-    this.intentId = intentId.toString();
+    this._zId = zId.toString();
 
     return this;
   }
@@ -53,6 +48,7 @@ const Select = class Select {
         `Sorry, you can not use "send" syntax from here`,
       );
     }
+
     return this._processor.sendEvent(this._getQuery(), eventName, eventData);
   }
 
@@ -65,6 +61,7 @@ const Select = class Select {
         `Sorry, you can not use "kill" syntax from here`,
       );
     }
+
     return this._processor.killWorkflow(this._getQuery());
   }
 
@@ -77,6 +74,7 @@ const Select = class Select {
         `Sorry, you can not use "pause" syntax from here`,
       );
     }
+
     return this._processor.pauseWorkflow(this._getQuery());
   }
 
@@ -89,17 +87,16 @@ const Select = class Select {
         `Sorry, you can not use "resume" syntax from here`,
       );
     }
+
     return this._processor.resumeWorkflow(this._getQuery());
   }
 
   _getQuery() {
     return {
-      type: this.type,
-      name: this.name,
-      input: this.input,
-      options: this.options,
-      customId: this.customId,
-      intentId: this.intentId,
+      name: this._name,
+      type: this._type,
+      customId: this._customId,
+      zId: this._zId,
     };
   }
 };

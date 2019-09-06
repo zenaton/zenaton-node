@@ -1,7 +1,8 @@
+const uuidv4 = require("uuid/v4");
 const { version } = require("../../../infos");
 const { init, credentials } = require("../../../client");
 const InternalZenatonError = require("../../../Errors/InternalZenatonError");
-const { http, serializer, graphQL } = require("../Services");
+const { http, serializer, versioner, graphQL } = require("../Services");
 
 const ZENATON_WORKER_URL = "http://localhost";
 const DEFAULT_WORKER_PORT = 4001;
@@ -16,6 +17,7 @@ const ATTR_INTENT_ID = "intent_id";
 const ATTR_CUSTOM_ID = "custom_id";
 const ATTR_NAME = "name";
 const ATTR_CANONICAL = "canonical_name";
+const ATTR_VERSION = "version";
 const ATTR_INPUT = "data";
 const ATTR_PROG = "programming_language";
 const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
@@ -222,31 +224,35 @@ const Alfred = class Alfred {
   }
 
   _getBodyForTask(job) {
+    const { canonical, version: vers } = versioner(job.name);
+
     return {
       [ATTR_INTENT_ID]: job.intentId,
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
       [ATTR_NAME]: job.name,
+      [ATTR_CANONICAL]: canonical,
+      [ATTR_VERSION]: vers,
       [ATTR_INPUT]: serializer.encode(job.input),
       // TODO : maxProcessingTime should be managed from Agent
       [ATTR_MAX_PROCESSING_TIME]: null,
-      // typeof options.maxProcessingTime === "function"
-      //   ? options.maxProcessingTime()
-      //   : null,
     };
   }
 
   _getBodyForWorkflow(job) {
+    const { canonical, version: vers } = versioner(job.name);
+
     return {
-      [ATTR_INTENT_ID]: job.intentId,
+      [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_CANONICAL]: job.canonical,
       [ATTR_NAME]: job.name,
+      [ATTR_CANONICAL]: canonical,
+      [ATTR_VERSION]: vers,
       [ATTR_INPUT]: serializer.encode(job.input),
-      [ATTR_CUSTOM_ID]: job.customId,
+      [ATTR_CUSTOM_ID]: job.customId ? job.customId : null,
     };
   }
 
