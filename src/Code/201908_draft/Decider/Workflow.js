@@ -82,10 +82,19 @@ const workflow = function workflow(name, definition) {
     }
 
     async send(eventName, ...eventData) {
-      return new Select(this._processor)
-        .workflow(name)
-        .whereZenatonId(this.context.id)
-        .send(eventName, ...eventData);
+      return this._selectSelf().send(eventName, ...eventData);
+    }
+
+    async pause() {
+      return this._selectSelf().pause();
+    }
+
+    async resume() {
+      return this._selectSelf().resume();
+    }
+
+    async kill() {
+      return this._selectSelf().kill();
     }
 
     get select() {
@@ -126,6 +135,12 @@ const workflow = function workflow(name, definition) {
       throw new ExternalZenatonError(
         'Sorry, "wait" is reserved and can not be mutated',
       );
+    }
+
+    _selectSelf() {
+      new Select(this._processor)
+        .workflow(name)
+        .whereZenatonId(this.context.id);
     }
   };
 
