@@ -138,7 +138,7 @@ const workflow = function workflow(name, definition) {
     }
 
     _selectSelf() {
-      new Select(this._processor)
+      return new Select(this._processor)
         .workflow(name)
         .whereZenatonId(this.context.id);
     }
