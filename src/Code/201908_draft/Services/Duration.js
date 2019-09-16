@@ -96,7 +96,7 @@ class Duration {
     return this;
   }
 
-  get(definition, baseDate) {
+  get(definition, timezone = "UTC", baseDate) {
     const durationDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(durationDefinition)) {
@@ -105,7 +105,7 @@ class Duration {
 
     const duration = durationDefinition.split(":");
 
-    const now = moment(baseDate);
+    const now = moment(baseDate).tz(timezone);
     const date = now.clone();
 
     // eslint-disable-next-line no-plusplus
@@ -122,21 +122,3 @@ class Duration {
 }
 
 module.exports = objectify(Duration);
-
-module.exports.compute = (durationDefinition, baseDate) => {
-  if (Number.isInteger(durationDefinition)) {
-    return durationDefinition;
-  }
-
-  const duration = durationDefinition.split(":");
-
-  const now = moment(baseDate);
-  const date = now.clone();
-
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < duration.length; i++) {
-    date.add(parseInt(duration[i], 10), periodsForCompute[i]);
-  }
-
-  return date.diff(now, "seconds");
-};

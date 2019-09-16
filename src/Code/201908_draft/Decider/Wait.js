@@ -1,10 +1,14 @@
+const moment = require("moment-timezone");
 const { ExternalZenatonError } = require("../../../Errors");
+
+const defaultTimezone = "UTC";
 
 const Wait = class Wait {
   constructor(processor) {
     this.eventName = null;
     this.timestamp = null;
     this.duration = null;
+    this.timezone = defaultTimezone;
 
     this._processor = processor;
   }
@@ -53,6 +57,16 @@ const Wait = class Wait {
     return this._apply();
   }
 
+  timezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new ExternalZenatonError("Unknown timezone");
+    }
+
+    this.timezone = timezone;
+
+    return this;
+  }
+
   event(eventName) {
     this.eventName = eventName;
 
@@ -76,6 +90,7 @@ const Wait = class Wait {
         event: this.eventName,
         duration: this.duration,
         timestamp: this.timestamp,
+        timezone: this.timezone,
       },
     };
   }
