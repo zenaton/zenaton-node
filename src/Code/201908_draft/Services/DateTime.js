@@ -1,6 +1,6 @@
 const moment = require("moment-timezone");
 const objectify = require("./Objectify");
-const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
+const { ExternalZenatonError } = require("../../../Errors");
 const Duration = require("./Duration");
 
 const MONDAY = 1;
@@ -35,7 +35,7 @@ class DateTime {
 
   timestamp(timestamp) {
     if (!Number.isInteger(timestamp)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.timestamp()" must be an integer`,
       );
     }
@@ -46,7 +46,7 @@ class DateTime {
 
   at(time) {
     if (typeof time !== "string") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.at()" must be a string`,
       );
     }
@@ -57,7 +57,7 @@ class DateTime {
 
   dayOfMonth(day) {
     if (!Number.isInteger(day)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.dayOfMonth()" must be an integer`,
       );
     }
@@ -67,7 +67,7 @@ class DateTime {
 
   monday(count = 1) {
     if (!Number.isInteger(count)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.monday()" must be an integer`,
       );
     }
@@ -77,7 +77,7 @@ class DateTime {
 
   tuesday(count = 1) {
     if (!Number.isInteger(count)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.tuesday()" must be an integer`,
       );
     }
@@ -87,7 +87,7 @@ class DateTime {
 
   wednesday(count = 1) {
     if (!Number.isInteger(count)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.wednesday()" must be an integer`,
       );
     }
@@ -97,7 +97,7 @@ class DateTime {
 
   thursday(count = 1) {
     if (!Number.isInteger(count)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.thursday()" must be an integer`,
       );
     }
@@ -107,7 +107,7 @@ class DateTime {
 
   friday(count = 1) {
     if (!Number.isInteger(count)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "DateTime.friday()" must be an integer`,
       );
     }
@@ -117,7 +117,7 @@ class DateTime {
 
   saturday(count = 1) {
     if (!Number.isInteger(count)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'DateTime.saturday' must be an integer",
       );
     }
@@ -127,7 +127,7 @@ class DateTime {
 
   sunday(count = 1) {
     if (!Number.isInteger(count)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'DateTime.sunday' must be an integer",
       );
     }

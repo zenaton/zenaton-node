@@ -1,14 +1,13 @@
-const { InvalidArgumentError } = require("../../../Errors");
+const { ExternalZenatonError } = require("../../../Errors");
 const taskManager = require("./TaskManager");
 const Dispatch = require("../Client/Dispatch");
 const Select = require("../Client/Select");
-const ProcessorInterface = require("./ProcessorInterface");
-const Interface = require("../Services/Interface");
+const objectify = require("../Services/Objectify");
 
 const task = function task(name, definition) {
   // check that provided data have the right format
   if (typeof name !== "string" || name.length === 0) {
-    throw new InvalidArgumentError(
+    throw new ExternalZenatonError(
       "When getting or creating a task, 1st parameter (task name) must be a non-empty string",
     );
   }
@@ -18,13 +17,13 @@ const task = function task(name, definition) {
   }
   // check task definition
   if (typeof definition !== "function" && typeof definition !== "object") {
-    throw new InvalidArgumentError(
+    throw new ExternalZenatonError(
       `When creating "${name}", 2nd parameter (task definition) must be a function or an object`,
     );
   }
   if (typeof definition === "object") {
     if (undefined === definition.handle) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `When creating "${name}", 2nd parameter (task definition) must have a "handle" method`,
       );
     }
@@ -38,7 +37,7 @@ const task = function task(name, definition) {
         reservedMethods.indexOf(method) >= 0 &&
         typeof definition[method] !== "function"
       ) {
-        throw new InvalidArgumentError(
+        throw new ExternalZenatonError(
           `When creating task "${name}",  "${method}" method must be a function, not a "${typeof definition[
             method
           ]}"`,
@@ -48,31 +47,46 @@ const task = function task(name, definition) {
   }
 
   const TaskClass = class TaskClass {
-    static set processor(processor) {
-      Interface.check(processor, ProcessorInterface);
-      _dispatch.processor = processor;
-      _select.processor = processor;
+    set processor(processor) {
+      this._processor = processor;
+    }
+
+    get context() {
+      return this._context;
+    }
+
+    set context(context) {
+      if (this._context !== undefined) {
+        throw new ExternalZenatonError(
+          "Context is already set and cannot be mutated.",
+        );
+      }
+      this._context = context;
+    }
+
+    get dispatch() {
+      return objectify(Dispatch, this._processor);
+    }
+
+    get select() {
+      return objectify(Select, this._processor);
+    }
+
+    set dispatch(_d) {
+      throw new ExternalZenatonError(
+        'Sorry, "dispatch" is reserved and can not be mutated',
+      );
+    }
+
+    set select(_s) {
+      throw new ExternalZenatonError(
+        'Sorry, "select" is reserved and can not be mutated',
+      );
     }
   };
 
   // define name of this class
   Object.defineProperty(TaskClass, "name", { value: name });
-
-  // reserved dispatch methods
-  const _dispatch = new Dispatch();
-  Object.defineProperty(TaskClass.prototype, "dispatch", {
-    value: _dispatch,
-    writable: false,
-    configurable: false,
-  });
-
-  // reserved select methods
-  const _select = new Select();
-  Object.defineProperty(TaskClass.prototype, "select", {
-    value: _select,
-    writable: false,
-    configurable: false,
-  });
 
   // user-defined methods
   if (typeof definition === "function") {

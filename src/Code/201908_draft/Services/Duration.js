@@ -1,6 +1,6 @@
 const moment = require("moment-timezone");
 const objectify = require("./Objectify");
-const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
+const { ExternalZenatonError } = require("../../../Errors");
 
 const periodsForCompute = ["s", "m", "h", "d", "w", "M", "y"];
 
@@ -35,7 +35,7 @@ class Duration {
 
   seconds(seconds) {
     if (!Number.isInteger(seconds)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'duration.seconds' must be an integer",
       );
     }
@@ -46,7 +46,7 @@ class Duration {
 
   minutes(minutes) {
     if (!Number.isInteger(minutes)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'duration.minutes' must be an integer",
       );
     }
@@ -57,7 +57,7 @@ class Duration {
 
   hours(hours) {
     if (!Number.isInteger(hours)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'duration.hours' must be an integer",
       );
     }
@@ -68,7 +68,7 @@ class Duration {
 
   days(days) {
     if (!Number.isInteger(days)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'duration.days' must be an integer",
       );
     }
@@ -79,7 +79,7 @@ class Duration {
 
   weeks(weeks) {
     if (!Number.isInteger(weeks)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'duration.weeks' must be an integer",
       );
     }
@@ -90,7 +90,7 @@ class Duration {
 
   months(months) {
     if (!Number.isInteger(months)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'duration.months' must be an integer",
       );
     }
@@ -101,7 +101,7 @@ class Duration {
 
   years(years) {
     if (!Number.isInteger(years)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Parameter of 'duration.years' must be an integer",
       );
     }

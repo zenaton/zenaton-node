@@ -1,11 +1,11 @@
 const uuidv4 = require("uuid/v4");
-const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
 const versioner = require("../Services/Versioner");
+const { ExternalZenatonError } = require("../../../Errors");
 
 const MAX_ID_SIZE = 256;
 
 const Schedule = class Schedule {
-  constructor() {
+  constructor(processor) {
     this.name = null;
     this.input = null;
     this.options = null;
@@ -13,17 +13,12 @@ const Schedule = class Schedule {
     this.intentId = uuidv4();
     this.promise = null;
 
-    return this;
-  }
-
-  set processor(processor) {
     this._processor = processor;
-    return this;
   }
 
   each(cron) {
     if (typeof cron !== "string" || cron === "") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         "Param passed to 'schedule' function must be a non empty string",
       );
     }
@@ -36,12 +31,12 @@ const Schedule = class Schedule {
 
   withId(id) {
     if (typeof id !== "string" && !Number.isInteger(id)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "dispatch.withId" must be a string or an integer - not a "${typeof id}"`,
       );
     }
     if (id.toString().length >= MAX_ID_SIZE) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "dispatch.withId" must not exceed ${MAX_ID_SIZE} bytes`,
       );
     }
@@ -52,7 +47,7 @@ const Schedule = class Schedule {
 
   withOptions(options = {}) {
     if (typeof options !== "object") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "dispatch.withOptions" must be an object - not a "${typeof id}"`,
       );
     }
@@ -62,14 +57,19 @@ const Schedule = class Schedule {
   }
 
   async task(name, ...input) {
+    if (!this._processor.scheduleTask) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "schedule.task" syntax from here`,
+      );
+    }
     if (typeof name !== "string") {
-      throw new InvalidArgumentError(
-        `First parameter of Parameter "shedule.task" should be a string, not a "${typeof name}"`,
+      throw new ExternalZenatonError(
+        `First parameter of Parameter "schedule.task" should be a string, not a "${typeof name}"`,
       );
     }
     if (name.length === 0) {
-      throw new InvalidArgumentError(
-        `First parameter of Parameter "dispatch.task" should be a non-empty string`,
+      throw new ExternalZenatonError(
+        `First parameter of Parameter "schedule.task" should be a non-empty string`,
       );
     }
     this.type = "task";
@@ -79,14 +79,19 @@ const Schedule = class Schedule {
   }
 
   async workflow(name, ...input) {
+    if (!this._processor.scheduleWorkflow) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "schedule.workflow" syntax from here`,
+      );
+    }
     if (typeof name !== "string") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `First parameter of Parameter "schedule.workflow" should be a string, not a "${typeof name}"`,
       );
     }
     if (name.length === 0) {
-      throw new InvalidArgumentError(
-        `First parameter of Parameter "dispatch.workflow" should be a non-empty string`,
+      throw new ExternalZenatonError(
+        `First parameter of Parameter "schedule.workflow" should be a non-empty string`,
       );
     }
     const { canonical } = versioner(name);

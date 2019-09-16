@@ -1,32 +1,29 @@
 const uuidv4 = require("uuid/v4");
-const InvalidArgumentError = require("../../../Errors/InvalidArgumentError");
 const versioner = require("../Services/Versioner");
+const { ExternalZenatonError } = require("../../../Errors");
 
 const MAX_ID_SIZE = 256;
 
 const Dispatch = class Dispatch {
-  constructor() {
+  constructor(processor) {
     this.name = null;
     this.input = null;
     this.options = null;
     this.customId = null;
     this.intentId = uuidv4();
     this.promise = null;
-  }
 
-  set processor(processor) {
     this._processor = processor;
-    return this;
   }
 
   withId(id) {
     if (typeof id !== "string" && !Number.isInteger(id)) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "dispatch.withId" must be a string or an integer - not a "${typeof id}"`,
       );
     }
     if (id.toString().length >= MAX_ID_SIZE) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "dispatch.withId" must not exceed ${MAX_ID_SIZE} bytes`,
       );
     }
@@ -37,7 +34,7 @@ const Dispatch = class Dispatch {
 
   withOptions(options = {}) {
     if (typeof options !== "object") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `Parameter of "dispatch.withOptions" must be an object - not a "${typeof id}"`,
       );
     }
@@ -47,13 +44,18 @@ const Dispatch = class Dispatch {
   }
 
   async task(name, ...input) {
+    if (!this._processor.dispatchTask) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "dispatch.task" syntax from here`,
+      );
+    }
     if (typeof name !== "string") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `First parameter of "dispatch.task" should be a string, not a "${typeof name}"`,
       );
     }
     if (name.length === 0) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `First parameter of Parameter "dispatch.task" should be a non-empty string`,
       );
     }
@@ -66,13 +68,18 @@ const Dispatch = class Dispatch {
   }
 
   async workflow(name, ...input) {
+    if (!this._processor.dispatchWorkflow) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "dispatch.workflow" syntax from here`,
+      );
+    }
     if (typeof name !== "string") {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `First parameter of Parameter "dispatch.workflow" should be a string, not a "${typeof name}"`,
       );
     }
     if (name.length === 0) {
-      throw new InvalidArgumentError(
+      throw new ExternalZenatonError(
         `First parameter of Parameter "dispatch.workflow" should be a non-empty string`,
       );
     }
