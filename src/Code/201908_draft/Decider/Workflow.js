@@ -2,6 +2,7 @@ const { ExternalZenatonError } = require("../../../Errors");
 const workflowManager = require("./WorkflowManager");
 const Dispatch = require("../Client/Dispatch");
 const Execute = require("./Execute");
+const Schedule = require("../Client/Schedule");
 const Select = require("../Client/Select");
 const Wait = require("./Wait");
 const objectify = require("../Services/Objectify");
@@ -97,6 +98,10 @@ const workflow = function workflow(name, definition) {
       return this._selectSelf().kill();
     }
 
+    get schedule() {
+      return objectify(Schedule, this._processor);
+    }
+
     get select() {
       return objectify(Select, this._processor);
     }
@@ -111,6 +116,12 @@ const workflow = function workflow(name, definition) {
 
     get wait() {
       return objectify(Wait, this._processor);
+    }
+
+    set schedule(_e) {
+      throw new ExternalZenatonError(
+        'Sorry, "schedule" is reserved and can not be mutated',
+      );
     }
 
     set select(_e) {
