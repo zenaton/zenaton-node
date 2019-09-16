@@ -12,9 +12,23 @@ const WEEKS_INDEX = 4;
 const MONTHS_INDEX = 5;
 const YEARS_INDEX = 6;
 
+let defaultTimezone = "UTC";
+
 class Duration {
   constructor() {
-    this.duration = [0, 0, 0, 0, 0, 0, 0];
+    this.definition = {};
+    this.definition.duration = [0, 0, 0, 0, 0, 0, 0];
+    this.definition.timezone = defaultTimezone;
+
+    return this;
+  }
+
+  timezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new InvalidArgumentError("Unknown timezone");
+    }
+
+    this.definition.timezone = timezone;
 
     return this;
   }
@@ -26,7 +40,7 @@ class Duration {
       );
     }
 
-    this.duration[SECONDS_INDEX] = seconds;
+    this.definition.duration[SECONDS_INDEX] = seconds;
     return this;
   }
 
@@ -37,7 +51,7 @@ class Duration {
       );
     }
 
-    this.duration[MINUTES_INDEX] = minutes;
+    this.definition.duration[MINUTES_INDEX] = minutes;
     return this;
   }
 
@@ -48,7 +62,7 @@ class Duration {
       );
     }
 
-    this.duration[HOURS_INDEX] = hours;
+    this.definition.duration[HOURS_INDEX] = hours;
     return this;
   }
 
@@ -59,7 +73,7 @@ class Duration {
       );
     }
 
-    this.duration[DAYS_INDEX] = days;
+    this.definition.duration[DAYS_INDEX] = days;
     return this;
   }
 
@@ -70,7 +84,7 @@ class Duration {
       );
     }
 
-    this.duration[WEEKS_INDEX] = weeks;
+    this.definition.duration[WEEKS_INDEX] = weeks;
     return this;
   }
 
@@ -81,7 +95,7 @@ class Duration {
       );
     }
 
-    this.duration[MONTHS_INDEX] = months;
+    this.definition.duration[MONTHS_INDEX] = months;
     return this;
   }
 
@@ -92,20 +106,20 @@ class Duration {
       );
     }
 
-    this.duration[YEARS_INDEX] = years;
+    this.definition.duration[YEARS_INDEX] = years;
     return this;
   }
 
-  get(definition, timezone = "UTC", baseDate) {
+  get(definition, baseDate) {
     const durationDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(durationDefinition)) {
       return durationDefinition;
     }
 
-    const duration = durationDefinition.split(":");
+    const { duration } = durationDefinition;
 
-    const now = moment(baseDate).tz(timezone);
+    const now = moment(baseDate).tz(durationDefinition.timezone);
     const date = now.clone();
 
     // eslint-disable-next-line no-plusplus
@@ -116,8 +130,20 @@ class Duration {
     return date.diff(now, "seconds");
   }
 
+  setDefaultTimezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new InvalidArgumentError("Unknown timezone");
+    }
+
+    defaultTimezone = timezone;
+  }
+
+  getDefaultTimezone() {
+    return defaultTimezone;
+  }
+
   _getDefinition() {
-    return this.duration.join(":");
+    return this.definition;
   }
 }
 
