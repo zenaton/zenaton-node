@@ -9,11 +9,11 @@ const serializer = require("./Services/Serializer");
 
 module.exports = {
   Client,
+  WorkflowContext,
+  TaskContext,
   workflow,
   task,
   duration,
   datetime,
   serializer,
-  TaskContext,
-  WorkflowContext,
 };

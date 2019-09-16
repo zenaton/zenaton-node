@@ -2,6 +2,7 @@ const Alfred = require("./Alfred");
 const Dispatch = require("./Dispatch");
 const Select = require("./Select");
 const Schedule = require("./Schedule");
+const Connector = require("./Connector");
 const clientManager = require("./ClientManager");
 const objectify = require("../Services/Objectify");
 const { ExternalZenatonError } = require("../../../Errors");
@@ -32,6 +33,11 @@ const Client = class Client {
     this._processor = processor;
   }
 
+  get connector() {
+    return (service, input) =>
+      objectify(Connector, service, input, this._processor);
+  }
+
   get dispatch() {
     return objectify(Dispatch, this._processor);
   }
@@ -42,6 +48,12 @@ const Client = class Client {
 
   get schedule() {
     return objectify(Schedule, this._processor);
+  }
+
+  set connector(_c) {
+    throw new ExternalZenatonError(
+      'Sorry, "connector" is reserved and can not be mutated',
+    );
   }
 
   set dispatch(_d) {

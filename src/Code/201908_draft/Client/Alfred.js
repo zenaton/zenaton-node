@@ -1,6 +1,5 @@
 const { version } = require("../../../infos");
 const { init, credentials } = require("../../../client");
-const InternalZenatonError = require("../../../Errors/InternalZenatonError");
 const { http, serializer, graphQL } = require("../Services");
 
 const ZENATON_WORKER_URL = "http://localhost";
@@ -41,52 +40,6 @@ const Alfred = class Alfred {
      * init the credentials, they need to be shared between all code paths
      * clients */
     init(appId, apiToken, appEnv);
-  }
-
-  _getWorkerUrl(ressources = "") {
-    const host = process.env.ZENATON_WORKER_URL
-      ? process.env.ZENATON_WORKER_URL
-      : ZENATON_WORKER_URL;
-    const port = process.env.ZENATON_WORKER_PORT
-      ? process.env.ZENATON_WORKER_PORT
-      : DEFAULT_WORKER_PORT;
-
-    return `${host}:${port}/api/${WORKER_API_VERSION}/${ressources}`;
-  }
-
-  _getGatewayUrl() {
-    const host = process.env.ZENATON_GATEWAY_URL
-      ? process.env.ZENATON_GATEWAY_URL
-      : ZENATON_GATEWAY_URL;
-
-    return host;
-  }
-
-  /**
-   * Execute a task
-   */
-  async executeTask(job) {
-    console.error(
-      `Warning: local workflow processing of "${
-        job.name
-      }" - for development purpose only`,
-    );
-    switch (job.type) {
-      case "task":
-        // eslint-disable-next-line global-require
-        return require("../Worker/TaskManager")
-          .getTask(job.name)
-          .handle(job.input);
-      case "wait":
-        return new Promise((resolve) => {
-          setTimeout(resolve, job.input.duration * 1000);
-        });
-      default:
-        break;
-    }
-    throw new InternalZenatonError(
-      `Unexpected Job Type "${job.type}" for "${job.name}"`,
-    );
   }
 
   /**
@@ -200,6 +153,48 @@ const Alfred = class Alfred {
     };
     const params = this._getAppEnv();
     return http.post(url, body, { params });
+  }
+
+  /**
+   * Dispatch a HTTP
+   */
+  async restConnector(query, eventName, eventData) {
+    const url = this._getWorkerUrl("events");
+    const body = {
+      [ATTR_INTENT_ID]: query.intentId,
+      [ATTR_PROG]: PROG,
+      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
+      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
+      [ATTR_NAME]: query.name,
+      [ATTR_CUSTOM_ID]: query.customId,
+      [EVENT_NAME]: eventName,
+      [EVENT_DATA]: serializer.encode(eventData),
+      [EVENT_COMPLET]: serializer.encode({
+        name: eventName,
+        data: eventData,
+      }),
+    };
+    const params = this._getAppEnv();
+    return http.post(url, body, { params });
+  }
+
+  _getWorkerUrl(ressources = "") {
+    const host = process.env.ZENATON_WORKER_URL
+      ? process.env.ZENATON_WORKER_URL
+      : ZENATON_WORKER_URL;
+    const port = process.env.ZENATON_WORKER_PORT
+      ? process.env.ZENATON_WORKER_PORT
+      : DEFAULT_WORKER_PORT;
+
+    return `${host}:${port}/api/${WORKER_API_VERSION}/${ressources}`;
+  }
+
+  _getGatewayUrl() {
+    const host = process.env.ZENATON_GATEWAY_URL
+      ? process.env.ZENATON_GATEWAY_URL
+      : ZENATON_GATEWAY_URL;
+
+    return host;
   }
 
   async _updateInstance(query, mode) {
