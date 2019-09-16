@@ -14,7 +14,12 @@ class WaitDummyClass {
   }
 }
 
+WaitDummyClass.timezone = function timezoneFunc(timezone) {
+  this._timezone = timezone;
+};
+
 const Wait = Trait.apply(WaitDummyClass, WithTimestamp);
+Wait.timezone("UTC");
 
 describe("Wait/DateTime old/new implementation simple", () => {
   it("Timestamp", () => {

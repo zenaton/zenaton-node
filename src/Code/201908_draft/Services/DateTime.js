@@ -11,11 +11,24 @@ const FRIDAY = 5;
 const SATURDAY = 6;
 const SUNDAY = 7;
 
+let defaultTimezone = "UTC";
+
 class DateTime {
   constructor() {
     this.duration = Duration.seconds(0);
     this.ts = null;
     this.definition = {};
+    this.definition.timezone = defaultTimezone;
+
+    return this;
+  }
+
+  timezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new InvalidArgumentError("Unknown timezone");
+    }
+
+    this.definition.timezone = timezone;
 
     return this;
   }
@@ -171,7 +184,7 @@ class DateTime {
       return timeDefinition;
     }
 
-    const now = moment(baseDate);
+    const now = moment(baseDate).tz(timeDefinition.timezone);
     const date = now.clone();
 
     // we add a duration to current date if specified
@@ -216,6 +229,18 @@ class DateTime {
 
     // else, we return timestamps
     return now.isAfter(date) ? date.add(1, "d").unix() : date.unix();
+  }
+
+  setDefaultTimezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new InvalidArgumentError("Unknown timezone");
+    }
+
+    defaultTimezone = timezone;
+  }
+
+  getDefaultTimezone() {
+    return defaultTimezone;
   }
 
   _getDefinition() {

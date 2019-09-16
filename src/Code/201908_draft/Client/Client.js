@@ -14,7 +14,7 @@ const Client = class Client {
     this.name = name;
 
     // default processor
-    this._processor = new Alfred(appId, apiToken, appEnv);
+    this.processor = new Alfred(this);
 
     // add to manager
     clientManager.add(this);
