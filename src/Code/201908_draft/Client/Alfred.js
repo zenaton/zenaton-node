@@ -1,6 +1,12 @@
+const { GraphQLClient } = require("graphql-request");
 const { version } = require("../../../infos");
-const { init, credentials } = require("../../../client");
-const { http, serializer, graphQL } = require("../Services");
+
+const {
+  ExternalZenatonError,
+  InternalZenatonError,
+  ZenatonError,
+} = require("../../../Errors");
+const { http, serializer } = require("../Services");
 
 const ZENATON_WORKER_URL = "http://localhost";
 const DEFAULT_WORKER_PORT = 4001;
@@ -35,11 +41,35 @@ const WORKFLOW_PAUSE = "pause";
 const WORKFLOW_RUN = "run";
 
 const Alfred = class Alfred {
-  constructor(appId, apiToken, appEnv) {
-    /* This was moved in a singleton module because whatever client is used to
-     * init the credentials, they need to be shared between all code paths
-     * clients */
-    init(appId, apiToken, appEnv);
+  constructor(client) {
+    this.client = client;
+  }
+
+  /**
+   * Execute a task
+   */
+  async executeTask(job) {
+    console.error(
+      `Warning: local workflow processing of "${
+        job.name
+      }" - for development purpose only`,
+    );
+    switch (job.type) {
+      case "task":
+        // eslint-disable-next-line global-require
+        return require("../Worker/TaskManager")
+          .getTask(job.name)
+          .handle(job.input);
+      case "wait":
+        return new Promise((resolve) => {
+          setTimeout(resolve, job.input.duration * 1000);
+        });
+      default:
+        break;
+    }
+    throw new InternalZenatonError(
+      `Unexpected Job Type "${job.type}" for "${job.name}"`,
+    );
   }
 
   /**
@@ -58,11 +88,11 @@ const Alfred = class Alfred {
   async scheduleTask(job) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForTask(job);
-    const mutation = graphQL.mutations.createTaskSchedule;
+    const mutation = mutations.createTaskSchedule;
     const variables = {
       createTaskScheduleInput: {
         intentId: body[ATTR_INTENT_ID],
-        environmentName: credentials.appEnv,
+        environmentName: this.client.appEnv,
         cron: job.scheduling.cron,
         taskName: body[ATTR_NAME],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
@@ -72,7 +102,7 @@ const Alfred = class Alfred {
       },
     };
 
-    const res = await graphQL.request(endpoint, mutation, variables);
+    const res = await this._request(endpoint, mutation, variables);
     return res.createTaskSchedule;
   }
 
@@ -92,11 +122,11 @@ const Alfred = class Alfred {
   async scheduleWorkflow(job) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForWorkflow(job);
-    const mutation = graphQL.mutations.createWorkflowSchedule;
+    const mutation = mutations.createWorkflowSchedule;
     const variables = {
       createWorkflowScheduleInput: {
         intentId: body[ATTR_INTENT_ID],
-        environmentName: credentials.appEnv,
+        environmentName: this.client.appEnv,
         cron: job.scheduling.cron,
         workflowName: body[ATTR_NAME],
         canonicalName: body[ATTR_CANONICAL],
@@ -107,7 +137,7 @@ const Alfred = class Alfred {
       },
     };
 
-    const res = await graphQL.request(endpoint, mutation, variables);
+    const res = await this._request(endpoint, mutation, variables);
     return res.createWorkflowSchedule;
   }
 
@@ -197,6 +227,23 @@ const Alfred = class Alfred {
     return host;
   }
 
+  async _request(endpoint, query, variables) {
+    try {
+      const graphQLClient = new GraphQLClient(endpoint, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "app-id": this.client.appId,
+          "api-token": this.client.apiToken,
+        },
+      });
+
+      return graphQLClient.request(query, variables);
+    } catch (err) {
+      throw getError(err);
+    }
+  }
+
   async _updateInstance(query, mode) {
     const url = this._getWorkerUrl("instances");
     const body = {
@@ -249,16 +296,87 @@ const Alfred = class Alfred {
     // when called from worker, APP_ENV and APP_ID is not defined
     const params = {};
 
-    if (credentials.appEnv) {
-      params[APP_ENV] = credentials.appEnv;
+    if (this.client && this.client.appEnv) {
+      params[APP_ENV] = this.client.appEnv;
     }
 
-    if (credentials.appId) {
-      params[APP_ID] = credentials.appId;
+    if (this.client && this.client.appId) {
+      params[APP_ID] = this.client.appId;
     }
 
     return params;
   }
+};
+
+function getError(err) {
+  // Validation errors
+  if (err.response && err.response.errors && err.response.errors.length > 0) {
+    const message = err.response.errors
+      .map((graphqlError) => {
+        const path = graphqlError.path ? `(${graphqlError.path}) ` : "";
+        const errorMessage = graphqlError.message || "Unknown error";
+        return `${path}${errorMessage}`;
+      })
+      .join("\n");
+    return new ExternalZenatonError(message);
+  }
+
+  // Internal Server Error
+  if (err.response && err.response.status >= 500) {
+    return new InternalZenatonError(
+      `Please contact Zenaton support - ${err.message}`,
+    );
+  }
+
+  return new ZenatonError(err.message);
+}
+
+const mutations = {
+  createWorkflowSchedule: `
+    mutation ($createWorkflowScheduleInput: CreateWorkflowScheduleInput!) {
+      createWorkflowSchedule(input: $createWorkflowScheduleInput) {
+        schedule {
+          id
+          name
+          cron
+          insertedAt
+          updatedAt
+          target {
+            ... on WorkflowTarget {
+              name
+              type
+              canonicalName
+              programmingLanguage
+              properties
+              codePathVersion
+              initialLibraryVersion
+            }
+          }
+        }
+      }
+    }`,
+  createTaskSchedule: `
+    mutation ($createTaskScheduleInput: CreateTaskScheduleInput!) {
+      createTaskSchedule(input: $createTaskScheduleInput) {
+        schedule {
+          id
+          name
+          cron
+          insertedAt
+          updatedAt
+          target {
+            ... on TaskTarget {
+              name
+              type
+              programmingLanguage
+              properties
+              codePathVersion
+              initialLibraryVersion
+            }
+          }
+        }
+      }
+    }`,
 };
 
 module.exports = Alfred;

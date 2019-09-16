@@ -32,7 +32,7 @@ describe("Duration Definition methods", () => {
 
   it("get months", () => {
     const duration = Duration.months(3)._getDefinition();
-    expect(Duration.get(duration, baseDate)).to.be.equals(7952400);
+    expect(Duration.get(duration, baseDate)).to.be.equals(7948800);
   });
 
   it("get years", () => {
@@ -49,6 +49,6 @@ describe("Duration Definition methods", () => {
       .months(3)
       .years(3)
       ._getDefinition();
-    expect(Duration.get(duration, baseDate)).to.be.equals(104644983);
+    expect(Duration.get(duration, baseDate)).to.be.equals(104641383);
   });
 });

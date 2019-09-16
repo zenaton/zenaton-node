@@ -1,3 +1,4 @@
+const moment = require("moment-timezone");
 const { ExternalZenatonError } = require("../../../Errors");
 
 const Wait = class Wait {
@@ -51,6 +52,16 @@ const Wait = class Wait {
       : timestamp._getDefinition();
 
     return this._apply();
+  }
+
+  timezone(timezone) {
+    if (moment.tz.names().indexOf(timezone) < 0) {
+      throw new ExternalZenatonError("Unknown timezone");
+    }
+
+    this.timezone = timezone;
+
+    return this;
   }
 
   event(eventName) {
