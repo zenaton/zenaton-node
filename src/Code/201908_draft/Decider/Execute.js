@@ -2,11 +2,6 @@ const { ExternalZenatonError } = require("../../../Errors");
 
 const Execute = class Execute {
   constructor(processor) {
-    this._type = null;
-    this._name = null;
-    this._input = [];
-    this._options = {};
-
     this._processor = processor;
   }
 
@@ -21,18 +16,16 @@ const Execute = class Execute {
         `First parameter of Parameter "execute.task" should be a string, not a "${typeof name}"`,
       );
     }
-    this._type = "task";
-    this._name = name;
     this._input = input;
+    this._name = name;
+
     return this._processor.executeTask(this._getJob());
   }
 
   _getJob() {
     return {
-      type: this._type,
       name: this._name,
       input: this._input,
-      options: this._options,
     };
   }
 };

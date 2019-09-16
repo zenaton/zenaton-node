@@ -2,6 +2,8 @@ const { ExternalZenatonError } = require("../../../Errors");
 const workflowManager = require("./WorkflowManager");
 const Dispatch = require("../Client/Dispatch");
 const Execute = require("./Execute");
+const Schedule = require("../Client/Schedule");
+const Select = require("../Client/Select");
 const Wait = require("./Wait");
 const objectify = require("../Services/Objectify");
 
@@ -80,6 +82,30 @@ const workflow = function workflow(name, definition) {
       this._context = context;
     }
 
+    async send(eventName, ...eventData) {
+      return this._selectSelf().send(eventName, ...eventData);
+    }
+
+    async pause() {
+      return this._selectSelf().pause();
+    }
+
+    async resume() {
+      return this._selectSelf().resume();
+    }
+
+    async kill() {
+      return this._selectSelf().kill();
+    }
+
+    get schedule() {
+      return objectify(Schedule, this._processor);
+    }
+
+    get select() {
+      return objectify(Select, this._processor);
+    }
+
     get execute() {
       return objectify(Execute, this._processor);
     }
@@ -90,6 +116,18 @@ const workflow = function workflow(name, definition) {
 
     get wait() {
       return objectify(Wait, this._processor);
+    }
+
+    set schedule(_e) {
+      throw new ExternalZenatonError(
+        'Sorry, "schedule" is reserved and can not be mutated',
+      );
+    }
+
+    set select(_e) {
+      throw new ExternalZenatonError(
+        'Sorry, "select" is reserved and can not be mutated',
+      );
     }
 
     set execute(_e) {
@@ -108,6 +146,12 @@ const workflow = function workflow(name, definition) {
       throw new ExternalZenatonError(
         'Sorry, "wait" is reserved and can not be mutated',
       );
+    }
+
+    _selectSelf() {
+      return new Select(this._processor)
+        .workflow(name)
+        .whereZenatonId(this.context.id);
     }
   };
 
