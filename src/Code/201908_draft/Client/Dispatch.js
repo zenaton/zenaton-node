@@ -1,18 +1,9 @@
-const uuidv4 = require("uuid/v4");
-const versioner = require("../Services/Versioner");
 const { ExternalZenatonError } = require("../../../Errors");
 
 const MAX_ID_SIZE = 256;
 
 const Dispatch = class Dispatch {
   constructor(processor) {
-    this.name = null;
-    this.input = null;
-    this.options = null;
-    this.customId = null;
-    this.intentId = uuidv4();
-    this.promise = null;
-
     this._processor = processor;
   }
 
@@ -27,7 +18,7 @@ const Dispatch = class Dispatch {
         `Parameter of "dispatch.withId" must not exceed ${MAX_ID_SIZE} bytes`,
       );
     }
-    this.customId = id.toString();
+    this._customId = id.toString();
 
     return this;
   }
@@ -38,7 +29,7 @@ const Dispatch = class Dispatch {
         `Parameter of "dispatch.withOptions" must be an object - not a "${typeof id}"`,
       );
     }
-    this.options = options;
+    this._options = options;
 
     return this;
   }
@@ -60,7 +51,7 @@ const Dispatch = class Dispatch {
       );
     }
     this.promise = await this._processor.dispatchTask(
-      this._getJob("task", name, input),
+      this._getJob(name, input),
     );
 
     return this;
@@ -83,7 +74,7 @@ const Dispatch = class Dispatch {
       );
     }
     this.promise = await this._processor.dispatchWorkflow(
-      this._getJob("workflow", name, input),
+      this._getJob(name, input),
     );
 
     return this;
@@ -91,46 +82,41 @@ const Dispatch = class Dispatch {
 
   async post(url, body, headers) {
     return this._processor.dispatchTask(
-      this._getJob("post", url, body, headers),
+      this._getHttpJob("post", url, body, headers),
     );
   }
 
   async get(url, body, headers) {
     return this._processor.dispatchTask(
-      this._getJob("get", url, body, headers),
+      this._getHttpJob("get", url, body, headers),
     );
   }
 
   async put(url, body, headers) {
     return this._processor.dispatchTask(
-      this._getJob("put", url, body, headers),
+      this._getHttpJob("put", url, body, headers),
     );
   }
 
   async patch(url, body, headers) {
     return this._processor.dispatchTask(
-      this._getJob("patch", url, body, headers),
+      this._getHttpJob("patch", url, body, headers),
     );
   }
 
   async delete(url, body, headers) {
     return this._processor.dispatchTask(
-      this._getJob("delete", url, body, headers),
+      this._getHttpJob("delete", url, body, headers),
     );
   }
 
-  _getJob(type, name, input) {
-    const { canonical } = versioner(name);
-
+  _getJob(name, input) {
     return {
-      type,
       name,
-      canonical,
       input,
-      options: this.options,
-      customId: this.customId,
-      intentId: this.intentId,
-      promise: this.promise,
+      options: this._options,
+      customId: this._customId,
+      promise: this._promise,
     };
   }
 };
