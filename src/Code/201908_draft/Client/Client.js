@@ -15,7 +15,7 @@ const Client = class Client {
     this.name = name;
 
     // default processor
-    this.processor = new Alfred(this);
+    this._processor = new Alfred(this);
 
     // add to manager
     clientManager.add(this);

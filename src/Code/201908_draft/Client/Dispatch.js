@@ -59,10 +59,9 @@ const Dispatch = class Dispatch {
         `First parameter of Parameter "dispatch.task" should be a non-empty string`,
       );
     }
-    this.type = "task";
-    this.input = input;
-    this.name = name;
-    this.promise = await this._processor.dispatchTask(this._getJob());
+    this.promise = await this._processor.dispatchTask(
+      this._getJob("task", name, input),
+    );
 
     return this;
   }
@@ -83,22 +82,51 @@ const Dispatch = class Dispatch {
         `First parameter of Parameter "dispatch.workflow" should be a non-empty string`,
       );
     }
-    const { canonical } = versioner(name);
-    this.type = "workflow";
-    this.input = input;
-    this.name = name;
-    this.canonical = canonical;
-    this.promise = await this._processor.dispatchWorkflow(this._getJob());
+    this.promise = await this._processor.dispatchWorkflow(
+      this._getJob("workflow", name, input),
+    );
 
     return this;
   }
 
-  _getJob() {
+  async post(url, body, headers) {
+    return this._processor.dispatchTask(
+      this._getJob("post", url, body, headers),
+    );
+  }
+
+  async get(url, body, headers) {
+    return this._processor.dispatchTask(
+      this._getJob("get", url, body, headers),
+    );
+  }
+
+  async put(url, body, headers) {
+    return this._processor.dispatchTask(
+      this._getJob("put", url, body, headers),
+    );
+  }
+
+  async patch(url, body, headers) {
+    return this._processor.dispatchTask(
+      this._getJob("patch", url, body, headers),
+    );
+  }
+
+  async delete(url, body, headers) {
+    return this._processor.dispatchTask(
+      this._getJob("delete", url, body, headers),
+    );
+  }
+
+  _getJob(type, name, input) {
+    const { canonical } = versioner(name);
+
     return {
-      type: this.type,
-      name: this.name,
-      canonical: this.canonical,
-      input: this.input,
+      type,
+      name,
+      canonical,
+      input,
       options: this.options,
       customId: this.customId,
       intentId: this.intentId,

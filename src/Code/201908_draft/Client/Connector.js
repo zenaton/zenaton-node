@@ -1,54 +1,41 @@
+const uuidv4 = require("uuid/v4");
+const Dispatch = require("./Dispatch");
+const Execute = require("../Decider/Execute");
+const objectify = require("../Services/Objectify");
 const { ExternalZenatonError } = require("../../../Errors");
 
 const Connector = class Connector {
   constructor(service, authId, processor) {
     this._checkString(service, "First", "connector's name");
-    this._service = service;
     this._checkString(authId, "Second", "connector's id");
+
+    this._service = service;
     this._authId = authId;
     this._processor = processor;
   }
 
-  async post(url, body, headers) {
-    return this._processor.restConnector(
-      this._getRestConnector("post", url, body, headers),
-    );
+  get dispatch() {
+    return objectify(Dispatch, this._processor, this._service, this._authId);
   }
 
-  async get(url, body, headers) {
-    return this._processor.restConnector(
-      this._getRestConnector("get", url, body, headers),
-    );
+  get execute() {
+    return objectify(Execute, this._processor, this._service, this._authId);
   }
 
-  async put(url, body, headers) {
-    return this._processor.restConnector(
-      this._getRestConnector("put", url, body, headers),
-    );
-  }
-
-  async patch(url, body, headers) {
-    return this._processor.restConnector(
-      this._getRestConnector("patch", url, body, headers),
-    );
-  }
-
-  async delete(url, body, headers) {
-    return this._processor.restConnector(
-      this._getRestConnector("delete", url, body, headers),
-    );
-  }
-
-  _getRestConnector(verb, url, body, headers) {
+  _getJob(verb, url, body, headers) {
     this._checkString(url, "First", "url", `.${verb}`);
 
     return {
-      service: this._service,
-      authId: this._authId,
-      verb,
-      url,
-      body,
-      headers,
+      name: `${verb} ${this._service}:${url}`,
+      input: {
+        service: this._service,
+        authId: this._authId,
+        verb,
+        url,
+        body,
+        headers,
+      },
+      intentId: uuidv4(),
     };
   }
 
