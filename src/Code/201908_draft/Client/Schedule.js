@@ -72,9 +72,11 @@ const Schedule = class Schedule {
         `First parameter of Parameter "schedule.task" should be a non-empty string`,
       );
     }
+    const { canonical } = versioner(name);
     this.type = "task";
     this.name = name;
     this.input = input;
+    this.canonical = canonical;
     return this._processor.scheduleTask(this._getJob());
   }
 
