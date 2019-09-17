@@ -3,6 +3,7 @@ const workflowManager = require("./WorkflowManager");
 const Dispatch = require("../Client/Dispatch");
 const Execute = require("./Execute");
 const Schedule = require("../Client/Schedule");
+const Connector = require("../Client/Connector");
 const Select = require("../Client/Select");
 const Wait = require("./Wait");
 const objectify = require("../Services/Objectify");
@@ -80,6 +81,10 @@ const workflow = function workflow(name, definition) {
         );
       }
       this._context = context;
+    }
+
+    connector(service, serviceId) {
+      return new Connector(service, serviceId, this._processor);
     }
 
     async send(eventName, ...eventData) {

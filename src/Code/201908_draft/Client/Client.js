@@ -33,9 +33,8 @@ const Client = class Client {
     this._processor = processor;
   }
 
-  get connector() {
-    return (service, input) =>
-      objectify(Connector, service, input, this._processor);
+  connector(service, serviceId) {
+    return new Connector(service, serviceId, this._processor);
   }
 
   get dispatch() {
@@ -48,12 +47,6 @@ const Client = class Client {
 
   get schedule() {
     return objectify(Schedule, this._processor);
-  }
-
-  set connector(_c) {
-    throw new ExternalZenatonError(
-      'Sorry, "connector" is reserved and can not be mutated',
-    );
   }
 
   set dispatch(_d) {

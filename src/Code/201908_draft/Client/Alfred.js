@@ -48,33 +48,6 @@ const Alfred = class Alfred {
   }
 
   /**
-   * Execute a task
-   */
-  async executeTask(job) {
-    console.error(
-      `Warning: local workflow processing of "${
-        job.name
-      }" - for development purpose only`,
-    );
-    switch (job.type) {
-      case "task":
-        // eslint-disable-next-line global-require
-        return require("../Worker/TaskManager")
-          .getTask(job.name)
-          .handle(job.input);
-      case "wait":
-        return new Promise((resolve) => {
-          setTimeout(resolve, job.input.duration * 1000);
-        });
-      default:
-        break;
-    }
-    throw new InternalZenatonError(
-      `Unexpected Job Type "${job.type}" for "${job.name}"`,
-    );
-  }
-
-  /**
    * Dispatch a task
    */
   async dispatchTask(job) {
