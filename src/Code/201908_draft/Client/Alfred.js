@@ -1,7 +1,7 @@
 const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
 const { http, serializer, versioner } = require("../Services");
-const { version } = require("../../../infos");
+const { version: libVersion } = require("../../../infos");
 
 const {
   ExternalZenatonError,
@@ -31,7 +31,7 @@ const ATTR_MODE = "mode";
 const ATTR_MAX_PROCESSING_TIME = "maxProcessingTime";
 
 const PROG = "Javascript";
-const INITIAL_LIB_VERSION = version;
+const INITIAL_LIB_VERSION = libVersion;
 const CODE_PATH_VERSION = process.env.ZENATON_LAST_CODE_PATH;
 
 const EVENT_DATA = "event_input";
@@ -239,7 +239,7 @@ const Alfred = class Alfred {
   }
 
   _getBodyForTask(job) {
-    const { canonical, version: vers } = versioner(job.name);
+    const { canonical, version } = versioner(job.name);
 
     return {
       [ATTR_INTENT_ID]: job.intentId,
@@ -248,7 +248,7 @@ const Alfred = class Alfred {
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
       [ATTR_NAME]: job.name,
       [ATTR_CANONICAL]: canonical,
-      [ATTR_VERSION]: vers,
+      [ATTR_VERSION]: version,
       [ATTR_INPUT]: serializer.encode(job.input),
       // TODO : maxProcessingTime should be managed from Agent
       [ATTR_MAX_PROCESSING_TIME]: null,
