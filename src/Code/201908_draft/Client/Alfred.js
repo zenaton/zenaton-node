@@ -1,7 +1,6 @@
 const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
-const { init, credentials } = require("../../../client");
-const { http, serializer, versioner, graphQL } = require("../Services");
+const { http, serializer, versioner } = require("../Services");
 const { version } = require("../../../infos");
 const {
   ExternalZenatonError,
