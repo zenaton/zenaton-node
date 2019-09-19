@@ -25,7 +25,7 @@ class DateTime {
 
   timezone(timezone) {
     if (moment.tz.names().indexOf(timezone) < 0) {
-      throw new InvalidArgumentError("Unknown timezone");
+      throw new ExternalZenatonError("Unknown timezone");
     }
 
     this.definition.timezone = timezone;
@@ -233,7 +233,7 @@ class DateTime {
 
   setDefaultTimezone(timezone) {
     if (moment.tz.names().indexOf(timezone) < 0) {
-      throw new InvalidArgumentError("Unknown timezone");
+      throw new ExternalZenatonError("Unknown timezone");
     }
 
     defaultTimezone = timezone;
