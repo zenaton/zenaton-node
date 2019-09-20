@@ -178,6 +178,8 @@ class DateTime {
   }
 
   get(definition, baseDate) {
+    if (definition === null) return null;
+
     const timeDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(timeDefinition)) {
