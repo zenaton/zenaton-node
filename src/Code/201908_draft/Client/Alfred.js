@@ -1,8 +1,7 @@
 const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
-const { serializer, versioner } = require("../Services");
 const { version: libVersion } = require("../../../infos");
-
+const { serializer, versioner } = require("../Services");
 const {
   ExternalZenatonError,
   InternalZenatonError,
@@ -35,9 +34,9 @@ const Alfred = class Alfred {
   }
 
   /**
-   * Dispatch a task
+   * Dispatch Task
    */
-  async dispatchTask(job) {
+  async runTask(job) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForTask(job);
     const mutation = mutations.dispatchTask;
@@ -54,13 +53,13 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.dispatchTask;
   }
 
   /**
-   * Schedule a task
+   * Schedule Task
    */
   async scheduleTask(job) {
     const endpoint = this._getGatewayUrl();
@@ -78,8 +77,8 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.createTaskSchedule;
   }
 
@@ -103,8 +102,8 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.dispatchWorkflow;
   }
 
@@ -128,8 +127,8 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.createWorkflowSchedule;
   }
 
@@ -149,8 +148,8 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.killWorkflow;
   }
 
@@ -170,8 +169,8 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.pauseWorkflow;
   }
 
@@ -191,8 +190,8 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.resumeWorkflow;
   }
 
@@ -221,6 +220,7 @@ const Alfred = class Alfred {
       },
     };
     const res = await this._request(endpoint, mutation, variables);
+
     return res.sendEventToWorkflowByNameAndCustomId;
   }
 
@@ -242,8 +242,8 @@ const Alfred = class Alfred {
         }),
       },
     };
-
     const res = await this._request(endpoint, mutation, variables);
+
     return res.sendEventToWorkflowById;
   }
 
@@ -269,7 +269,7 @@ const Alfred = class Alfred {
       const res = await graphQLClient.request(query, variables);
       return res;
     } catch (err) {
-      const [error, message] = getError(err);
+      const [error, message] = this._getError(err);
 
       switch (error) {
         case "NOT_FOUND":
@@ -339,37 +339,37 @@ const Alfred = class Alfred {
 
     return params;
   }
-};
 
-function getError(err) {
-  // Validation errors
-  if (err.response && err.response.errors && err.response.errors.length > 0) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const el of err.response.errors) {
-      if (el.type === "NOT_FOUND") return ["NOT_FOUND", err.response.data];
+  _getError(err) {
+    // Validation errors
+    if (err.response && err.response.errors && err.response.errors.length > 0) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const el of err.response.errors) {
+        if (el.type === "NOT_FOUND") return ["NOT_FOUND", err.response.data];
+      }
+
+      const message = err.response.errors
+        .map((graphqlError) => {
+          const path = graphqlError.path ? `(${graphqlError.path}) ` : "";
+          const errorMessage = graphqlError.message || "Unknown error";
+          return `${path}${errorMessage}`;
+        })
+        .join("\n");
+
+      return ["ExternalZenatonError", message];
     }
 
-    const message = err.response.errors
-      .map((graphqlError) => {
-        const path = graphqlError.path ? `(${graphqlError.path}) ` : "";
-        const errorMessage = graphqlError.message || "Unknown error";
-        return `${path}${errorMessage}`;
-      })
-      .join("\n");
+    // Internal Server Error
+    if (err.response && err.response.status >= 500) {
+      return [
+        "InternalZenatonError",
+        `Please contact Zenaton support - ${err.message}`,
+      ];
+    }
 
-    return ["ExternalZenatonError", message];
+    return ["ZenatonError", err.message];
   }
-
-  // Internal Server Error
-  if (err.response && err.response.status >= 500) {
-    return [
-      "InternalZenatonError",
-      `Please contact Zenaton support - ${err.message}`,
-    ];
-  }
-
-  return ["ZenatonError", err.message];
-}
+};
 
 const mutations = {
   dispatchTask: `

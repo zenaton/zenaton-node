@@ -1,7 +1,6 @@
 const { ExternalZenatonError } = require("../../../Errors");
 const workflowManager = require("./WorkflowManager");
-const Dispatch = require("../Client/Dispatch");
-const Execute = require("./Execute");
+const Run = require("../Client/Run");
 const Schedule = require("../Client/Schedule");
 const Connector = require("../Client/Connector");
 const Select = require("../Client/Select");
@@ -103,6 +102,10 @@ const workflow = function workflow(name, definition) {
       return this._selectSelf().kill();
     }
 
+    get run() {
+      return objectify(Run, this._processor);
+    }
+
     get schedule() {
       return objectify(Schedule, this._processor);
     }
@@ -111,25 +114,23 @@ const workflow = function workflow(name, definition) {
       return objectify(Select, this._processor);
     }
 
-    get execute() {
-      return objectify(Execute, this._processor);
-    }
-
-    get dispatch() {
-      return objectify(Dispatch, this._processor);
-    }
-
     get wait() {
       return objectify(Wait, this._processor);
     }
 
-    set schedule(_e) {
+    set run(_r) {
+      throw new ExternalZenatonError(
+        'Sorry, "run" is reserved and can not be mutated',
+      );
+    }
+
+    set schedule(_s) {
       throw new ExternalZenatonError(
         'Sorry, "schedule" is reserved and can not be mutated',
       );
     }
 
-    set select(_e) {
+    set select(_s) {
       throw new ExternalZenatonError(
         'Sorry, "select" is reserved and can not be mutated',
       );
