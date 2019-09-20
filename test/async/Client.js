@@ -117,6 +117,7 @@ describe("Client", () => {
         createWorkflowScheduleInput: {
           codePathVersion: "async",
           cron: "* * * * *",
+          customId: "FAKE CUSTOM ID",
           environmentName: "prod",
           initialLibraryVersion: FAKE_APP_VERSION,
           intentId: "statically-generated-intent-id",

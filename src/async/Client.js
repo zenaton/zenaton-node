@@ -199,6 +199,7 @@ module.exports = class Client {
         intentId: workflowBody[ATTR_INTENT_ID],
         environmentName: credentials.appEnv,
         cron: flow.scheduling.cron,
+        customId: workflowBody[ATTR_ID],
         workflowName: workflowBody[ATTR_NAME],
         canonicalName: workflowBody[ATTR_CANONICAL] || workflowBody[ATTR_NAME],
         programmingLanguage: workflowBody[ATTR_PROG].toUpperCase(),
