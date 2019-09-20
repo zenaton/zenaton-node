@@ -1,7 +1,8 @@
 const { ExternalZenatonError } = require("../../../Errors");
 const taskManager = require("./TaskManager");
-const Dispatch = require("../Client/Dispatch");
+const Run = require("../Client/Run");
 const Select = require("../Client/Select");
+const Schedule = require("../Client/Schedule");
 const objectify = require("../Services/Objectify");
 
 const task = function task(name, definition) {
@@ -64,23 +65,33 @@ const task = function task(name, definition) {
       this._context = context;
     }
 
-    get dispatch() {
-      return objectify(Dispatch, this._processor);
+    get run() {
+      return objectify(Run, this._processor);
     }
 
     get select() {
       return objectify(Select, this._processor);
     }
 
-    set dispatch(_d) {
+    get schedule() {
+      return objectify(Schedule, this._processor);
+    }
+
+    set run(_d) {
       throw new ExternalZenatonError(
-        'Sorry, "dispatch" is reserved and can not be mutated',
+        'Sorry, "run" is reserved and can not be mutated',
       );
     }
 
     set select(_s) {
       throw new ExternalZenatonError(
         'Sorry, "select" is reserved and can not be mutated',
+      );
+    }
+
+    set schedule(_s) {
+      throw new ExternalZenatonError(
+        'Sorry, "schedule" is reserved and can not be mutated',
       );
     }
   };
