@@ -11,7 +11,8 @@ const Wait = class Wait {
   }
 
   forever() {
-    this.duration = null;
+    // http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
+    this.timestamp = 8640000000000000;
 
     return this._apply();
   }
@@ -71,12 +72,12 @@ const Wait = class Wait {
   }
 
   async _apply() {
-    if (!this._processor.executeWait) {
+    if (!this._processor.runWait) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "wait" syntax from here`,
       );
     }
-    return this._processor.executeWait(this._getWait());
+    return this._processor.runWait(this._getWait());
   }
 
   _getWait() {

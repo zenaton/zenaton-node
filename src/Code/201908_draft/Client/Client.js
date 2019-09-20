@@ -1,5 +1,5 @@
 const Alfred = require("./Alfred");
-const Dispatch = require("./Dispatch");
+const Run = require("./Run");
 const Select = require("./Select");
 const Schedule = require("./Schedule");
 const clientManager = require("./ClientManager");
@@ -32,8 +32,8 @@ const Client = class Client {
     this._processor = processor;
   }
 
-  get dispatch() {
-    return objectify(Dispatch, this._processor);
+  get run() {
+    return objectify(Run, this._processor);
   }
 
   get select() {
@@ -44,9 +44,9 @@ const Client = class Client {
     return objectify(Schedule, this._processor);
   }
 
-  set dispatch(_d) {
+  set run(_d) {
     throw new ExternalZenatonError(
-      'Sorry, "dispatch" is reserved and can not be mutated',
+      'Sorry, "run" is reserved and can not be mutated',
     );
   }
 

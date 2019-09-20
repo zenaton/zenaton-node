@@ -1,7 +1,8 @@
 const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
-const { init, credentials } = require("../../../client");
-const { http, serializer, versioner, graphQL } = require("../Services");
+const { http, serializer, versioner } = require("../Services");
+const TaskInstance = require("./Instance");
+const Instance = require("./Instance");
 const { version } = require("../../../infos");
 const {
   ExternalZenatonError,
@@ -47,83 +48,46 @@ const Alfred = class Alfred {
     this.client = client;
   }
 
-  _getWorkerUrl(ressources = "") {
-    const host = process.env.ZENATON_WORKER_URL
-      ? process.env.ZENATON_WORKER_URL
-      : ZENATON_WORKER_URL;
-    const port = process.env.ZENATON_WORKER_PORT
-      ? process.env.ZENATON_WORKER_PORT
-      : DEFAULT_WORKER_PORT;
-
-    return `${host}:${port}/api/${WORKER_API_VERSION}/${ressources}`;
-  }
-
-  _getGatewayUrl() {
-    const host = process.env.ZENATON_GATEWAY_URL
-      ? process.env.ZENATON_GATEWAY_URL
-      : ZENATON_GATEWAY_URL;
-
-    return host;
-  }
-
-  async _request(endpoint, query, variables) {
-    try {
-      const graphQLClient = new GraphQLClient(endpoint, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "app-id": this.client.appId,
-          "api-token": this.client.apiToken,
-        },
-      });
-
-      return graphQLClient.request(query, variables);
-    } catch (err) {
-      throw getError(err);
-    }
-  }
-
-  /**
-   * Execute a task
-   */
-  async executeTask(job) {
-    console.error(
-      `Warning: local workflow processing of "${
-        job.name
-      }" - for development purpose only`,
-    );
-    switch (job.type) {
-      case "task":
-        // eslint-disable-next-line global-require
-        return require("../Worker/TaskManager")
-          .getTask(job.name)
-          .handle(job.input);
-      case "wait":
-        return new Promise((resolve) => {
-          setTimeout(resolve, job.input.duration * 1000);
-        });
-      default:
-        break;
-    }
-    throw new InternalZenatonError(
-      `Unexpected Job Type "${job.type}" for "${job.name}"`,
-    );
-  }
-
   /**
    * Dispatch a task
    */
-  async dispatchTask(job) {
+  runTask(job) {
     const url = this._getWorkerUrl("tasks");
     const body = this._getBodyForTask(job);
     const params = this._getAppEnv();
-    return http.post(url, body, { params });
+
+    const instance = new TaskInstance({
+      id: body[ATTR_INTENT_ID],
+      appId: params[APP_ID],
+      appEnv: params[APP_ENV],
+    });
+    instance.promise = http.post(url, body, { params });
+
+    return instance;
+  }
+
+  /**
+   * Dispatch a workflow
+   */
+  runWorkflow(job) {
+    const url = this._getWorkerUrl("instances");
+    const body = this._getBodyForWorkflow(job);
+    const params = this._getAppEnv();
+
+    const instance = new Instance({
+      id: body[ATTR_INTENT_ID],
+      appId: params[APP_ID],
+      appEnv: params[APP_ENV],
+    });
+    instance.promise = http.post(url, body, { params });
+
+    return instance;
   }
 
   /**
    * Schedule a task
    */
-  async scheduleTask(job) {
+  scheduleTask(job) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForTask(job);
     const mutation = mutations.createTaskSchedule;
@@ -140,18 +104,16 @@ const Alfred = class Alfred {
       },
     };
 
-    const res = await this._request(endpoint, mutation, variables);
-    return res.createTaskSchedule;
-  }
+    const instance = new Instance({
+      id: body[ATTR_INTENT_ID],
+      appId: this.client.appId,
+      appEnv: this.client.appEnv,
+    });
+    instance.promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.createTaskSchedule,
+    );
 
-  /**
-   * Dispatch a workflow
-   */
-  async dispatchWorkflow(job) {
-    const url = this._getWorkerUrl("instances");
-    const body = this._getBodyForWorkflow(job);
-    const params = this._getAppEnv();
-    return http.post(url, body, { params });
+    return instance;
   }
 
   /**
@@ -175,8 +137,16 @@ const Alfred = class Alfred {
       },
     };
 
-    const res = await this._request(endpoint, mutation, variables);
-    return res.createWorkflowSchedule;
+    const instance = new Instance({
+      id: body[ATTR_INTENT_ID],
+      appId: this.client.appId,
+      appEnv: this.client.appEnv,
+    });
+    instance.promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.createWorkflowSchedule,
+    );
+
+    return instance;
   }
 
   /**
@@ -221,6 +191,42 @@ const Alfred = class Alfred {
     };
     const params = this._getAppEnv();
     return http.post(url, body, { params });
+  }
+
+  _getWorkerUrl(ressources = "") {
+    const host = process.env.ZENATON_WORKER_URL
+      ? process.env.ZENATON_WORKER_URL
+      : ZENATON_WORKER_URL;
+    const port = process.env.ZENATON_WORKER_PORT
+      ? process.env.ZENATON_WORKER_PORT
+      : DEFAULT_WORKER_PORT;
+
+    return `${host}:${port}/api/${WORKER_API_VERSION}/${ressources}`;
+  }
+
+  _getGatewayUrl() {
+    const host = process.env.ZENATON_GATEWAY_URL
+      ? process.env.ZENATON_GATEWAY_URL
+      : ZENATON_GATEWAY_URL;
+
+    return host;
+  }
+
+  async _request(endpoint, query, variables) {
+    try {
+      const graphQLClient = new GraphQLClient(endpoint, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "app-id": this.client.appId,
+          "api-token": this.client.apiToken,
+        },
+      });
+
+      return graphQLClient.request(query, variables);
+    } catch (err) {
+      throw _getError(err);
+    }
   }
 
   async _updateInstance(query, mode) {
@@ -291,7 +297,7 @@ const Alfred = class Alfred {
   }
 };
 
-function getError(err) {
+function _getError(err) {
   // Validation errors
   if (err.response && err.response.errors && err.response.errors.length > 0) {
     const message = err.response.errors
