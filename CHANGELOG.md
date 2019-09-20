@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
-- Tasks and workflows scheduling in new syntax
+- Tasks and workflows scheduling in new syntax.
+- Added an `input` key for dispatch workflow and schedule workflow.
 
 ### Changed
 
@@ -16,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Time/Duration methods don't have anymore `1` as default value.
 - Time/Duration methods can't be stacked, works now like mutators.
 - Better uses of capitalize convention: initial caps limited to constructors
+- Changed `data` value for dispatch workflow and schedule workflow to empty object.
 
 ### Deprecated
 

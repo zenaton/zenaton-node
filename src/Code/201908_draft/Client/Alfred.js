@@ -18,7 +18,9 @@ const ATTR_CUSTOM_ID = "custom_id";
 const ATTR_NAME = "name";
 const ATTR_CANONICAL = "canonical_name";
 const ATTR_VERSION = "version";
-const ATTR_INPUT = "data";
+const ATTR_INPUT = "input";
+const ATTR_PROPERTIES = "properties";
+
 const ATTR_PROG = "programming_language";
 const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
 const ATTR_CODE_PATH_VERSION = "code_path_version";
@@ -97,7 +99,8 @@ const Alfred = class Alfred {
         customId: body[ATTR_CUSTOM_ID],
         canonicalName: body[ATTR_CANONICAL],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
-        data: body[ATTR_INPUT],
+        input: body[ATTR_INPUT],
+        data: body[ATTR_PROPERTIES],
         codePathVersion: body[ATTR_CODE_PATH_VERSION],
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
@@ -122,7 +125,8 @@ const Alfred = class Alfred {
         workflowName: body[ATTR_NAME],
         canonicalName: body[ATTR_CANONICAL],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
-        properties: body[ATTR_INPUT],
+        input: body[ATTR_INPUT],
+        properties: body[ATTR_PROPERTIES],
         codePathVersion: body[ATTR_CODE_PATH_VERSION],
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
@@ -311,6 +315,7 @@ const Alfred = class Alfred {
       [ATTR_CANONICAL]: canonical,
       [ATTR_VERSION]: version,
       [ATTR_INPUT]: serializer.encode(job.input),
+      [ATTR_PROPERTIES]: serializer.encode({}),
       [ATTR_CUSTOM_ID]: job.customId ? job.customId : null,
     };
   }
