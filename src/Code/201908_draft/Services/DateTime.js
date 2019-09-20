@@ -189,7 +189,7 @@ class DateTime {
 
     // we add a duration to current date if specified
     if (timeDefinition.duration) {
-      const duration = Duration.get(timeDefinition.duration);
+      const duration = Duration.get(timeDefinition.duration, baseDate);
       date.add(duration, "s");
     }
 
