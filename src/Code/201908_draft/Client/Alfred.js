@@ -85,7 +85,7 @@ const Alfred = class Alfred {
   /**
    * Dispatch a workflow
    */
-  async dispatchWorkflow(job) {
+  async runWorkflow(job) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForWorkflow(job);
     const mutation = mutations.dispatchWorkflow;
