@@ -178,6 +178,8 @@ class DateTime {
   }
 
   get(definition, baseDate) {
+    if (definition === null) return null;
+
     const timeDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(timeDefinition)) {
@@ -189,7 +191,7 @@ class DateTime {
 
     // we add a duration to current date if specified
     if (timeDefinition.duration) {
-      const duration = Duration.get(timeDefinition.duration);
+      const duration = Duration.get(timeDefinition.duration, baseDate);
       date.add(duration, "s");
     }
 

@@ -11,7 +11,8 @@ const Wait = class Wait {
   }
 
   forever() {
-    this.duration = null;
+    // http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
+    this.timestamp = 8640000000;
 
     return this._apply();
   }

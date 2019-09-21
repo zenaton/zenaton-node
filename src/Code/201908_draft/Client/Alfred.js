@@ -1,6 +1,6 @@
 const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
-const { http, serializer, versioner } = require("../Services");
+const { serializer, versioner } = require("../Services");
 const { version } = require("../../../infos");
 const {
   ExternalZenatonError,
@@ -26,19 +26,9 @@ const ATTR_INPUT = "data";
 const ATTR_PROG = "programming_language";
 const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
 const ATTR_CODE_PATH_VERSION = "code_path_version";
-const ATTR_MODE = "mode";
-
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
 const CODE_PATH_VERSION = process.env.ZENATON_LAST_CODE_PATH;
-
-const EVENT_DATA = "event_input";
-const EVENT_NAME = "event_name";
-const EVENT_COMPLET = "event_data";
-
-const WORKFLOW_KILL = "kill";
-const WORKFLOW_PAUSE = "pause";
-const WORKFLOW_RUN = "run";
 
 const Alfred = class Alfred {
   constructor(client) {
@@ -75,9 +65,21 @@ const Alfred = class Alfred {
         },
       });
 
-      return graphQLClient.request(query, variables);
+      const res = await graphQLClient.request(query, variables);
+      return res;
     } catch (err) {
-      throw getError(err);
+      const [error, message] = getError(err);
+
+      switch (error) {
+        case "NOT_FOUND":
+          return message;
+        case "ExternalZenatonError":
+          throw new ExternalZenatonError(message);
+        case "InternalZenatonError":
+          throw new InternalZenatonError(message);
+        default:
+          throw new ZenatonError(message);
+      }
     }
   }
 
@@ -112,10 +114,25 @@ const Alfred = class Alfred {
    * Dispatch a task
    */
   async dispatchTask(job) {
-    const url = this._getWorkerUrl("tasks");
+    const endpoint = this._getGatewayUrl();
     const body = this._getBodyForTask(job);
-    const params = this._getAppEnv();
-    return http.post(url, body, { params });
+    const mutation = mutations.dispatchTask;
+
+    const variables = {
+      dispatchTaskInput: {
+        intentId: body[ATTR_INTENT_ID],
+        environmentName: this.client.appEnv,
+        name: body[ATTR_NAME],
+        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        maxProcessingTime: body[ATTR_MAX_PROCESSING_TIME],
+        data: body[ATTR_INPUT],
+        codePathVersion: body[ATTR_CODE_PATH_VERSION],
+        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
+      },
+    };
+
+    const res = await this._request(endpoint, mutation, variables);
+    return res.dispatchTask;
   }
 
   /**
@@ -146,10 +163,25 @@ const Alfred = class Alfred {
    * Dispatch a workflow
    */
   async dispatchWorkflow(job) {
-    const url = this._getWorkerUrl("instances");
+    const endpoint = this._getGatewayUrl();
     const body = this._getBodyForWorkflow(job);
-    const params = this._getAppEnv();
-    return http.post(url, body, { params });
+    const mutation = mutations.dispatchWorkflow;
+    const variables = {
+      dispatchWorkflowInput: {
+        intentId: body[ATTR_INTENT_ID],
+        environmentName: this.client.appEnv,
+        name: body[ATTR_NAME],
+        customId: body[ATTR_CUSTOM_ID],
+        canonicalName: body[ATTR_CANONICAL] || body[ATTR_NAME],
+        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        data: body[ATTR_INPUT],
+        codePathVersion: body[ATTR_CODE_PATH_VERSION],
+        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
+      },
+    };
+
+    const res = await this._request(endpoint, mutation, variables);
+    return res.dispatchWorkflow;
   }
 
   /**
@@ -180,64 +212,115 @@ const Alfred = class Alfred {
   /**
    * Kill a workflow instance
    */
-  async killWorkflow(query) {
-    return this._updateInstance(query, WORKFLOW_KILL);
+  async killWorkflow2(query) {
+    const endpoint = this._getGatewayUrl();
+    const body = this._getBodyForUpdateWorkflow(query);
+    const mutation = mutations.killWorkflow;
+    const variables = {
+      killWorkflowInput: {
+        customId: query.customId,
+        environmentName: this.client.appEnv,
+        intentId: body[ATTR_INTENT_ID],
+        name: body[ATTR_NAME],
+        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+      },
+    };
+
+    const res = await this._request(endpoint, mutation, variables);
+    return res.killWorkflow;
   }
 
   /**
    * Pause a workflow instance
    */
   async pauseWorkflow(query) {
-    return this._updateInstance(query, WORKFLOW_PAUSE);
+    const endpoint = this._getGatewayUrl();
+    const body = this._getBodyForUpdateWorkflow(query);
+    const mutation = mutations.pauseWorkflow;
+    const variables = {
+      pauseWorkflowInput: {
+        customId: query.customId,
+        environmentName: this.client.appEnv,
+        intentId: body[ATTR_INTENT_ID],
+        name: body[ATTR_NAME],
+        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+      },
+    };
+
+    const res = await this._request(endpoint, mutation, variables);
+    return res.pauseWorkflow;
   }
 
   /**
    * Resume a workflow instance
    */
   async resumeWorkflow(query) {
-    return this._updateInstance(query, WORKFLOW_RUN);
+    const endpoint = this._getGatewayUrl();
+    const body = this._getBodyForUpdateWorkflow(query);
+    const mutation = mutations.resumeWorkflow;
+    const variables = {
+      resumeWorkflowInput: {
+        customId: query.customId,
+        environmentName: this.client.appEnv,
+        intentId: body[ATTR_INTENT_ID],
+        name: body[ATTR_NAME],
+        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+      },
+    };
+
+    const res = await this._request(endpoint, mutation, variables);
+    return res.resumeWorkflow;
   }
 
   /**
    * Send an event to a workflow instance
    */
   async sendEvent(query, eventName, eventData) {
-    const url = this._getWorkerUrl("events");
-    const body = {
-      [ATTR_INTENT_ID]: query.intentId,
-      [ATTR_PROG]: PROG,
-      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
-      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: query.name,
-      [ATTR_CUSTOM_ID]: query.customId,
-      [EVENT_NAME]: eventName,
-      [EVENT_DATA]: serializer.encode(eventData),
-      [EVENT_COMPLET]: serializer.encode({
+    const endpoint = this._getGatewayUrl();
+
+    const mutation = mutations.sendEventToWorkflowByNameAndCustomId;
+    const variables = {
+      sendEventToWorkflowByNameAndCustomIdInput: {
+        codePathVersion: CODE_PATH_VERSION,
+        customId: query.customId,
+        data: serializer.encode({
+          name: eventName,
+          data: eventData,
+        }),
+        environmentName: this.client.appEnv,
+        initialLibraryVersion: INITIAL_LIB_VERSION,
+        input: serializer.encode(eventData),
+        intentId: query.intentId,
         name: eventName,
-        data: eventData,
-      }),
+        programmingLanguage: PROG.toUpperCase(),
+        workflowName: query.name,
+      },
     };
-    const params = this._getAppEnv();
-    return http.post(url, body, { params });
+    const res = await this._request(endpoint, mutation, variables);
+    return res.sendEventToWorkflowByNameAndCustomId;
   }
 
-  async _updateInstance(query, mode) {
-    const url = this._getWorkerUrl("instances");
-    const body = {
-      [ATTR_INTENT_ID]: query.intentId,
-      [ATTR_PROG]: PROG,
-      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
-      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: query.name,
-      [ATTR_MODE]: mode,
-    };
-    const params = Object.assign(
-      {
-        [ATTR_CUSTOM_ID]: query.customId,
+  /**
+   * Send an event to a workflow by instance_id
+   */
+  async sendEventByInstanceId(id, eventName, eventData) {
+    const endpoint = this._getGatewayUrl();
+
+    const mutation = mutations.sendEventToWorkflowById;
+    const variables = {
+      sendEventToWorkflowByIdInput: {
+        id,
+        eventName,
+        eventInput: serializer.encode(eventData),
+        eventData: serializer.encode({
+          name: eventName,
+          data: eventData,
+        }),
       },
-      this._getAppEnv(),
-    );
-    return http.put(url, body, { params });
+    };
+
+    const res = await this._request(endpoint, mutation, variables);
+    return res.sendEventToWorkflowById;
   }
 
   _getBodyForTask(job) {
@@ -271,6 +354,16 @@ const Alfred = class Alfred {
     };
   }
 
+  _getBodyForUpdateWorkflow(query) {
+    return {
+      [ATTR_INTENT_ID]: query.intentId,
+      [ATTR_PROG]: PROG,
+      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
+      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
+      [ATTR_NAME]: query.name,
+    };
+  }
+
   _getAppEnv() {
     // when called from worker, APP_ENV and APP_ID is not defined
     const params = {};
@@ -290,6 +383,11 @@ const Alfred = class Alfred {
 function getError(err) {
   // Validation errors
   if (err.response && err.response.errors && err.response.errors.length > 0) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const el of err.response.errors) {
+      if (el.type === "NOT_FOUND") return ["NOT_FOUND", err.response.data];
+    }
+
     const message = err.response.errors
       .map((graphqlError) => {
         const path = graphqlError.path ? `(${graphqlError.path}) ` : "";
@@ -297,20 +395,76 @@ function getError(err) {
         return `${path}${errorMessage}`;
       })
       .join("\n");
-    return new ExternalZenatonError(message);
+
+    return ["ExternalZenatonError", message];
   }
 
   // Internal Server Error
   if (err.response && err.response.status >= 500) {
-    return new InternalZenatonError(
+    return [
+      "InternalZenatonError",
       `Please contact Zenaton support - ${err.message}`,
-    );
+    ];
   }
 
-  return new ZenatonError(err.message);
+  return ["ZenatonError", err.message];
 }
 
 const mutations = {
+  dispatchTask: `
+    mutation ($dispatchTaskInput: DispatchTaskInput!) {
+      dispatchTask(input: $dispatchTaskInput) {
+        task {
+          intentId
+        }
+      }
+  }`,
+  dispatchWorkflow: `
+    mutation ($dispatchWorkflowInput: DispatchWorkflowInput!) {
+      dispatchWorkflow(input: $dispatchWorkflowInput) {
+        workflow {
+          id
+          canonicalName
+          name
+          programmingLanguage
+          properties
+        }
+      }
+  }`,
+  killWorkflow: `
+    mutation ($killWorkflowInput: KillWorkflowInput!) {
+      killWorkflow(input: $killWorkflowInput) {
+        id
+      }
+  }`,
+  pauseWorkflow: `
+    mutation ($pauseWorkflowInput: PauseWorkflowInput!) {
+      pauseWorkflow(input: $pauseWorkflowInput) {
+        id
+      }
+  }`,
+  resumeWorkflow: `
+    mutation ($resumeWorkflowInput: ResumeWorkflowInput!) {
+      resumeWorkflow(input: $resumeWorkflowInput) {
+        id
+      }
+  }`,
+  sendEventToWorkflowByNameAndCustomId: `
+    mutation ($sendEventToWorkflowByNameAndCustomIdInput: SendEventToWorkflowByNameAndCustomIdInput!) {
+      sendEventToWorkflowByNameAndCustomId(input: $sendEventToWorkflowByNameAndCustomIdInput) {
+        event {
+          intentId
+        }
+      }
+  }`,
+  sendEventToWorkflowById: `
+    mutation ($sendEventToWorkflowByIdInput: SendEventToWorkflowByIdInput!) {
+      sendEventToWorkflowById(input: $sendEventToWorkflowByIdInput) {
+        event {
+          intentId
+        }
+      }
+  }`,
   createWorkflowSchedule: `
     mutation ($createWorkflowScheduleInput: CreateWorkflowScheduleInput!) {
       createWorkflowSchedule(input: $createWorkflowScheduleInput) {
