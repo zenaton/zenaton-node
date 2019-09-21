@@ -1,16 +1,13 @@
 const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
 const { serializer, versioner } = require("../Services");
-const { version } = require("../../../infos");
+const { version: libVersion } = require("../../../infos");
+
 const {
   ExternalZenatonError,
   InternalZenatonError,
   ZenatonError,
 } = require("../../../Errors");
-
-const ZENATON_WORKER_URL = "http://localhost";
-const DEFAULT_WORKER_PORT = 4001;
-const WORKER_API_VERSION = "v_newton";
 
 const ZENATON_GATEWAY_URL = "https://gateway.zenaton.com/api";
 
@@ -26,88 +23,15 @@ const ATTR_INPUT = "data";
 const ATTR_PROG = "programming_language";
 const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
 const ATTR_CODE_PATH_VERSION = "code_path_version";
+const ATTR_MAX_PROCESSING_TIME = "maxProcessingTime";
+
 const PROG = "Javascript";
-const INITIAL_LIB_VERSION = version;
+const INITIAL_LIB_VERSION = libVersion;
 const CODE_PATH_VERSION = process.env.ZENATON_LAST_CODE_PATH;
 
 const Alfred = class Alfred {
   constructor(client) {
     this.client = client;
-  }
-
-  _getWorkerUrl(ressources = "") {
-    const host = process.env.ZENATON_WORKER_URL
-      ? process.env.ZENATON_WORKER_URL
-      : ZENATON_WORKER_URL;
-    const port = process.env.ZENATON_WORKER_PORT
-      ? process.env.ZENATON_WORKER_PORT
-      : DEFAULT_WORKER_PORT;
-
-    return `${host}:${port}/api/${WORKER_API_VERSION}/${ressources}`;
-  }
-
-  _getGatewayUrl() {
-    const host = process.env.ZENATON_GATEWAY_URL
-      ? process.env.ZENATON_GATEWAY_URL
-      : ZENATON_GATEWAY_URL;
-
-    return host;
-  }
-
-  async _request(endpoint, query, variables) {
-    try {
-      const graphQLClient = new GraphQLClient(endpoint, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "app-id": this.client.appId,
-          "api-token": this.client.apiToken,
-        },
-      });
-
-      const res = await graphQLClient.request(query, variables);
-      return res;
-    } catch (err) {
-      const [error, message] = getError(err);
-
-      switch (error) {
-        case "NOT_FOUND":
-          return message;
-        case "ExternalZenatonError":
-          throw new ExternalZenatonError(message);
-        case "InternalZenatonError":
-          throw new InternalZenatonError(message);
-        default:
-          throw new ZenatonError(message);
-      }
-    }
-  }
-
-  /**
-   * Execute a task
-   */
-  async executeTask(job) {
-    console.error(
-      `Warning: local workflow processing of "${
-        job.name
-      }" - for development purpose only`,
-    );
-    switch (job.type) {
-      case "task":
-        // eslint-disable-next-line global-require
-        return require("../Worker/TaskManager")
-          .getTask(job.name)
-          .handle(job.input);
-      case "wait":
-        return new Promise((resolve) => {
-          setTimeout(resolve, job.input.duration * 1000);
-        });
-      default:
-        break;
-    }
-    throw new InternalZenatonError(
-      `Unexpected Job Type "${job.type}" for "${job.name}"`,
-    );
   }
 
   /**
@@ -212,7 +136,7 @@ const Alfred = class Alfred {
   /**
    * Kill a workflow instance
    */
-  async killWorkflow2(query) {
+  async killWorkflow(query) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForUpdateWorkflow(query);
     const mutation = mutations.killWorkflow;
@@ -323,8 +247,45 @@ const Alfred = class Alfred {
     return res.sendEventToWorkflowById;
   }
 
+  _getGatewayUrl() {
+    const host = process.env.ZENATON_GATEWAY_URL
+      ? process.env.ZENATON_GATEWAY_URL
+      : ZENATON_GATEWAY_URL;
+
+    return host;
+  }
+
+  async _request(endpoint, query, variables) {
+    try {
+      const graphQLClient = new GraphQLClient(endpoint, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "app-id": this.client.appId,
+          "api-token": this.client.apiToken,
+        },
+      });
+
+      const res = await graphQLClient.request(query, variables);
+      return res;
+    } catch (err) {
+      const [error, message] = getError(err);
+
+      switch (error) {
+        case "NOT_FOUND":
+          return message;
+        case "ExternalZenatonError":
+          throw new ExternalZenatonError(message);
+        case "InternalZenatonError":
+          throw new InternalZenatonError(message);
+        default:
+          throw new ZenatonError(message);
+      }
+    }
+  }
+
   _getBodyForTask(job) {
-    const { canonical, version: vers } = versioner(job.name);
+    const { canonical, version } = versioner(job.name);
 
     return {
       [ATTR_INTENT_ID]: job.intentId,
@@ -333,7 +294,7 @@ const Alfred = class Alfred {
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
       [ATTR_NAME]: job.name,
       [ATTR_CANONICAL]: canonical,
-      [ATTR_VERSION]: vers,
+      [ATTR_VERSION]: version,
       [ATTR_INPUT]: serializer.encode(job.input),
     };
   }
@@ -365,7 +326,7 @@ const Alfred = class Alfred {
   }
 
   _getAppEnv() {
-    // when called from worker, APP_ENV and APP_ID is not defined
+    // when called from Agent, APP_ENV and APP_ID is not defined
     const params = {};
 
     if (this.client && this.client.appEnv) {

@@ -3,8 +3,10 @@ const { ExternalZenatonError } = require("../../../Errors");
 const MAX_ID_SIZE = 256;
 
 const Dispatch = class Dispatch {
-  constructor(processor) {
+  constructor(processor, service, authId) {
     this._processor = processor;
+    this._service = service;
+    this._authId = authId;
   }
 
   withId(id) {
@@ -50,10 +52,9 @@ const Dispatch = class Dispatch {
         `First parameter of Parameter "dispatch.task" should be a non-empty string`,
       );
     }
-    this._type = "task";
-    this._input = input;
-    this._name = name;
-    this._promise = await this._processor.dispatchTask(this._getJob());
+    this.promise = await this._processor.dispatchTask(
+      this._getTaskJob(name, input),
+    );
 
     return this;
   }
@@ -74,21 +75,65 @@ const Dispatch = class Dispatch {
         `First parameter of Parameter "dispatch.workflow" should be a non-empty string`,
       );
     }
-    this._input = input;
-    this._name = name;
-
-    this._promise = await this._processor.dispatchWorkflow(this._getJob());
+    this.promise = await this._processor.dispatchWorkflow(
+      this._getTaskJob(name, input),
+    );
 
     return this;
   }
 
-  _getJob() {
+  async post(url, body, header) {
+    return this._http("post", url, body, header);
+  }
+
+  async get(url, body, header) {
+    return this._http("get", url, body, header);
+  }
+
+  async put(url, body, header) {
+    return this._http("put", url, body, header);
+  }
+
+  async patch(url, body, header) {
+    return this._http("patch", url, body, header);
+  }
+
+  async delete(url, body, header) {
+    return this._http("delete", url, body, header);
+  }
+
+  async _http(verb, url, body, header) {
+    if (!this._processor.dispatchTask) {
+      throw new ExternalZenatonError(
+        `Sorry, you can not use "dispatch.${verb}" syntax from here`,
+      );
+    }
+    return this._processor.dispatchTask(
+      this._getHttpJob(verb, url, body, header),
+    );
+  }
+
+  _getHttpJob(verb, url, body, header) {
     return {
-      name: this._name,
-      input: this._input,
+      name: `Http:${verb}`,
+      input: [
+        {
+          url,
+          body,
+          header,
+        },
+      ],
       options: this._options,
       customId: this._customId,
-      promise: this._promise,
+    };
+  }
+
+  _getTaskJob(name, input) {
+    return {
+      name,
+      input,
+      options: this._options,
+      customId: this._customId,
     };
   }
 };

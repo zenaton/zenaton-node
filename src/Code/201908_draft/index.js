@@ -10,12 +10,12 @@ const versioner = require("./Services/Versioner");
 
 module.exports = {
   Client,
+  WorkflowContext,
+  TaskContext,
   workflow,
   task,
   duration,
   datetime,
   serializer,
   versioner,
-  TaskContext,
-  WorkflowContext,
 };

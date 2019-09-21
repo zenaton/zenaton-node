@@ -2,6 +2,7 @@ const Alfred = require("./Alfred");
 const Dispatch = require("./Dispatch");
 const Select = require("./Select");
 const Schedule = require("./Schedule");
+const Connector = require("./Connector");
 const clientManager = require("./ClientManager");
 const objectify = require("../Services/Objectify");
 const { ExternalZenatonError } = require("../../../Errors");
@@ -14,7 +15,7 @@ const Client = class Client {
     this.name = name;
 
     // default processor
-    this.processor = new Alfred(this);
+    this._processor = new Alfred(this);
 
     // add to manager
     clientManager.add(this);
@@ -30,6 +31,10 @@ const Client = class Client {
 
   set processor(processor) {
     this._processor = processor;
+  }
+
+  connector(service, serviceId) {
+    return new Connector(service, serviceId, this._processor);
   }
 
   get dispatch() {
