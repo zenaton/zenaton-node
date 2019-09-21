@@ -111,6 +111,8 @@ class Duration {
   }
 
   get(definition, baseDate) {
+    if (definition === null) return null;
+
     const durationDefinition = definition || this._getDefinition();
 
     if (Number.isInteger(durationDefinition)) {
