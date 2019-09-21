@@ -5,21 +5,21 @@ const objectify = require("../Services/Objectify");
 const { ExternalZenatonError } = require("../../../Errors");
 
 const Connector = class Connector {
-  constructor(service, authId, processor) {
+  constructor(service, serviceId, processor) {
     this._checkString(service, "First", "connector's name");
-    this._checkString(authId, "Second", "connector's id");
+    this._checkString(serviceId, "Second", "connector's id");
 
     this._service = service;
-    this._authId = authId;
+    this._serviceId = serviceId;
     this._processor = processor;
   }
 
   get dispatch() {
-    return objectify(Dispatch, this._processor, this._service, this._authId);
+    return objectify(Dispatch, this._processor, this._service, this._serviceId);
   }
 
   get execute() {
-    return objectify(Execute, this._processor, this._service, this._authId);
+    return objectify(Execute, this._processor, this._service, this._serviceId);
   }
 
   _getJob(verb, url, body, headers) {
@@ -29,7 +29,7 @@ const Connector = class Connector {
       name: `${verb} ${this._service}:${url}`,
       input: {
         service: this._service,
-        authId: this._authId,
+        serviceId: this._serviceId,
         verb,
         url,
         body,
