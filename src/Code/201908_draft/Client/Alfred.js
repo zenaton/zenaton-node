@@ -95,7 +95,7 @@ const Alfred = class Alfred {
         environmentName: this.client.appEnv,
         name: body[ATTR_NAME],
         customId: body[ATTR_CUSTOM_ID],
-        canonicalName: body[ATTR_CANONICAL] || body[ATTR_NAME],
+        canonicalName: body[ATTR_CANONICAL],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
         data: body[ATTR_INPUT],
         codePathVersion: body[ATTR_CODE_PATH_VERSION],
@@ -288,7 +288,7 @@ const Alfred = class Alfred {
     const { canonical, version } = versioner(job.name);
 
     return {
-      [ATTR_INTENT_ID]: job.intentId,
+      [ATTR_INTENT_ID]: uuidv4(),
       [ATTR_PROG]: PROG,
       [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
@@ -300,7 +300,7 @@ const Alfred = class Alfred {
   }
 
   _getBodyForWorkflow(job) {
-    const { canonical, version: vers } = versioner(job.name);
+    const { canonical, version } = versioner(job.name);
 
     return {
       [ATTR_INTENT_ID]: uuidv4(),
@@ -309,7 +309,7 @@ const Alfred = class Alfred {
       [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
       [ATTR_NAME]: job.name,
       [ATTR_CANONICAL]: canonical,
-      [ATTR_VERSION]: vers,
+      [ATTR_VERSION]: version,
       [ATTR_INPUT]: serializer.encode(job.input),
       [ATTR_CUSTOM_ID]: job.customId ? job.customId : null,
     };

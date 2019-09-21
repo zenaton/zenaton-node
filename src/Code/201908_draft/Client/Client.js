@@ -37,6 +37,10 @@ const Client = class Client {
     return new Connector(service, serviceId, this._processor);
   }
 
+  get schedule() {
+    return (cron) => new Schedule(cron, this._processor);
+  }
+
   get run() {
     return objectify(Run, this._processor);
   }
@@ -45,25 +49,21 @@ const Client = class Client {
     return objectify(Select, this._processor);
   }
 
-  get schedule() {
-    return objectify(Schedule, this._processor);
+  set schedule(_d) {
+    throw new ExternalZenatonError(
+      '"schedule" is reserved and can not be mutated',
+    );
   }
 
   set run(_d) {
     throw new ExternalZenatonError(
-      'Sorry, "run" is reserved and can not be mutated',
+      '"run" is reserved and can not be mutated  ',
     );
   }
 
   set select(_s) {
     throw new ExternalZenatonError(
-      'Sorry, "select" is reserved and can not be mutated',
-    );
-  }
-
-  set schedule(_s) {
-    throw new ExternalZenatonError(
-      'Sorry, "schedule" is reserved and can not be mutated',
+      '"select" is reserved and can not be mutated',
     );
   }
 };

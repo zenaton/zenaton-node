@@ -92,7 +92,7 @@ const Run = class Run {
    * Returns [ {name: string , input: array}, ...]
    */
   _getJobs(...jobs) {
-    return jobs.map((task) => this._getJob(...task));
+    return jobs.map((job) => this._getJob(...job));
   }
 
   /*

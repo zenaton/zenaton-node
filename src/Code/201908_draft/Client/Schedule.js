@@ -1,32 +1,16 @@
-const uuidv4 = require("uuid/v4");
-const versioner = require("../Services/Versioner");
 const { ExternalZenatonError } = require("../../../Errors");
 
 const MAX_ID_SIZE = 256;
 
 const Schedule = class Schedule {
-  constructor(processor) {
-    this.name = null;
-    this.input = null;
-    this.options = null;
-    this.customId = null;
-    this.intentId = uuidv4();
-    this.promise = null;
-
-    this._processor = processor;
-  }
-
-  each(cron) {
+  constructor(cron, processor) {
     if (typeof cron !== "string" || cron === "") {
       throw new ExternalZenatonError(
-        "Param passed to 'schedule' function must be a non empty string",
+        `Parameter of "schedule" must be a non empty string`,
       );
     }
-
-    this.scheduling = this.scheduling || {};
-    this.scheduling.cron = cron;
-
-    return this;
+    this._scheduling = { cron };
+    this._processor = processor;
   }
 
   withId(id) {
@@ -40,7 +24,7 @@ const Schedule = class Schedule {
         `Parameter of "dispatch.withId" must not exceed ${MAX_ID_SIZE} bytes`,
       );
     }
-    this.customId = id.toString();
+    this._customId = id.toString();
 
     return this;
   }
@@ -51,7 +35,7 @@ const Schedule = class Schedule {
         `Parameter of "dispatch.withOptions" must be an object - not a "${typeof id}"`,
       );
     }
-    this.options = options;
+    this._options = options;
 
     return this;
   }
@@ -72,12 +56,8 @@ const Schedule = class Schedule {
         `First parameter of Parameter "schedule.task" should be a non-empty string`,
       );
     }
-    const { canonical } = versioner(name);
-    this.type = "task";
-    this.name = name;
-    this.input = input;
-    this.canonical = canonical;
-    return this._processor.scheduleTask(this._getJob());
+
+    return this._processor.scheduleTask(this._getJob(name, ...input));
   }
 
   async workflow(name, ...input) {
@@ -96,27 +76,17 @@ const Schedule = class Schedule {
         `First parameter of Parameter "schedule.workflow" should be a non-empty string`,
       );
     }
-    const { canonical } = versioner(name);
-    this.type = "workflow";
-    this.input = input;
-    this.name = name;
-    this.canonical = canonical;
-    this.promise = await this._processor.scheduleWorkflow(this._getJob());
 
-    return this;
+    return this._processor.scheduleWorkflow(this._getJob(name, ...input));
   }
 
-  _getJob() {
+  _getJob(name, ...input) {
     return {
-      type: this.type,
-      name: this.name,
-      canonical: this.canonical,
-      input: this.input,
-      options: this.options,
-      customId: this.customId,
-      intentId: this.intentId,
-      promise: this.promise,
-      scheduling: this.scheduling,
+      name,
+      input,
+      options: this._options,
+      customId: this._customId,
+      scheduling: this._scheduling,
     };
   }
 };
