@@ -26,8 +26,6 @@ const ATTR_INPUT = "data";
 const ATTR_PROG = "programming_language";
 const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
 const ATTR_CODE_PATH_VERSION = "code_path_version";
-const ATTR_MAX_PROCESSING_TIME = "maxProcessingTime";
-
 const PROG = "Javascript";
 const INITIAL_LIB_VERSION = version;
 const CODE_PATH_VERSION = process.env.ZENATON_LAST_CODE_PATH;
@@ -337,8 +335,6 @@ const Alfred = class Alfred {
       [ATTR_CANONICAL]: canonical,
       [ATTR_VERSION]: vers,
       [ATTR_INPUT]: serializer.encode(job.input),
-      // TODO : maxProcessingTime should be managed from Agent
-      [ATTR_MAX_PROCESSING_TIME]: null,
     };
   }
 
