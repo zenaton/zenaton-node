@@ -1,6 +1,5 @@
 const uuidv4 = require("uuid/v4");
-const Dispatch = require("./Dispatch");
-const Execute = require("../Decider/Execute");
+const Run = require("./Run");
 const objectify = require("../Services/Objectify");
 const { ExternalZenatonError } = require("../../../Errors");
 
@@ -14,12 +13,8 @@ const Connector = class Connector {
     this._processor = processor;
   }
 
-  get dispatch() {
-    return objectify(Dispatch, this._processor, this._service, this._serviceId);
-  }
-
-  get execute() {
-    return objectify(Execute, this._processor, this._service, this._serviceId);
+  get run() {
+    return objectify(Run, this._processor, this._service, this._serviceId);
   }
 
   _getJob(verb, url, body, headers) {
