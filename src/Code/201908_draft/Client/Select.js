@@ -17,24 +17,24 @@ const Select = class Select {
     return this;
   }
 
-  whereId(id) {
-    if (typeof id !== "string" && !Number.isInteger(id)) {
+  whereTag(tag) {
+    if (typeof tag !== "string" && !Number.isInteger(tag)) {
       throw new ExternalZenatonError(
-        `In "select.whereId()", parameter should be a string or an integer - not a "${typeof id}"`,
+        `In "select.whereTag()", parameter should be a string or an integer - not a "${typeof tag}"`,
       );
     }
-    this._customId = id.toString();
+    this._customId = tag.toString();
 
     return this;
   }
 
-  whereZenatonId(zId) {
-    if (typeof zId !== "string" && !Number.isInteger(zId)) {
+  whereId(id) {
+    if (typeof id !== "string" && !Number.isInteger(id)) {
       throw new ExternalZenatonError(
-        `In "select.whereZenatonId", parameter should be a string or an integer - not a "${typeof zId}"`,
+        `In "select.whereZenatonId", parameter should be a string or an integer - not a "${typeof id}"`,
       );
     }
-    this._zId = zId.toString();
+    this._zId = id.toString();
 
     return this;
   }
