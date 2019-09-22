@@ -13,18 +13,18 @@ const Schedule = class Schedule {
     this._processor = processor;
   }
 
-  withId(id) {
-    if (typeof id !== "string" && !Number.isInteger(id)) {
+  withTag(tag) {
+    if (typeof tag !== "string" && !Number.isInteger(tag)) {
       throw new ExternalZenatonError(
-        `Parameter of "dispatch.withId" must be a string or an integer - not a "${typeof id}"`,
+        `Parameter of "schedule.withTag" must be a string or an integer - not a "${typeof tag}"`,
       );
     }
-    if (id.toString().length >= MAX_ID_SIZE) {
+    if (tag.toString().length >= MAX_ID_SIZE) {
       throw new ExternalZenatonError(
-        `Parameter of "dispatch.withId" must not exceed ${MAX_ID_SIZE} bytes`,
+        `Parameter of "schedule.withTag" must not exceed ${MAX_ID_SIZE} bytes`,
       );
     }
-    this._customId = id.toString();
+    this._customId = tag.toString();
 
     return this;
   }
