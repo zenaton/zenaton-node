@@ -2,6 +2,7 @@ const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
 const { version: libVersion } = require("../../../infos");
 const { serializer, versioner } = require("../Services");
+const Job = require("./Job");
 const {
   ExternalZenatonError,
   InternalZenatonError,
@@ -36,9 +37,9 @@ const Alfred = class Alfred {
   /**
    * Dispatch Task
    */
-  async runTask(job) {
+  runTask(task) {
     const endpoint = this._getGatewayUrl();
-    const body = this._getBodyForTask(job);
+    const body = this._getBodyForTask(task);
     const mutation = mutations.dispatchTask;
 
     const variables = {
@@ -53,23 +54,27 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.dispatchTask,
+    );
+    job.promise = promise;
 
-    return res.dispatchTask;
+    return job;
   }
 
   /**
    * Schedule Task
    */
-  async scheduleTask(job) {
+  scheduleTask(task) {
     const endpoint = this._getGatewayUrl();
-    const body = this._getBodyForTask(job);
+    const body = this._getBodyForTask(task);
     const mutation = mutations.createTaskSchedule;
     const variables = {
       createTaskScheduleInput: {
         intentId: body[ATTR_INTENT_ID],
         environmentName: this.client.appEnv,
-        cron: job.scheduling.cron,
+        cron: task.scheduling.cron,
         taskName: body[ATTR_NAME],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
         properties: body[ATTR_INPUT],
@@ -77,17 +82,21 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.createTaskSchedule,
+    );
+    job.promise = promise;
 
-    return res.createTaskSchedule;
+    return job;
   }
 
   /**
    * Dispatch a workflow
    */
-  async runWorkflow(job) {
+  runWorkflow(w) {
     const endpoint = this._getGatewayUrl();
-    const body = this._getBodyForWorkflow(job);
+    const body = this._getBodyForWorkflow(w);
     const mutation = mutations.dispatchWorkflow;
     const variables = {
       dispatchWorkflowInput: {
@@ -102,23 +111,27 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.dispatchWorkflow,
+    );
+    job.promise = promise;
 
-    return res.dispatchWorkflow;
+    return job;
   }
 
   /**
    * Schedule a workflow
    */
-  async scheduleWorkflow(job) {
+  scheduleWorkflow(w) {
     const endpoint = this._getGatewayUrl();
-    const body = this._getBodyForWorkflow(job);
+    const body = this._getBodyForWorkflow(w);
     const mutation = mutations.createWorkflowSchedule;
     const variables = {
       createWorkflowScheduleInput: {
         intentId: body[ATTR_INTENT_ID],
         environmentName: this.client.appEnv,
-        cron: job.scheduling.cron,
+        cron: w.scheduling.cron,
         workflowName: body[ATTR_NAME],
         canonicalName: body[ATTR_CANONICAL],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
@@ -127,15 +140,19 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.createWorkflowSchedule,
+    );
+    job.promise = promise;
 
-    return res.createWorkflowSchedule;
+    return job;
   }
 
   /**
    * Kill a workflow instance
    */
-  async killWorkflow(query) {
+  killWorkflow(query) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForUpdateWorkflow(query);
     const mutation = mutations.killWorkflow;
@@ -148,15 +165,19 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.killWorkflow,
+    );
+    job.promise = promise;
 
-    return res.killWorkflow;
+    return job;
   }
 
   /**
    * Pause a workflow instance
    */
-  async pauseWorkflow(query) {
+  pauseWorkflow(query) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForUpdateWorkflow(query);
     const mutation = mutations.pauseWorkflow;
@@ -169,15 +190,19 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.pauseWorkflow,
+    );
+    job.promise = promise;
 
-    return res.pauseWorkflow;
+    return job;
   }
 
   /**
    * Resume a workflow instance
    */
-  async resumeWorkflow(query) {
+  resumeWorkflow(query) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForUpdateWorkflow(query);
     const mutation = mutations.resumeWorkflow;
@@ -190,17 +215,20 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.resumeWorkflow,
+    );
+    job.promise = promise;
 
-    return res.resumeWorkflow;
+    return job;
   }
 
   /**
    * Send an event to a workflow instance
    */
-  async sendEvent(query, eventName, eventData) {
+  sendEvent(query, eventName, eventData) {
     const endpoint = this._getGatewayUrl();
-
     const mutation = mutations.sendEventToWorkflowByNameAndCustomId;
     const variables = {
       sendEventToWorkflowByNameAndCustomIdInput: {
@@ -219,15 +247,19 @@ const Alfred = class Alfred {
         workflowName: query.name,
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: uuidv4() });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.sendEventToWorkflowByNameAndCustomId,
+    );
+    job.promise = promise;
 
-    return res.sendEventToWorkflowByNameAndCustomId;
+    return job;
   }
 
   /**
    * Send an event to a workflow by instance_id
    */
-  async sendEventByInstanceId(id, eventName, eventData) {
+  sendEventByInstanceId(id, eventName, eventData) {
     const endpoint = this._getGatewayUrl();
 
     const mutation = mutations.sendEventToWorkflowById;
@@ -242,9 +274,13 @@ const Alfred = class Alfred {
         }),
       },
     };
-    const res = await this._request(endpoint, mutation, variables);
+    const job = new Job({ id: uuidv4() });
+    const promise = this._request(endpoint, mutation, variables).then(
+      (res) => res.sendEventToWorkflowById,
+    );
+    job.promise = promise;
 
-    return res.sendEventToWorkflowById;
+    return job;
   }
 
   _getGatewayUrl() {
