@@ -31,7 +31,7 @@ const Select = class Select {
   whereId(id) {
     if (typeof id !== "string" && !Number.isInteger(id)) {
       throw new ExternalZenatonError(
-        `In "select.whereZenatonId", parameter should be a string or an integer - not a "${typeof id}"`,
+        `In "select.whereId", parameter should be a string or an integer - not a "${typeof id}"`,
       );
     }
     this._zId = id.toString();
