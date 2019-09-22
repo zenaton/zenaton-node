@@ -1,7 +1,7 @@
 const Client = require("./Client/Client");
 const TaskContext = require("./Worker/TaskContext");
 const WorkflowContext = require("./Decider/WorkflowContext");
-const Instance = require("./Client/Instance");
+const Job = require("./Client/Job");
 
 const workflow = require("./Decider/Workflow");
 const task = require("./Worker/Task");
@@ -14,7 +14,7 @@ module.exports = {
   Client,
   TaskContext,
   WorkflowContext,
-  Instance,
+  Job,
 
   workflow,
   task,

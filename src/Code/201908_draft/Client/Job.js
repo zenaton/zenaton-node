@@ -1,4 +1,4 @@
-module.exports = class Instance {
+module.exports = class Job {
   constructor(values = {}) {
     this.id = values.id || null;
     this.appId = values.appId || null;
