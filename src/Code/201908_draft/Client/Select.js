@@ -34,7 +34,7 @@ const Select = class Select {
         `In "select.whereId", parameter should be a string or an integer - not a "${typeof id}"`,
       );
     }
-    this._instanceIntendId = id.toString();
+    this._instanceIntentId = id.toString();
 
     return this;
   }
@@ -96,7 +96,7 @@ const Select = class Select {
       name: this._name,
       type: this._type,
       customId: this._customId,
-      instanceIntendId: this._instanceIntendId,
+      instanceIntentId: this._instanceIntentId,
     };
   }
 };
