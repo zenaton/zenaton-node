@@ -30,7 +30,14 @@ const workflow = function workflow(name, definition) {
         `When creating worflow "${name}", 2nd parameter (workflow definition) must have a "handle" method`,
       );
     }
-    const reservedMethods = ["handle"];
+    const reservedMethods = [
+      "handle",
+      "onEvent",
+      "onStart",
+      "onSuccess",
+      "onTimeout",
+      "onFailure",
+    ];
     Object.keys(definition).forEach((method) => {
       if (
         reservedMethods.indexOf(method) >= 0 &&
