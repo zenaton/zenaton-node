@@ -93,28 +93,28 @@ const workflow = function workflow(name, definition) {
       return new Connector(service, serviceId, this._processor);
     }
 
-    async send(eventName, ...eventData) {
+    send(eventName, ...eventData) {
       return this._selectSelf().send(eventName, ...eventData);
     }
 
-    async pause() {
+    schedule(cron) {
+      return new Schedule(cron, this._processor);
+    }
+
+    pause() {
       return this._selectSelf().pause();
     }
 
-    async resume() {
+    resume() {
       return this._selectSelf().resume();
     }
 
-    async kill() {
+    kill() {
       return this._selectSelf().kill();
     }
 
     get run() {
       return objectify(Run, this._processor);
-    }
-
-    get schedule() {
-      return objectify(Schedule, this._processor);
     }
 
     get select() {
@@ -128,12 +128,6 @@ const workflow = function workflow(name, definition) {
     set run(_r) {
       throw new ExternalZenatonError(
         'Sorry, "run" is reserved and can not be mutated',
-      );
-    }
-
-    set schedule(_s) {
-      throw new ExternalZenatonError(
-        'Sorry, "schedule" is reserved and can not be mutated',
       );
     }
 
