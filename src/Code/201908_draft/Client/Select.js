@@ -42,7 +42,7 @@ const Select = class Select {
   /**
    * Send an event to a workflow instance
    */
-  async send(eventName, ...eventData) {
+  send(eventName, ...eventData) {
     if (!this._processor.sendEvent) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "send" syntax from here`,
@@ -55,7 +55,7 @@ const Select = class Select {
   /**
    * Kill a workflow instance
    */
-  async kill() {
+  kill() {
     if (!this._processor.killWorkflow) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "kill" syntax from here`,
@@ -68,7 +68,7 @@ const Select = class Select {
   /**
    * Pause a workflow instance
    */
-  async pause() {
+  pause() {
     if (!this._processor.pauseWorkflow) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "pause" syntax from here`,
@@ -81,7 +81,7 @@ const Select = class Select {
   /**
    * Resume a workflow instance
    */
-  async resume() {
+  resume() {
     if (!this._processor.resumeWorkflow) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "resume" syntax from here`,
