@@ -71,7 +71,7 @@ const Wait = class Wait {
     return this;
   }
 
-  async _apply() {
+  _apply() {
     if (!this._processor.runWait) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "wait" syntax from here`,

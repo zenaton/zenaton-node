@@ -109,8 +109,8 @@ const workflow = function workflow(name, definition) {
       return this._selectSelf().resume();
     }
 
-    kill() {
-      return this._selectSelf().kill();
+    terminate() {
+      return this._selectSelf().terminate();
     }
 
     get run() {
@@ -156,9 +156,7 @@ const workflow = function workflow(name, definition) {
     }
 
     _selectSelf() {
-      return new Select(this._processor)
-        .workflow(name)
-        .whereId(this.context.id);
+      return new Select(this._processor).workflow(name).withId(this.context.id);
     }
   };
 

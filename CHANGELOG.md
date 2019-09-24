@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Time/Duration methods can't be stacked, works now like mutators.
 - Better uses of capitalize convention: initial caps limited to constructors
 - Changed `data` value for dispatch workflow and schedule workflow to empty object.
+- Replace `kill` per `terminate``
 
 ### Deprecated
 

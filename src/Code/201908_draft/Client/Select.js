@@ -17,10 +17,10 @@ const Select = class Select {
     return this;
   }
 
-  whereTag(tag) {
+  withTag(tag) {
     if (typeof tag !== "string" && !Number.isInteger(tag)) {
       throw new ExternalZenatonError(
-        `In "select.whereTag()", parameter should be a string or an integer - not a "${typeof tag}"`,
+        `In "select.withTag()", parameter should be a string or an integer - not a "${typeof tag}"`,
       );
     }
     this._customId = tag.toString();
@@ -28,10 +28,10 @@ const Select = class Select {
     return this;
   }
 
-  whereId(id) {
+  withId(id) {
     if (typeof id !== "string" && !Number.isInteger(id)) {
       throw new ExternalZenatonError(
-        `In "select.whereId", parameter should be a string or an integer - not a "${typeof id}"`,
+        `In "select.withId", parameter should be a string or an integer - not a "${typeof id}"`,
       );
     }
     this._instanceIntentId = id.toString();
@@ -53,16 +53,16 @@ const Select = class Select {
   }
 
   /**
-   * Kill a workflow instance
+   * Terminate a workflow instance
    */
-  kill() {
-    if (!this._processor.killWorkflow) {
+  terminate() {
+    if (!this._processor.terminateWorkflow) {
       throw new ExternalZenatonError(
-        `Sorry, you can not use "kill" syntax from here`,
+        `Sorry, you can not use "terminate" syntax from here`,
       );
     }
 
-    return this._processor.killWorkflow(this._getQuery());
+    return this._processor.terminateWorkflow(this._getQuery());
   }
 
   /**

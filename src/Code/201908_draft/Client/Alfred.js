@@ -154,12 +154,12 @@ const Alfred = class Alfred {
   }
 
   /**
-   * Kill a workflow instance
+   * Terminate a workflow instance
    */
-  killWorkflow(query) {
+  terminateWorkflow(query) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForUpdateWorkflow(query);
-    const mutation = mutations.killWorkflow;
+    const mutation = mutations.terminateWorkflow;
     const variables = {
       killWorkflowInput: {
         customId: query.customId,
@@ -433,7 +433,7 @@ const mutations = {
         }
       }
   }`,
-  killWorkflow: `
+  terminateWorkflow: `
     mutation ($killWorkflowInput: KillWorkflowInput!) {
       killWorkflow(input: $killWorkflowInput) {
         id
