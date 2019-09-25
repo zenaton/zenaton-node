@@ -9,7 +9,7 @@ const {
   ZenatonError,
 } = require("../../../Errors");
 
-const ZENATON_GATEWAY_URL = "https://gateway.zenaton.com/api";
+const ZENATON_GATEWAY_BASE_URL = "https://gateway.zenaton.com";
 
 const APP_ENV = "app_env";
 const APP_ID = "app_id";
@@ -56,7 +56,9 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const job = new Job({
+      id: body[ATTR_INTENT_ID],
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.dispatchTask,
     );
@@ -84,7 +86,9 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const job = new Job({
+      id: body[ATTR_INTENT_ID],
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.createTaskSchedule,
     );
@@ -114,7 +118,9 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const job = new Job({
+      id: body[ATTR_INTENT_ID],
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.dispatchWorkflow,
     );
@@ -144,7 +150,9 @@ const Alfred = class Alfred {
         initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
       },
     };
-    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const job = new Job({
+      id: body[ATTR_INTENT_ID],
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.createWorkflowSchedule,
     );
@@ -169,7 +177,9 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const job = new Job({
+      id: body[ATTR_INTENT_ID],
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.killWorkflow,
     );
@@ -194,7 +204,9 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const job = new Job({
+      id: body[ATTR_INTENT_ID],
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.pauseWorkflow,
     );
@@ -219,7 +231,9 @@ const Alfred = class Alfred {
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
       },
     };
-    const job = new Job({ id: body[ATTR_INTENT_ID] });
+    const job = new Job({
+      id: body[ATTR_INTENT_ID],
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.resumeWorkflow,
     );
@@ -251,7 +265,9 @@ const Alfred = class Alfred {
         workflowName: query.name,
       },
     };
-    const job = new Job({ id: uuidv4() });
+    const job = new Job({
+      id: uuidv4(),
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.sendEventToWorkflowByNameAndCustomId,
     );
@@ -278,7 +294,9 @@ const Alfred = class Alfred {
         }),
       },
     };
-    const job = new Job({ id: uuidv4() });
+    const job = new Job({
+      id: uuidv4(),
+    });
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.sendEventToWorkflowById,
     );
@@ -290,9 +308,9 @@ const Alfred = class Alfred {
   _getGatewayUrl() {
     const host = process.env.ZENATON_GATEWAY_URL
       ? process.env.ZENATON_GATEWAY_URL
-      : ZENATON_GATEWAY_URL;
+      : ZENATON_GATEWAY_BASE_URL;
 
-    return host;
+    return `${host}/api`;
   }
 
   async _request(endpoint, query, variables) {
