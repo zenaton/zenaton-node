@@ -13,67 +13,66 @@ const Connector = class Connector {
     this._processor = processor;
   }
 
-  post(url, body, header) {
-    return this._http("post", url, body, header);
+  post(url, parameters) {
+    return this._http("post", url, parameters);
   }
 
-  get(url, body, header) {
-    return this._http("get", url, body, header);
+  get(url, parameters) {
+    return this._http("get", url, parameters);
   }
 
-  put(url, body, header) {
-    return this._http("put", url, body, header);
+  put(url, parameters) {
+    return this._http("put", url, parameters);
   }
 
-  patch(url, body, header) {
-    return this._http("patch", url, body, header);
+  patch(url, parameters) {
+    return this._http("patch", url, parameters);
   }
 
-  delete(url, body, header) {
-    return this._http("delete", url, body, header);
+  delete(url, parameters) {
+    return this._http("delete", url, parameters);
   }
 
-  _http(verb, url, body, headers) {
+  _http(method, url, parameters) {
     if (!this._processor.runTask) {
       throw new ExternalZenatonError(
-        `Sorry, you can not use "${this._service}.${verb}" syntax from here`,
+        `Sorry, you can not use "${this._service}.${method}" syntax from here`,
       );
     }
-    return this._processor.runTask(this._getJob(verb, url, body, headers));
+    return this._processor.runTask(this._getJob(method, url, parameters));
   }
 
-  _getJob(verb, url, body, headers) {
-    this._checkString(url, "First", "url", verb);
+  _getJob(method, url, parameters) {
+    this._checkString(url, "First", "url", method);
 
     return {
-      name: `${this._service}:${verb}`,
+      name: `${this._service}:${method}`,
       input: [
         {
           service: this._service,
           serviceId: this._serviceId,
-          verb,
+          method,
           url,
-          body,
-          headers,
+          parameters,
         },
       ],
       intentId: uuidv4(),
     };
   }
 
-  _checkString(val, position, type, verb) {
+  _checkString(val, position, type, method) {
     if (typeof val !== "string") {
       throw new ExternalZenatonError(
         `${position} parameter of "${
           this._service
-        }.${verb}" must be a string (${type}) - not a "${typeof id}"`,
+        }.${method}" must be a string (${type}) - not a "${typeof id}"`,
       );
     }
     if (typeof val !== "string" || val.length > 128) {
       throw new ExternalZenatonError(
         `${position} parameter of "${
           this._service
-        }.${verb}" (${type}) must have less than 128 characters"`,
+        }.${method}" (${type}) must have less than 128 characters"`,
       );
     }
   }
