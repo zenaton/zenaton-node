@@ -217,23 +217,21 @@ const Alfred = class Alfred {
    * Resume a workflow instance
    */
   resumeWorkflow(query) {
+    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
-    const body = this._getBodyForUpdateWorkflow(query);
-    const mutation = mutations.resumeWorkflow;
+    const mutation = mutations.resumeWorkflows;
     const variables = {
-      resumeWorkflowInput: {
-        customId: query.customId,
+      resumeWorkflowsInput: {
+        intentId,
         environmentName: this.client.appEnv,
-        intentId: body[ATTR_INTENT_ID],
-        name: body[ATTR_NAME],
-        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        selector: query,
       },
     };
     const job = new Job({
-      id: body[ATTR_INTENT_ID],
+      id: intentId,
     });
     const promise = this._request(endpoint, mutation, variables).then(
-      (res) => res.resumeWorkflow,
+      (res) => res.resumeWorkflows,
     );
     job.promise = promise;
 
@@ -370,16 +368,6 @@ const Alfred = class Alfred {
     };
   }
 
-  _getBodyForUpdateWorkflow(query) {
-    return {
-      [ATTR_INTENT_ID]: query.intentId,
-      [ATTR_PROG]: PROG,
-      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
-      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: query.name,
-    };
-  }
-
   _getAppEnv() {
     // when called from Agent, APP_ENV and APP_ID is not defined
     const params = {};
@@ -459,9 +447,9 @@ const mutations = {
         id
       }
   }`,
-  resumeWorkflow: `
-    mutation ($resumeWorkflowInput: ResumeWorkflowInput!) {
-      resumeWorkflow(input: $resumeWorkflowInput) {
+  resumeWorkflows: `
+    mutation ($resumeWorkflowsInput: ResumeWorkflowsInput!) {
+      resumeWorkflows(input: $resumeWorkflowsInput) {
         id
       }
   }`,
