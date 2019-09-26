@@ -94,7 +94,6 @@ const Select = class Select {
   _getQuery() {
     return {
       name: this._name,
-      type: this._type,
       customId: this._customId,
       instanceIntentId: this._instanceIntentId,
     };

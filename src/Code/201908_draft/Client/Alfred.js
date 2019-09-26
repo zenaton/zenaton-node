@@ -165,23 +165,23 @@ const Alfred = class Alfred {
    * Terminate a workflow instance
    */
   terminateWorkflow(query) {
+    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
-    const body = this._getBodyForUpdateWorkflow(query);
-    const mutation = mutations.terminateWorkflow;
+    const mutation = mutations.terminateWorkflows;
+
     const variables = {
-      killWorkflowInput: {
-        customId: query.customId,
+      killWorkflowsInput: {
+        intentId,
         environmentName: this.client.appEnv,
-        intentId: body[ATTR_INTENT_ID],
-        name: body[ATTR_NAME],
-        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        selector: query,
       },
     };
+
     const job = new Job({
-      id: body[ATTR_INTENT_ID],
+      id: intentId,
     });
     const promise = this._request(endpoint, mutation, variables).then(
-      (res) => res.killWorkflow,
+      (res) => res.killWorkflows,
     );
     job.promise = promise;
 
@@ -451,9 +451,9 @@ const mutations = {
         }
       }
   }`,
-  terminateWorkflow: `
-    mutation ($killWorkflowInput: KillWorkflowInput!) {
-      killWorkflow(input: $killWorkflowInput) {
+  terminateWorkflows: `
+    mutation ($killWorkflowsInput: KillWorkflowsInput!) {
+      killWorkflows(input: $killWorkflowsInput) {
         id
       }
   }`,
