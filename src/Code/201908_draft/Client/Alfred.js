@@ -192,23 +192,21 @@ const Alfred = class Alfred {
    * Pause a workflow instance
    */
   pauseWorkflow(query) {
+    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
-    const body = this._getBodyForUpdateWorkflow(query);
-    const mutation = mutations.pauseWorkflow;
+    const mutation = mutations.pauseWorkflows;
     const variables = {
-      pauseWorkflowInput: {
-        customId: query.customId,
+      pauseWorkflowsInput: {
+        intentId,
         environmentName: this.client.appEnv,
-        intentId: body[ATTR_INTENT_ID],
-        name: body[ATTR_NAME],
-        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        selector: query,
       },
     };
     const job = new Job({
-      id: body[ATTR_INTENT_ID],
+      id: intentId,
     });
     const promise = this._request(endpoint, mutation, variables).then(
-      (res) => res.pauseWorkflow,
+      (res) => res.pauseWorkflows,
     );
     job.promise = promise;
 
@@ -455,9 +453,9 @@ const mutations = {
         id
       }
   }`,
-  pauseWorkflow: `
-    mutation ($pauseWorkflowInput: PauseWorkflowInput!) {
-      pauseWorkflow(input: $pauseWorkflowInput) {
+  pauseWorkflows: `
+    mutation ($pauseWorkflowsInput: PauseWorkflowsInput!) {
+      pauseWorkflows(input: $pauseWorkflowsInput) {
         id
       }
   }`,
