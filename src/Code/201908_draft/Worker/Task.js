@@ -4,6 +4,7 @@ const Run = require("../Client/Run");
 const Select = require("../Client/Select");
 const Schedule = require("../Client/Schedule");
 const objectify = require("../Services/Objectify");
+const Connector = require("../Client/Connector");
 
 const task = function task(name, definition) {
   // check that provided data have the right format
@@ -94,10 +95,16 @@ const task = function task(name, definition) {
         'Sorry, "schedule" is reserved and can not be mutated',
       );
     }
+
+    connector(service, serviceId) {
+      return new Connector(service, serviceId, this._processor);
+    }
   };
 
   // define name of this class
-  Object.defineProperty(TaskClass, "name", { value: name });
+  Object.defineProperty(TaskClass, "name", {
+    value: name,
+  });
 
   // user-defined methods
   if (typeof definition === "function") {
