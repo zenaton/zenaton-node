@@ -246,30 +246,28 @@ const Alfred = class Alfred {
    * Send an event to a workflow instance
    */
   sendEvent(query, eventName, eventData) {
+    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
-    const mutation = mutations.sendEventToWorkflowByNameAndCustomId;
+    const mutation = mutations.sendEventToWorkflows;
+
     const variables = {
-      sendEventToWorkflowByNameAndCustomIdInput: {
-        codePathVersion: CODE_PATH_VERSION,
-        customId: query.customId,
+      sendEventToWorkflowsInput: {
+        intent_id: intentId,
+        environmentName: this.client.appEnv,
         data: serializer.encode({
           name: eventName,
           data: eventData,
         }),
-        environmentName: this.client.appEnv,
-        initialLibraryVersion: INITIAL_LIB_VERSION,
-        input: serializer.encode(eventData),
-        intentId: query.intentId,
         name: eventName,
-        programmingLanguage: PROG.toUpperCase(),
-        workflowName: query.name,
+        input: serializer.encode(eventData),
+        selector: query,
       },
     };
     const job = new Job({
-      id: uuidv4(),
+      id: intentId,
     });
     const promise = this._request(endpoint, mutation, variables).then(
-      (res) => res.sendEventToWorkflowByNameAndCustomId,
+      (res) => res.sendEventToWorkflows,
     );
     job.promise = promise;
 
@@ -474,6 +472,17 @@ const mutations = {
       sendEventToWorkflowByNameAndCustomId(input: $sendEventToWorkflowByNameAndCustomIdInput) {
         event {
           intentId
+        }
+      }
+  }`,
+  sendEventToWorkflows: `
+    mutation ($sendEventToWorkflowsInput: SendEventToWorkflowsInput!) {
+      sendEventToWorkflows(input: $sendEventToWorkflowsInput) {
+        event {
+          data
+          input
+          intentId
+          name
         }
       }
   }`,
