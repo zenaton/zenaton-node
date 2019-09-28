@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 const { expect } = require("chai");
-const Duration = require("../../../src/Code/201908_draft/Services/Duration");
+const Duration = require("../../../src/Code/yield/Services/Duration");
 
 const baseDate = "2019-08-09T16:26:44.929Z";
 

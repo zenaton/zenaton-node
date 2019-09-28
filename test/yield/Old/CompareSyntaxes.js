@@ -2,8 +2,8 @@
 const { expect } = require("chai");
 const { Trait } = require("../../../src/Code/async/Services");
 const WithTimestamp = require("../../../src/Code/async/Traits/WithTimestamp");
-const DateTime = require("../../../src/Code/201908_draft/Services/DateTime");
-const Duration = require("../../../src/Code/201908_draft/Services/Duration");
+const DateTime = require("../../../src/Code/yield/Services/DateTime");
+const Duration = require("../../../src/Code/yield/Services/Duration");
 
 const baseDate = "2019-08-09T16:26:44.929Z";
 

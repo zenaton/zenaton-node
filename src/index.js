@@ -3,7 +3,7 @@ const { readdirSync, statSync } = require("fs");
 const { version } = require("./infos");
 const Errors = require("./Errors");
 
-const LAST_CODE_PATH = "201908_draft";
+const LAST_CODE_PATH = "yield";
 const getDirectories = (source) => readdirSync(source);
 
 // store path to this file for use by Zenaton worker
