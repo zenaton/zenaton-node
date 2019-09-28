@@ -1,5 +1,29 @@
 # Breaking Changes
 
+## Version 0.7.0
+
+The Zenaton NodeJS library has been going through a major overhaul in version 0.7.0. In order to use a more modern syntax
+
+- using generators to be more explicit about how it works
+- ensuring a complete separation between tasks and workflows - in a way that we could later have workflows in node.js and tasks in some other languages
+- add new capabilities to reduce boilerplate, such as
+  - send an event from a workflow
+  - dispatch a workflow from a workflow
+  - terminate a workflow from a workflow
+
+If you need to ensure that workflow launched with a previous version continue to run, you need to:
+
+1. update your Zenaton Agent in production
+2. on your sources
+
+- Update your sources to use `{ Client, Workflow, Task } = require("zenaton").async` instead of `{ Client, Workflow, Task } = require("zenaton")`
+- Upgrade your Zenaton library
+- deploy - everything should continue to work as previously
+
+3. implement new tasks and workflows using the new syntax
+
+Please check at each step that everything works well and contact us if you encounter difficulties.
+
 ## Version 0.5.0
 
 The Zenaton NodeJS library has been going through a major overhaul in version 0.5.0. Particularly, we've made sure that it is now asynchronous from top to bottom, which will make for better performances and reliability all around.
@@ -106,7 +130,8 @@ If you're using a version of NodeJS prior to 7.10, and don't have access to the 
 const { Workflow } = require("zenaton");
 
 module.exports = Workflow("MyWorkflow", function() {
-  return new TaskA().execute()
+  return new TaskA()
+    .execute()
     .then((result) => {
       return new Wait().seconds(5).execute();
     })

@@ -5,7 +5,7 @@ const {
   Workflow,
   AbstractWorkflow,
   workflowManager,
-} = require("../../../src/async/Workflows");
+} = require("../../../src/Code/async/Workflows");
 const {
   InvalidArgumentError,
   ExternalZenatonError,

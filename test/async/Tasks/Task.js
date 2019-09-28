@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const sinon = require("sinon");
 
-const { Task, taskManager } = require("../../../src/async/Tasks");
+const { Task, taskManager } = require("../../../src/Code/async/Tasks");
 const { InvalidArgumentError, ZenatonError } = require("../../../src/Errors");
 
 describe("Task builder", () => {

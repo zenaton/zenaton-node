@@ -102,7 +102,7 @@ Then, initialize your Zenaton client:
 
 const { Client } = require("zenaton");
 
-Client.init(
+module.exports = new Client(
   "YourApplicationId",
   "YourApiToken",
   "YourApplicationEnv", // Use "dev" as default
@@ -118,9 +118,7 @@ The Agent needs to be pointed to a `boot` file which will allow him to infer you
 ```javascript
 /* boot.js */
 
-require("./client");
-
-// Import here your jobs as you go
+// Import here all your tasks and workflows as you go
 // require("./tasks/HelloWorldTask");
 // require("./workflows/MyFirstWorkflow");
 ```
@@ -139,27 +137,22 @@ Let's start by implementing a first task printing something, and returning a val
 
 ```javascript
 /* tasks/HelloWorldTask.js */
+const { task } = require("zenaton");
 
-const { Task } = require("zenaton");
-
-module.exports = Task("HelloWorldTask", async function handle() {
-  console.log("Hello world!");
-
-  return Math.floor(Math.random() * 10);
-});
+module.exports = task("HelloWorldTask",
+  async function handle(name="World") {
+    return `Hello ${name}`!;
+  }
+);
 ```
 
 Now, when you want to run this task as a background job, you need to do the following:
 
 ```javascript
 /* launchHelloWorldTask.js */
+const { run } = require("./client.js");
 
-// Don't forget to import it in the 'boot' file as well
-const HelloWorldTask = require("./tasks/HelloWorldTask");
-
-new HelloWorldTask().dispatch().catch((err) => {
-  console.error(err);
-});
+run.task("HelloWorldTask", "Me");
 ```
 
 That's all you need to get started. With this, you can run many background jobs.
@@ -176,14 +169,9 @@ to see how people use job orchestration.
 
 #### Using workflows
 
-A workflow in Zenaton is created through the `Workflow` function.
+A workflow in Zenaton is created through the `workflow` function.
 
-We will implement a very simple workflow:
-
-First, it will execute the `HelloWorld` task.
-The result of the first task will be used to make a condition using an `if` statement.
-When the returned value will be greater than `0`, we will execute a second task named `FinalTask`.
-Otherwise, we won't do anything else.
+We will implement a very simple workflow that will execute sequentialy the `HelloWorld` task 3 times.
 
 One important thing to remember is that your workflow implementation **must** be idempotent.
 You can read more about that in our [documentation](https://zenaton.com/documentation/node/workflow-basics/#implementation).
@@ -192,35 +180,23 @@ The implementation looks like this:
 
 ```javascript
 /* workflows/MyFirstWorkflow.js */
-
-const HelloWorldTask = require("../tasks/HelloWorldTask");
-const FinalTask = require("../tasks/FinalTask");
-
 const { Workflow } = require("zenaton");
 
-module.exports = Workflow("MyFirstWorkflow", async function handle() {
-  const number = await new HelloWorldTask().execute();
-
-  if (number > 0) {
-    await new FinalTask().execute();
-  }
+module.exports = workflow("MyFirstWorkflow", function* handle(name) {
+  yield this.run.task("HelloWorldTask", name);
+  yield this.run.task("HelloWorldTask", "Me");
+  yield this.run.task("HelloWorldTask", "All");
 });
 ```
 
-Now that your workflow is implemented, you can execute it by calling the `dispatch` method:
+Now that your workflow is implemented, you can ask for its processing like this:
 
 ```javascript
 /* launchMyFirstWorkflow.js */
+const { run } = require("./client.js");
 
-// Don't forget to import it in the 'boot' file as well
-const MyFirstWorkflow = require("./workflows/MyFirstWorkflow");
-
-new MyFirstWorkflow().dispatch().catch((err) => {
-  console.error(err);
-});
+run.workflow("MyFirstWorkflow", "Gilles");
 ```
-
-> If you really want to run this example, you will need to implement the `FinalTask` task.
 
 There are many more features usable in workflows in order to get the orchestration done right. You can learn more
 in our [documentation](https://zenaton.com/documentation/node/workflow-basics/#implementation).

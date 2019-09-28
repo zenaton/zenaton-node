@@ -4,17 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-## Unreleased
+## 0.7.0 - 2019-09-28
 
 ### Added
 
+- Major overhaul of the library: use of generators and new syntax
 - Added `custom_id` argument for workflow schedule.
+- Tasks and workflows scheduling in new syntax.
+- Added an `input` key for dispatch workflow and schedule workflow.
 
 ### Changed
+
+- Default timezone with new syntax is now UTC.
+- Time/Duration methods don't have anymore `1` as default value.
+- Time/Duration methods can't be stacked, works now like mutators.
+- Better uses of capitalize convention: initial caps limited to constructors
+- Changed `data` value for dispatch workflow and schedule workflow to empty object.
+- Replace `kill` per `terminate``
 
 ### Deprecated
 
 ### Removed
+
+- Use of Array as parralel
+- Parallel methods
 
 ### Fixed
 

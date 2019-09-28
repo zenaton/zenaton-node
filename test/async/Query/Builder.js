@@ -4,7 +4,7 @@ const proxyquire = require("proxyquire");
 const { expect } = require("chai");
 const sinon = require("sinon");
 
-const { AbstractWorkflow } = require("../../../src/async/Workflows");
+const { AbstractWorkflow } = require("../../../src/Code/async/Workflows");
 
 proxyquire.noPreserveCache();
 
@@ -32,7 +32,7 @@ describe("Builder", () => {
       this.resumeWorkflow = resumeWorkflowFake;
     };
 
-    Builder = proxyquire("../../../src/async/Query/Builder", {
+    Builder = proxyquire("../../../src/Code/async/Query/Builder", {
       "../Client": clientStub,
     });
   });
