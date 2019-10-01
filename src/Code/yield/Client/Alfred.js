@@ -142,6 +142,7 @@ const Alfred = class Alfred {
         environmentName: this.client.appEnv,
         cron: w.scheduling.cron,
         workflowName: body[ATTR_NAME],
+        customId: body[ATTR_CUSTOM_ID],
         canonicalName: body[ATTR_CANONICAL],
         programmingLanguage: body[ATTR_PROG].toUpperCase(),
         input: body[ATTR_INPUT],
