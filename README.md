@@ -111,9 +111,9 @@ module.exports = new Client(
 
 #### Boot file
 
-Next step is to have your Zenaton Agent listen to your application.
+The next step is to have your Zenaton Agent listen to your application.
 
-The Agent needs to be pointed to a `boot` file which will allow him to infer your programming language (here JavaScript) but also to figure out where your jobs are located when the time comes to run them.
+The Agent needs to be pointed to a `boot` file which will allow it to infer your programming language (here JavaScript) but also to figure out where your jobs are located when the time comes to run them.
 
 ```javascript
 /* boot.js */
@@ -131,7 +131,7 @@ zenaton listen --app_id=YourApplicationId --api_token=YourApiToken --app_env=You
 
 #### Executing a background job
 
-A background job in Zenaton is created through the `Task` function.
+A job in Zenaton is created through the `Task` function.
 
 Let's start by implementing a first task printing something, and returning a value:
 
