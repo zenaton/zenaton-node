@@ -2,7 +2,9 @@
   <a href="https://zenaton.com" target="_blank">
     <img src="https://user-images.githubusercontent.com/36400935/58254828-e5176880-7d6b-11e9-9094-3f46d91faeee.png" target="_blank" />
   </a><br>
-  Easy Asynchronous Jobs Manager for Developers <br>
+  Build and run event-driven processes within the product journey in days instead of months.<br>
+ie. payment, booking, personalized communication sequences, ETL processes and more.
+<br>Now with 90+ APIs connectors.<br>
   <a href="https://zenaton.com/documentation/node/getting-started/" target="_blank">
     <strong> Explore the docs » </strong>
   </a> <br>
@@ -22,14 +24,15 @@
 
 [Zenaton](https://zenaton.com) helps developers to easily run, monitor and orchestrate background jobs on your workers without managing a queuing system. 
 
-Build workflows using Zenaton functions to build control flows around your busines logic and tasks.  The zenaton engine orchestrates the timing of executions on your workers. Include functions like wait for a specific time or event, react to external events within a workflow, run parallel tasks or create schedules by adding just one line of code. [More about Zenaton Functions](https://zenaton.com/how-it-works)
+Build workflows using Zenaton functions to build control flows around your busines logic and tasks - managing time, events and external services within one class.  The zenaton engine orchestrates the timing of executions on your workers. Functions include 'wait for a specific time or event', 'react to external events', 'run parallel tasks, 'create schedules' and more all by writing one line of code. [More about Zenaton Functions](https://zenaton.com/how-it-works)
 
-Key capabilities:
-Single Tasks - dispatch or schedule an asynchronous job with just one line of code
-Workflows - Write complicated business logic in easily readable and familiar code. Factor in time (wait) and trigger tasks and trigger events based on internal or external variables (APIs & third party services). 
-Real time Monitoring - Get a real time view of workers and tasks - scheduled, processing and executed.
-Scheduler - Schedule recurrent tasks and workflows and automatically retry tasks that fail or get alerts when there are errors or timeouts.
-Error Handling: - Alerts for errors and timeouts and retry, resume or kill processes. React to errors by writing logic into workflow code to trigger retries or other actions.
+Key capabilities:<br>
+Single Tasks - dispatch or schedule an asyncbusiness hronous job with just one line of code <br>
+Workflows as code - Combine Zenaton functions and Node.js to create infinite possibilities of logic.<br>
+Real time Monitoring - Get a real time view of workers and tasks - scheduled, processing and executed. <br>
+Scheduler - Schedule recurrent tasks and workflows and automatically retry tasks that fail or get alerts when there are errors or timeouts. <br>
+Error Handling: - Alerts for errors and timeouts and retry, resume or kill processes. React to errors by writing logic into workflow code to trigger retries or other actions. <br>
+<br>
                 
 You can sign up for an account on [Zenaton](https://zenaton.com) and go through the [tutorial in Node](https://app.zenaton.com/tutorial/node).
 
