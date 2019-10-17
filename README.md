@@ -20,9 +20,18 @@
 
 # Zenaton library for Node
 
-[Zenaton](https://zenaton.com) helps developers to easily run, monitor and orchestrate background jobs on your workers without managing a queuing system. In addition to this, a monitoring dashboard shows you in real-time tasks executions and helps you to handle errors.
+[Zenaton](https://zenaton.com) helps developers to easily run, monitor and orchestrate background jobs on your workers without managing a queuing system. 
 
-The Zenaton library for Node lets you code and launch tasks using Zenaton platform, as well as write workflows as code. You can sign up for an account on [Zenaton](https://zenaton.com) and go through the [tutorial in Node](https://app.zenaton.com/tutorial/node).
+Build workflows using Zenaton functions to build control flows around your busines logic and tasks.  The zenaton engine orchestrates the timing of executions on your workers. Include functions like wait for a specific time or event, react to external events within a workflow, run parallel tasks or create schedules by adding just one line of code. [More about Zenaton Functions](https://zenaton.com/how-it-works)
+
+Key capabilities:
+Single Tasks - dispatch or schedule an asynchronous job with just one line of code
+Workflows - Write complicated business logic in easily readable and familiar code. Factor in time (wait) and trigger tasks and trigger events based on internal or external variables (APIs & third party services). 
+Real time Monitoring - Get a real time view of workers and tasks - scheduled, processing and executed.
+Scheduler - Schedule recurrent tasks and workflows and automatically retry tasks that fail or get alerts when there are errors or timeouts.
+Error Handling: - Alerts for errors and timeouts and retry, resume or kill processes. React to errors by writing logic into workflow code to trigger retries or other actions.
+                
+You can sign up for an account on [Zenaton](https://zenaton.com) and go through the [tutorial in Node](https://app.zenaton.com/tutorial/node).
 
 - [What's new](WHATSNEW.md).
 
