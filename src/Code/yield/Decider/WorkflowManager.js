@@ -51,6 +51,10 @@ const WorkflowManager = class WorkflowManager {
       acc.version > current.version ? acc : current,
     ).class;
   }
+
+  clear() {
+    this.workflows = [];
+  }
 };
 
 module.exports = new WorkflowManager();
