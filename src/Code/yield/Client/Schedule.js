@@ -40,7 +40,7 @@ const Schedule = class Schedule {
     return this;
   }
 
-  async task(name, ...input) {
+  task(name, ...input) {
     if (!this._processor.scheduleTask) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "schedule.task" syntax from here`,
@@ -60,7 +60,7 @@ const Schedule = class Schedule {
     return this._processor.scheduleTask(this._getJob(name, ...input));
   }
 
-  async workflow(name, ...input) {
+  workflow(name, ...input) {
     if (!this._processor.scheduleWorkflow) {
       throw new ExternalZenatonError(
         `Sorry, you can not use "schedule.workflow" syntax from here`,
