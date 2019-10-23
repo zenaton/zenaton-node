@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-## [Unreleased]
+## 0.7.2 - 2019-10-23
 
 ### Added
 
 - Added auto publish to npm when creating a GitHub release.
+- Added `serverless` code_path.
 
 ### Fixed
 
