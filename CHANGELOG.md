@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Added
+
+- Added auto publish to npm when creating a GitHub release.
+
 ### Fixed
 
 - Fixed the `schedule` function that returned an useless Promise.
