@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
+## Unreleased
+
+### Changed
+
+- Require the `ZENATON_CODE_PATH` dynamically depending the `ZENATON_LAST_CODE_PATH`.
+
 ## 0.7.2 - 2019-10-23
 
 ### Added
