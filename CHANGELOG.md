@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ## Unreleased
 
+### Added
+
+- Return an exception when the user gives a non standard Zenaton connector ID.
+
 ### Changed
 
 - Require the `ZENATON_CODE_PATH` dynamically depending the `ZENATON_LAST_CODE_PATH`.
