@@ -1,8 +1,6 @@
 const uuidv4 = require("uuid/v4");
 const { ExternalZenatonError } = require("../../../Errors");
 
-const ZENATON_CONNECTOR_ID_PATTERN_LENGTH = 5;
-
 const Connector = class Connector {
   constructor(service, serviceId, processor) {
     this._checkString(service, "First", "connector's name");
@@ -78,9 +76,14 @@ const Connector = class Connector {
     }
   }
 
+  _isUUID(str) {
+    const UUIDPattern = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
+    return UUIDPattern.test(str);
+  }
+
   // At this point we know that serviceId is a string because of ☝️
   _checkServiceIdPattern(serviceId) {
-    if (serviceId.split("-").length !== ZENATON_CONNECTOR_ID_PATTERN_LENGTH) {
+    if (!this._isUUID(serviceId)) {
       throw new ExternalZenatonError(
         `The current given connectorId "${serviceId}" is not corresponding to a Zenaton connector Id, you should check at https://zenaton.com/documentation/node/api-connectors#use-connectors`,
       );
