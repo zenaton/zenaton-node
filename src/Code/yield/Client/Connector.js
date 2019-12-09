@@ -6,6 +6,7 @@ const Connector = class Connector {
     this._checkString(service, "First", "connector's name");
     if (service !== "http") {
       this._checkString(serviceId, "Second", "connector's id");
+      this._checkServiceIdPattern(serviceId);
     }
 
     this._service = service;
@@ -71,6 +72,20 @@ const Connector = class Connector {
     if (typeof val !== "string" || val.length > 128) {
       throw new ExternalZenatonError(
         `${position} parameter of "${this._service}.${method}" (${type}) must have less than 128 characters"`,
+      );
+    }
+  }
+
+  _isUUID(str) {
+    const UUIDPattern = /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i;
+    return UUIDPattern.test(str);
+  }
+
+  // At this point we know that serviceId is a string because of ☝️
+  _checkServiceIdPattern(serviceId) {
+    if (!this._isUUID(serviceId)) {
+      throw new ExternalZenatonError(
+        `The current given connectorId "${serviceId}" is not corresponding to a Zenaton connector Id, you should check at https://zenaton.com/documentation/node/api-connectors#use-connectors`,
       );
     }
   }
