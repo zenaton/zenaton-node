@@ -99,7 +99,7 @@ const workflow = function workflow(name, definition) {
     }
 
     log(...obj) {
-      return new InstantTask("log", this._processor).execute(obj);
+      return new InstantTask("log", this._processor).execute(...obj);
     }
 
     date() {
