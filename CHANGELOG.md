@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Added
 
 - Return an exception when the user gives a non standard Zenaton connector ID.
+- Added the ability to use `this.log(obj)`, `this.random()`, `this.date()` in a workflow.
 
 ### Changed
 
