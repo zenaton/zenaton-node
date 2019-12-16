@@ -6,6 +6,7 @@ const Connector = require("../Client/Connector");
 const Select = require("../Client/Select");
 const Wait = require("./Wait");
 const objectify = require("../Services/Objectify");
+const InstantTask = require("../Client/InstantTask");
 
 const workflow = function workflow(name, definition) {
   // check that provided data have the right format
@@ -91,6 +92,18 @@ const workflow = function workflow(name, definition) {
 
     connector(service, serviceId) {
       return new Connector(service, serviceId, this._processor);
+    }
+
+    random() {
+      return new InstantTask("random", this._processor).execute();
+    }
+
+    log(...obj) {
+      return new InstantTask("log", this._processor).execute(...obj);
+    }
+
+    date() {
+      return new InstantTask("date", this._processor).execute();
     }
 
     send(eventName, ...eventData) {
