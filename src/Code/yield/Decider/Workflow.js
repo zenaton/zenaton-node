@@ -102,7 +102,7 @@ const workflow = function workflow(name, definition) {
       return new InstantTask("log", this._processor).execute(obj);
     }
 
-    now() {
+    date() {
       return new InstantTask("date", this._processor).execute();
     }
 
