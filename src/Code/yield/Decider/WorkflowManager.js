@@ -39,17 +39,29 @@ const WorkflowManager = class WorkflowManager {
     });
   }
 
-  get(name) {
-    // search by name
-    const workflow = this.workflows.find((w) => w.name === name);
-    if (workflow) return workflow.class;
+  getFirstFromCanonical(canonical) {
     // search per canonical
-    const ws = this.workflows.filter((w) => w.canonical === name);
+    const ws = this.workflows.filter((w) => w.canonical === canonical);
+    if (ws.length === 0) return undefined;
+    // return first version
+    return ws.reduce((current, last) =>
+      current.version < last.version ? current : last,
+    ).class;
+  }
+
+  getLastFromCanonical(canonical) {
+    // search per canonical
+    const ws = this.workflows.filter((w) => w.canonical === canonical);
     if (ws.length === 0) return undefined;
     // return last version
-    return ws.reduce((acc, current) =>
-      acc.version > current.version ? acc : current,
+    return ws.reduce((current, last) =>
+      current.version > last.version ? current : last,
     ).class;
+  }
+
+  get(name) {
+    // search by name
+    return this.workflows.find((w) => w.name === name);
   }
 
   clear() {
