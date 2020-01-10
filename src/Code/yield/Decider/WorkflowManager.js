@@ -62,8 +62,7 @@ const WorkflowManager = class WorkflowManager {
   get(name) {
     // search by name
     const workflow = this.workflows.find((w) => w.name === name);
-    if (workflow) return workflow.class;
-    return undefined;
+    return workflow ? workflow.class : undefined;
   }
 
   clear() {

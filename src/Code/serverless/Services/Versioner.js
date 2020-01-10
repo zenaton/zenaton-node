@@ -7,7 +7,7 @@ const versioner = function versioner(name) {
   const canonical = isVersioned ? versionMatch[1] : name;
   const version = isVersioned ? parseInt(versionMatch[2], 10) : 0;
 
-  return { canonical, version };
+  return { canonical, version, name };
 };
 
 module.exports = versioner;
