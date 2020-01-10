@@ -1,6 +1,4 @@
-const uuidv4 = require("uuid/v4");
 const { GraphQLClient } = require("graphql-request");
-const { version: libVersion } = require("../../../infos");
 const { serializer, versioner } = require("../Services");
 const Job = require("./Job");
 const {
@@ -14,22 +12,10 @@ const ZENATON_GATEWAY_BASE_URL = "https://gateway.zenaton.com";
 const APP_ENV = "app_env";
 const APP_ID = "app_id";
 
-const ATTR_INTENT_ID = "intent_id";
-const ATTR_CUSTOM_ID = "custom_id";
+const ATTR_TAG = "tag";
 const ATTR_NAME = "name";
-const ATTR_CANONICAL = "canonical_name";
 const ATTR_VERSION = "version";
 const ATTR_INPUT = "input";
-const ATTR_PROPERTIES = "properties";
-
-const ATTR_PROG = "programming_language";
-const ATTR_INITIAL_LIB_VERSION = "initial_library_version";
-const ATTR_CODE_PATH_VERSION = "code_path_version";
-const ATTR_MAX_PROCESSING_TIME = "maxProcessingTime";
-
-const PROG = "Javascript";
-const INITIAL_LIB_VERSION = libVersion;
-const CODE_PATH_VERSION = process.env.ZENATON_LAST_CODE_PATH;
 
 const Alfred = class Alfred {
   constructor(client) {
@@ -46,19 +32,13 @@ const Alfred = class Alfred {
 
     const variables = {
       dispatchTaskInput: {
-        intentId: body[ATTR_INTENT_ID],
-        environmentName: this.client.appEnv,
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         name: body[ATTR_NAME],
-        programmingLanguage: body[ATTR_PROG].toUpperCase(),
-        maxProcessingTime: body[ATTR_MAX_PROCESSING_TIME],
-        data: body[ATTR_INPUT],
-        codePathVersion: body[ATTR_CODE_PATH_VERSION],
-        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
+        input: body[ATTR_INPUT],
       },
     };
-    const job = new Job({
-      id: body[ATTR_INTENT_ID],
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.dispatchTask,
     );
@@ -73,22 +53,17 @@ const Alfred = class Alfred {
   scheduleTask(task) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForTask(task);
-    const mutation = mutations.createTaskSchedule;
+    const mutation = mutations.scheduleTask;
     const variables = {
-      createTaskScheduleInput: {
-        intentId: body[ATTR_INTENT_ID],
-        environmentName: this.client.appEnv,
+      scheduleTaskInput: {
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         cron: task.scheduling.cron,
-        taskName: body[ATTR_NAME],
-        programmingLanguage: body[ATTR_PROG].toUpperCase(),
-        properties: body[ATTR_INPUT],
-        codePathVersion: body[ATTR_CODE_PATH_VERSION],
-        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
+        name: body[ATTR_NAME],
+        input: body[ATTR_INPUT],
       },
     };
-    const job = new Job({
-      id: body[ATTR_INTENT_ID],
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.createTaskSchedule,
     );
@@ -106,21 +81,15 @@ const Alfred = class Alfred {
     const mutation = mutations.dispatchWorkflow;
     const variables = {
       dispatchWorkflowInput: {
-        intentId: body[ATTR_INTENT_ID],
-        environmentName: this.client.appEnv,
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         name: body[ATTR_NAME],
-        customId: body[ATTR_CUSTOM_ID],
-        canonicalName: body[ATTR_CANONICAL],
-        programmingLanguage: body[ATTR_PROG].toUpperCase(),
         input: body[ATTR_INPUT],
-        data: body[ATTR_PROPERTIES],
-        codePathVersion: body[ATTR_CODE_PATH_VERSION],
-        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
+        tag: body[ATTR_TAG],
+        version: body[ATTR_VERSION],
       },
     };
-    const job = new Job({
-      id: body[ATTR_INTENT_ID],
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.dispatchWorkflow,
     );
@@ -135,27 +104,21 @@ const Alfred = class Alfred {
   scheduleWorkflow(w) {
     const endpoint = this._getGatewayUrl();
     const body = this._getBodyForWorkflow(w);
-    const mutation = mutations.createWorkflowSchedule;
+    const mutation = mutations.scheduleWorkflow;
     const variables = {
-      createWorkflowScheduleInput: {
-        intentId: body[ATTR_INTENT_ID],
-        environmentName: this.client.appEnv,
+      scheduleWorkflow: {
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         cron: w.scheduling.cron,
-        workflowName: body[ATTR_NAME],
-        customId: body[ATTR_CUSTOM_ID],
-        canonicalName: body[ATTR_CANONICAL],
-        programmingLanguage: body[ATTR_PROG].toUpperCase(),
+        name: body[ATTR_NAME],
+        tag: body[ATTR_TAG],
         input: body[ATTR_INPUT],
-        properties: body[ATTR_PROPERTIES],
-        codePathVersion: body[ATTR_CODE_PATH_VERSION],
-        initialLibraryVersion: body[ATTR_INITIAL_LIB_VERSION],
+        version: body[ATTR_VERSION],
       },
     };
-    const job = new Job({
-      id: body[ATTR_INTENT_ID],
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
-      (res) => res.createWorkflowSchedule,
+      (res) => res.scheduleWorkflow,
     );
     job.promise = promise;
 
@@ -166,21 +129,18 @@ const Alfred = class Alfred {
    * Terminate a workflow instance
    */
   terminateWorkflow(query) {
-    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
     const mutation = mutations.terminateWorkflows;
 
     const variables = {
-      killWorkflowsInput: {
-        intentId,
-        environmentName: this.client.appEnv,
+      terminateWorkflowsInput: {
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         selector: query,
       },
     };
 
-    const job = new Job({
-      id: intentId,
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.killWorkflows,
     );
@@ -193,19 +153,16 @@ const Alfred = class Alfred {
    * Pause a workflow instance
    */
   pauseWorkflow(query) {
-    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
     const mutation = mutations.pauseWorkflows;
     const variables = {
       pauseWorkflowsInput: {
-        intentId,
-        environmentName: this.client.appEnv,
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         selector: query,
       },
     };
-    const job = new Job({
-      id: intentId,
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.pauseWorkflows,
     );
@@ -218,19 +175,16 @@ const Alfred = class Alfred {
    * Resume a workflow instance
    */
   resumeWorkflow(query) {
-    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
     const mutation = mutations.resumeWorkflows;
     const variables = {
       resumeWorkflowsInput: {
-        intentId,
-        environmentName: this.client.appEnv,
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         selector: query,
       },
     };
-    const job = new Job({
-      id: intentId,
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.resumeWorkflows,
     );
@@ -243,26 +197,19 @@ const Alfred = class Alfred {
    * Send an event to a workflow instance
    */
   sendEvent(query, eventName, eventData) {
-    const intentId = uuidv4();
     const endpoint = this._getGatewayUrl();
     const mutation = mutations.sendEventToWorkflows;
 
     const variables = {
       sendEventToWorkflowsInput: {
-        intent_id: intentId,
-        environmentName: this.client.appEnv,
-        data: serializer.encode({
-          name: eventName,
-          data: eventData,
-        }),
+        appId: this.client.appId,
+        environment: this.client.appEnv,
         name: eventName,
         input: serializer.encode(eventData),
         selector: query,
       },
     };
-    const job = new Job({
-      id: intentId,
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
       (res) => res.sendEventToWorkflows,
     );
@@ -277,23 +224,19 @@ const Alfred = class Alfred {
   sendEventByInstanceId(id, eventName, eventData) {
     const endpoint = this._getGatewayUrl();
 
-    const mutation = mutations.sendEventToWorkflowById;
+    const mutation = mutations.sendEventToWorkflows;
     const variables = {
-      sendEventToWorkflowByIdInput: {
-        id,
-        eventName,
-        eventInput: serializer.encode(eventData),
-        eventData: serializer.encode({
-          name: eventName,
-          data: eventData,
-        }),
+      sendEventToWorkflowsInput: {
+        appId: this.client.appId,
+        environment: this.client.appEnv,
+        name: eventName,
+        input: serializer.encode(eventData),
+        selector: { id },
       },
     };
-    const job = new Job({
-      id: uuidv4(),
-    });
+    const job = new Job();
     const promise = this._request(endpoint, mutation, variables).then(
-      (res) => res.sendEventToWorkflowById,
+      (res) => res.sendEventToWorkflows,
     );
     job.promise = promise;
 
@@ -305,7 +248,7 @@ const Alfred = class Alfred {
       ? process.env.ZENATON_GATEWAY_URL
       : ZENATON_GATEWAY_BASE_URL;
 
-    return `${host}/api`;
+    return `${host}/graphql`;
   }
 
   async _request(endpoint, query, variables) {
@@ -314,8 +257,7 @@ const Alfred = class Alfred {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          "app-id": this.client.appId,
-          "api-token": this.client.apiToken,
+          Authorization: `Bearer ${this.client.apiToken}`,
         },
       });
 
@@ -341,12 +283,7 @@ const Alfred = class Alfred {
     const { canonical, version } = versioner(job.name);
 
     return {
-      [ATTR_INTENT_ID]: uuidv4(),
-      [ATTR_PROG]: PROG,
-      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
-      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: job.name,
-      [ATTR_CANONICAL]: canonical,
+      [ATTR_NAME]: canonical,
       [ATTR_VERSION]: version,
       [ATTR_INPUT]: serializer.encode(job.input),
     };
@@ -356,16 +293,10 @@ const Alfred = class Alfred {
     const { canonical, version } = versioner(job.name);
 
     return {
-      [ATTR_INTENT_ID]: uuidv4(),
-      [ATTR_PROG]: PROG,
-      [ATTR_INITIAL_LIB_VERSION]: INITIAL_LIB_VERSION,
-      [ATTR_CODE_PATH_VERSION]: CODE_PATH_VERSION,
-      [ATTR_NAME]: job.name,
-      [ATTR_CANONICAL]: canonical,
+      [ATTR_NAME]: canonical,
       [ATTR_VERSION]: version,
       [ATTR_INPUT]: serializer.encode(job.input),
-      [ATTR_PROPERTIES]: serializer.encode({}),
-      [ATTR_CUSTOM_ID]: job.customId ? job.customId : null,
+      [ATTR_TAG]: job.customId ? job.customId : null,
     };
   }
 
@@ -417,115 +348,53 @@ const Alfred = class Alfred {
 
 const mutations = {
   dispatchTask: `
-    mutation ($dispatchTaskInput: DispatchTaskInput!) {
-      dispatchTask(input: $dispatchTaskInput) {
-        task {
-          intentId
-        }
+    mutation($input: DispatchTaskInput!) {
+      dispatchTask(input: $input) {
+        id
       }
   }`,
   dispatchWorkflow: `
-    mutation ($dispatchWorkflowInput: DispatchWorkflowInput!) {
-      dispatchWorkflow(input: $dispatchWorkflowInput) {
-        workflow {
-          id
-          canonicalName
-          name
-          programmingLanguage
-          properties
-        }
+    mutation($input: DispatchWorkflowInput!) {
+      dispatchWorkflow(input: $input) {
+        id
       }
   }`,
   terminateWorkflows: `
-    mutation ($killWorkflowsInput: KillWorkflowsInput!) {
-      killWorkflows(input: $killWorkflowsInput) {
-        id
+    mutation($input: TerminateWorkflowsInput!) {
+      terminateWorkflows(input: $input) {
+        status
       }
   }`,
   pauseWorkflows: `
-    mutation ($pauseWorkflowsInput: PauseWorkflowsInput!) {
-      pauseWorkflows(input: $pauseWorkflowsInput) {
-        id
+    mutation($input: ResumeWorkflowsInput!) {
+      resumeWorkflows(input: $input) {
+        status
       }
   }`,
   resumeWorkflows: `
-    mutation ($resumeWorkflowsInput: ResumeWorkflowsInput!) {
-      resumeWorkflows(input: $resumeWorkflowsInput) {
-        id
-      }
-  }`,
-  sendEventToWorkflowByNameAndCustomId: `
-    mutation ($sendEventToWorkflowByNameAndCustomIdInput: SendEventToWorkflowByNameAndCustomIdInput!) {
-      sendEventToWorkflowByNameAndCustomId(input: $sendEventToWorkflowByNameAndCustomIdInput) {
-        event {
-          intentId
-        }
+    mutation($input: ResumeWorkflowsInput!) {
+      resumeWorkflows(input: $input) {
+        status
       }
   }`,
   sendEventToWorkflows: `
-    mutation ($sendEventToWorkflowsInput: SendEventToWorkflowsInput!) {
-      sendEventToWorkflows(input: $sendEventToWorkflowsInput) {
-        event {
-          data
-          input
-          intentId
-          name
-        }
+    mutation($input: SendEventToWorkflowsInput!) {
+      sendEventToWorkflows(input: $input) {
+        status
       }
   }`,
-  sendEventToWorkflowById: `
-    mutation ($sendEventToWorkflowByIdInput: SendEventToWorkflowByIdInput!) {
-      sendEventToWorkflowById(input: $sendEventToWorkflowByIdInput) {
-        event {
-          intentId
-        }
+  scheduleWorkflow: `
+    mutation($input: ScheduleWorkflowInput!) {
+      scheduleWorkflow(input: $input) {
+        id
       }
   }`,
-  createWorkflowSchedule: `
-    mutation ($createWorkflowScheduleInput: CreateWorkflowScheduleInput!) {
-      createWorkflowSchedule(input: $createWorkflowScheduleInput) {
-        schedule {
-          id
-          name
-          cron
-          insertedAt
-          updatedAt
-          target {
-            ... on WorkflowTarget {
-              name
-              type
-              canonicalName
-              programmingLanguage
-              properties
-              codePathVersion
-              initialLibraryVersion
-            }
-          }
-        }
+  scheduleTask: `
+    mutation($input: ScheduleTaskInput!) {
+      scheduleTask(input: $input) {
+        id
       }
-    }`,
-  createTaskSchedule: `
-    mutation ($createTaskScheduleInput: CreateTaskScheduleInput!) {
-      createTaskSchedule(input: $createTaskScheduleInput) {
-        schedule {
-          id
-          name
-          cron
-          insertedAt
-          updatedAt
-          target {
-            ... on TaskTarget {
-              name
-              type
-              programmingLanguage
-              properties
-              codePathVersion
-              initialLibraryVersion
-            }
-          }
-        }
-      }
-    }`,
+  }`,
 };
 
 module.exports = Alfred;

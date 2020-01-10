@@ -9,13 +9,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Changed
 
 - Change the ZENATON `LAST_CODE_PATH` to `serverless`.
-- Allow the selection of workflows without a name.
+- Use the GraphQL API v2 for the `serverless` code path.
 
 ## 0.7.4 - 2020-01-20
 
 ### Fixed
 
 - Fixed selector query input.
+- Allow selection of workflows without name.
 
 ## 0.7.3 - 2020-01-13
 
