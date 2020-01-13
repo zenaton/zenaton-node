@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
-## Unreleased
+## 0.7.3 - 2020-01-13
 
 ### Added
 
@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Changed
 
 - Require the `ZENATON_CODE_PATH` dynamically depending the `ZENATON_LAST_CODE_PATH`.
-- Updated versioner in `yield`and `serverless`code path to return also the original name
+- Updated Versioner in `yield` and `serverless` code path to return also the original name
 - Update behavior of `get` function in WorkflowManager
 - Changed the decode method to accept `JSON` of the `yield` Serializer.
 
