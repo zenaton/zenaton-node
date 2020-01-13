@@ -10,10 +10,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 - Return an exception when the user gives a non standard Zenaton connector ID.
 - Added the ability to use `this.log(obj)`, `this.random()`, `this.date()` in a workflow.
+- Introduced `getFirstFromCanonical` and `getLastFromCanonical` function in WorkflowManager
 
 ### Changed
 
 - Require the `ZENATON_CODE_PATH` dynamically depending the `ZENATON_LAST_CODE_PATH`.
+- Updated versioner in `yield`and `serverless`code path to return also the original name
+- Update behavior of `get` function in WorkflowManager
 
 ## 0.7.2 - 2019-10-23
 
