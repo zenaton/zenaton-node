@@ -36,7 +36,6 @@ function isZenatonSerializerFormat(data) {
   return (
     "s" in data &&
     "v" in data &&
-    data.v === CURRENT_VERSION &&
     ("d" in data || ("o" in data && data.o.includes(ZENATON_PREFIX)))
   );
 }
