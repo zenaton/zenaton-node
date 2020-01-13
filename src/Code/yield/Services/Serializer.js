@@ -26,7 +26,19 @@ function encode(data) {
 function decode(data) {
   const parsedData = JSON.parse(data);
 
-  return decodeData(parsedData);
+  return isZenatonSerializerFormat(parsedData)
+    ? decodeData(parsedData)
+    : parsedData;
+}
+
+function isZenatonSerializerFormat(data) {
+  // required s & v key containing the current version and optionnally a d key or o key
+  return (
+    "s" in data &&
+    "v" in data &&
+    data.v === CURRENT_VERSION &&
+    ("d" in data || ("o" in data && data.o.includes(ZENATON_PREFIX)))
+  );
 }
 
 function encodeData(data) {

@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Require the `ZENATON_CODE_PATH` dynamically depending the `ZENATON_LAST_CODE_PATH`.
 - Updated versioner in `yield`and `serverless`code path to return also the original name
 - Update behavior of `get` function in WorkflowManager
+- Changed the decode method to accept `JSON` of the `yield` Serializer.
 
 ## 0.7.2 - 2019-10-23
 
