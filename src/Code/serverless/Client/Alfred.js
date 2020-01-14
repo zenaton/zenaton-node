@@ -205,7 +205,7 @@ const Alfred = class Alfred {
         appId: this.client.appId,
         environment: this.client.appEnv,
         name: eventName,
-        input: serializer.encode(eventData),
+        data: serializer.encode(eventData),
         selector: query,
       },
     };
@@ -230,7 +230,7 @@ const Alfred = class Alfred {
         appId: this.client.appId,
         environment: this.client.appEnv,
         name: eventName,
-        input: serializer.encode(eventData),
+        data: serializer.encode(eventData),
         selector: { id },
       },
     };
