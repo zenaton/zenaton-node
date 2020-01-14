@@ -3,7 +3,7 @@ const { readdirSync, statSync } = require("fs");
 const { version } = require("./infos");
 const Errors = require("./Errors");
 
-const LAST_CODE_PATH = "yield";
+const LAST_CODE_PATH = "serverless";
 
 // store path to this file for use by Zenaton worker
 process.env.ZENATON_LIBRARY_PATH = path.resolve(__dirname, __filename);
