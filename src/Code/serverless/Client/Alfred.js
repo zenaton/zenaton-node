@@ -31,7 +31,7 @@ const Alfred = class Alfred {
     const mutation = mutations.dispatchTask;
 
     const variables = {
-      dispatchTaskInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         name: body[ATTR_NAME],
