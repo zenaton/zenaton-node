@@ -80,7 +80,7 @@ const Alfred = class Alfred {
     const body = this._getBodyForWorkflow(w);
     const mutation = mutations.dispatchWorkflow;
     const variables = {
-      dispatchWorkflowInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         name: body[ATTR_NAME],

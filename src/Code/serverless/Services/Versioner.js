@@ -5,7 +5,7 @@ const versioner = function versioner(name) {
   const versionMatch = name.match(versionRegex);
   const isVersioned = Array.isArray(versionMatch);
   const canonical = isVersioned ? versionMatch[1] : name;
-  const version = isVersioned ? parseInt(versionMatch[2], 10) : 0;
+  const version = isVersioned ? parseInt(versionMatch[2], 10) : null;
 
   return { canonical, version, name };
 };
