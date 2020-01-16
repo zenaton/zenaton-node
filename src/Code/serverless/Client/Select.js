@@ -11,7 +11,6 @@ const Select = class Select {
         `In "select.workflow()", parameter should be a string - not a "${typeof name}"`,
       );
     }
-    this._type = "WORKFLOW";
     this._name = name;
 
     return this;
@@ -93,9 +92,8 @@ const Select = class Select {
 
   _getQuery() {
     return {
-      type: this._type,
       name: this._name,
-      customId: this._customId,
+      tag: this._customId,
       id: this._instanceIntentId,
     };
   }
