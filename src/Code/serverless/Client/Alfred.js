@@ -55,7 +55,7 @@ const Alfred = class Alfred {
     const body = this._getBodyForTask(task);
     const mutation = mutations.scheduleTask;
     const variables = {
-      scheduleTaskInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         cron: task.scheduling.cron,
@@ -106,7 +106,7 @@ const Alfred = class Alfred {
     const body = this._getBodyForWorkflow(w);
     const mutation = mutations.scheduleWorkflow;
     const variables = {
-      scheduleWorkflow: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         cron: w.scheduling.cron,
@@ -133,7 +133,7 @@ const Alfred = class Alfred {
     const mutation = mutations.terminateWorkflows;
 
     const variables = {
-      terminateWorkflowsInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         selector: query,
@@ -156,7 +156,7 @@ const Alfred = class Alfred {
     const endpoint = this._getGatewayUrl();
     const mutation = mutations.pauseWorkflows;
     const variables = {
-      pauseWorkflowsInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         selector: query,
@@ -178,7 +178,7 @@ const Alfred = class Alfred {
     const endpoint = this._getGatewayUrl();
     const mutation = mutations.resumeWorkflows;
     const variables = {
-      resumeWorkflowsInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         selector: query,
@@ -201,7 +201,7 @@ const Alfred = class Alfred {
     const mutation = mutations.sendEventToWorkflows;
 
     const variables = {
-      sendEventToWorkflowsInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         name: eventName,
@@ -226,7 +226,7 @@ const Alfred = class Alfred {
 
     const mutation = mutations.sendEventToWorkflows;
     const variables = {
-      sendEventToWorkflowsInput: {
+      input: {
         appId: this.client.appId,
         environment: this.client.appEnv,
         name: eventName,
