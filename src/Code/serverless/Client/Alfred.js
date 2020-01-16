@@ -366,8 +366,8 @@ const mutations = {
       }
   }`,
   pauseWorkflows: `
-    mutation($input: ResumeWorkflowsInput!) {
-      resumeWorkflows(input: $input) {
+    mutation($input: PauseWorkflowsInput!) {
+      pauseWorkflows(input: $input) {
         status
       }
   }`,
