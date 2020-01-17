@@ -1,6 +1,5 @@
 const { GraphQLClient } = require("graphql-request");
 const { serializer, versioner } = require("../Services");
-const Job = require("./Job");
 const {
   ExternalZenatonError,
   InternalZenatonError,
@@ -38,13 +37,10 @@ const Alfred = class Alfred {
         input: body[ATTR_INPUT],
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.dispatchTask,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -63,13 +59,10 @@ const Alfred = class Alfred {
         input: body[ATTR_INPUT],
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.createTaskSchedule,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -89,13 +82,10 @@ const Alfred = class Alfred {
         version: body[ATTR_VERSION],
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.dispatchWorkflow,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -116,13 +106,10 @@ const Alfred = class Alfred {
         version: body[ATTR_VERSION],
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.scheduleWorkflow,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -140,13 +127,9 @@ const Alfred = class Alfred {
       },
     };
 
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.killWorkflows,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -162,13 +145,10 @@ const Alfred = class Alfred {
         selector: query,
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.pauseWorkflows,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -184,13 +164,10 @@ const Alfred = class Alfred {
         selector: query,
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.resumeWorkflows,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -209,13 +186,10 @@ const Alfred = class Alfred {
         selector: query,
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.sendEventToWorkflows,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   /**
@@ -234,13 +208,10 @@ const Alfred = class Alfred {
         selector: { id },
       },
     };
-    const job = new Job();
-    const promise = this._request(endpoint, mutation, variables).then(
+
+    return this._request(endpoint, mutation, variables).then(
       (res) => res.sendEventToWorkflows,
     );
-    job.promise = promise;
-
-    return job;
   }
 
   _getGatewayUrl() {
