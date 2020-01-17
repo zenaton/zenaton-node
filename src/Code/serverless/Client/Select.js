@@ -6,6 +6,11 @@ const Select = class Select {
   }
 
   workflow(name) {
+    if (!!name && typeof name !== "string") {
+      throw new ExternalZenatonError(
+        `In "select.workflow()", parameter should be a string - not a "${typeof name}"`,
+      );
+    }
     this._type = "WORKFLOW";
     this._name = name;
 
