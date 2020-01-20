@@ -96,7 +96,7 @@ const Select = class Select {
       type: this._type,
       name: this._name,
       customId: this._customId,
-      instanceIntentId: this._instanceIntentId,
+      id: this._instanceIntentId,
     };
   }
 };
