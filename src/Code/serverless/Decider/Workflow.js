@@ -169,7 +169,7 @@ const workflow = function workflow(name, definition) {
     }
 
     _selectSelf() {
-      return new Select(this._processor).workflow(name).withId(this.context.id);
+      return new Select(this._processor).workflow().withId(this.context.id);
     }
   };
 
