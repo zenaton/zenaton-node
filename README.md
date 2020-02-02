@@ -150,8 +150,6 @@ Let's start by implementing a first task printing something, and returning a val
 
 ```javascript
 /* tasks/HelloWorldTask.js */
-const { task } = require("zenaton");
-
 module.exports.handle = async function(name = "World") {
   return `Hello ${name}`!;
 };
