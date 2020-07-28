@@ -6,8 +6,7 @@
   </a><br>
   Build and run event-driven processes within the product journey in days instead of months.<br>
 ie. payment, booking, personalized communication sequences, ETL processes and more.
-<br>Now with 90+ APIs connectors.<br>
-  <a href="https://zenaton.com/documentation/node/getting-started/" target="_blank">
+  <a href="https://docs.zenaton.com" target="_blank">
     <strong> Explore the docs » </strong>
   </a> <br>
   <a href="https://zenaton.com" target="_blank"> Website </a>
@@ -22,22 +21,26 @@ ie. payment, booking, personalized communication sequences, ETL processes and mo
   <a href="/LICENSE" target="_blank"><img src="https://img.shields.io/badge/iicense-MIT-blue.svg" alt="License" style="max-width:100%;"></a>
 </p>
 
-# Zenaton library for Node
+Note: This library can be used both as:
 
-[Zenaton](https://zenaton.com) helps developers to easily run, monitor and orchestrate background jobs on your workers without managing a queuing system.
+- a [sdk](https://docs.zenaton.com/client/nodejs-sdk/) to interact with workflows from your Node.js app
+- a [sdk](https://docs.zenaton.com/workflows/implementation/) to build workflows.
 
-Build workflows using Zenaton functions to build control flows around your business logic and tasks - managing time, events and external services within one class. The Zenaton engine orchestrates the timing of executions on your workers. Functions include 'wait for a specific time or event', 'react to external events', 'run parallel tasks, 'create schedules' and more all by writing one line of code. [More about Zenaton Functions](https://zenaton.com/how-it-works)
+# Zenaton library for Node.js
 
-Key capabilities: <br>
-Single Tasks - dispatch or schedule an asynchronous business job with just one line of code. <br>
-Workflows as code - Combine Zenaton functions and Node.js to create infinite possibilities of logic. <br>
-Real-time Monitoring - Get a real-time view of workers and tasks - scheduled, processing and executed. <br>
-Scheduler - Schedule recurrent tasks and workflows and automatically retry tasks that fail or get alerts when there are errors or timeouts. <br>
-Error Handling: - Alerts for errors and timeouts and retry, resume or kill processes. React to errors by writing logic into workflow code to trigger retries or other actions. <br>
+[Zenaton](https://zenaton.com) helps developers to easily build asynchronous workflows.
+
+Build workflows using Zenaton functions to build control flows around your business logic and tasks - managing time, events and external services within one class. Functions include 'wait for a specific time or event', 'react to external events', 'run parallel tasks, 'create schedules' and more all by writing one line of code. [More about Zenaton Functions](https://zenaton.com/how-it-works)
+
+Key capabilities:
+
+- Standalone Tasks - dispatch or schedule an asynchronous business job with just one line of code.
+- Workflows as code - Combine Zenaton functions and Node.js to create infinite possibilities of logic.
+- Real-time Monitoring - Get a real-time view of workers and tasks - scheduled, processing and executed.
+- Scheduler - Schedule recurrent tasks and workflows and automatically retry tasks that fail or get alerts when there are errors or timeouts.
+- Error Handling: - Alerts for errors and timeouts and retry, resume or kill processes. React to errors by writing logic into workflow code to trigger retries or other actions. <br>
 
 You can sign up for an account on [Zenaton](https://zenaton.com) and go through the [tutorial in Node](https://app.zenaton.com/tutorial/node/examples).
-
-- [What's new](WHATSNEW.md).
 
 - [Changelog](CHANGELOG.md).
 
@@ -45,7 +48,7 @@ You can sign up for an account on [Zenaton](https://zenaton.com) and go through 
 
 ## Node Documentation
 
-You can find all details on [Zenaton's website](https://zenaton.com/documentation/node/getting-started).
+You can find all the details on [Zenaton's website](https://docs.zenaton.com).
 
 ## Requirements
 
@@ -116,9 +119,9 @@ Then, initialize your Zenaton client:
 const { Client } = require("zenaton");
 
 module.exports = new Client(
-  "YourApplicationId",
-  "YourApiToken",
-  "YourApplicationEnv", // Use "dev" as default
+  "<YourApplicationId>",
+  "<YourApiToken>",
+  "<YourApplicationEnv>", // Use "dev" as default
 );
 ```
 
@@ -126,22 +129,24 @@ module.exports = new Client(
 
 The next step is to have your Zenaton Agent listen to your application.
 
-The Agent needs to be pointed to a `boot` file which will allow it to infer your programming language (here JavaScript) but also to figure out where your jobs are located when the time comes to run them.
+The Agent needs to be pointed to a `boot` file which will allow it to figure out where tasks or workflows are located when the time comes to run them.
 
 ```javascript
 /* boot.js */
 
 const { task, workflow } = require("zenaton");
 
-// Import here all your tasks and workflows as you go
-// task("HelloWorldTask", require("./tasks/HelloWorldTask"));
-// workflow("MyFirstWorkflow", require("./workflows/MyFirstWorkflow"));
+// define tasks (example)
+task("hello_world_task", require("./tasks/HelloWorldTask"));
+
+// define workflows (example)
+workflow("my_first_workflow", require("./workflows/MyFirstWorkflow"));
 ```
 
 To run the `listen` command:
 
 ```sh
-zenaton listen --app_id=YourApplicationId --api_token=YourApiToken --app_env=YourApplicationEnv --boot=boot.js
+zenaton listen --app_id=<YourApplicationId> --api_token=<YourApiToken> --app_env=<YourApplicationEnv> --boot=boot.js
 ```
 
 #### Executing a background job
@@ -163,7 +168,7 @@ Now, when you want to run this task as a background job, you need to do the foll
 /* launchHelloWorldTask.js */
 const { run } = require("./client.js");
 
-run.task("HelloWorldTask", "Me");
+run.task("hello_world_task", "Me");
 ```
 
 That's all you need to get started. With this, you can run many background jobs.
@@ -171,18 +176,18 @@ However, the real power of Zenaton is to be able to orchestrate these jobs. The 
 
 ### Orchestrating background jobs
 
-Job orchestration is what allows you to write complex business workflows in a simple way.
+Job orchestration is what allows you to write complex business workflows simply.
 You can execute jobs sequentially, in parallel, conditionally based on the result of a previous job,
 and you can even use loops to repeat some tasks.
 
-We wrote about some use-cases of job orchestration, you can take a look at [these articles](https://medium.com/zenaton/tagged/nodejs)
+We wrote about some use-cases of job orchestration, you can take a look at [these articles](https://zenaton.com/https://zenaton.com/workflows-examples)
 to see how people use job orchestration.
 
 #### Using workflows
 
 A workflow in Zenaton is created through the `workflow` function.
 
-We will implement a very simple workflow that will execute sequentially the `HelloWorld` task 3 times.
+We will implement a very simple workflow that will execute sequentially the `hello_world_task` 3 times.
 
 One important thing to remember is that your workflow implementation **must** be idempotent.
 You can read more about that in our [documentation](https://zenaton.com/documentation/node/workflow-basics/#implementation).
@@ -192,9 +197,9 @@ The implementation looks like this:
 ```javascript
 /* workflows/MyFirstWorkflow.js */
 module.exports.handle = function*(name) {
-  yield this.run.task("HelloWorldTask", name);
-  yield this.run.task("HelloWorldTask", "Me");
-  yield this.run.task("HelloWorldTask", "All");
+  yield this.run.task("hello_world_task", name);
+  yield this.run.task("hello_world_task", "Me");
+  yield this.run.task("hello_world_task", "All");
 };
 ```
 
@@ -204,11 +209,11 @@ Now that your workflow is implemented, you can ask for its processing like this:
 /* launchMyFirstWorkflow.js */
 const { run } = require("./client.js");
 
-run.workflow("MyFirstWorkflow", "Gilles");
+run.workflow("my_first_workflow", "Gilles");
 ```
 
-There are many more features usable in workflows in order to get the orchestration done right. You can learn more
-in our [documentation](https://zenaton.com/documentation/node/workflow-basics/#implementation).
+There are many more features usable in workflows to get the orchestration done right. You can learn more
+in our [documentation](https://docs.zenaton.com).
 
 ## Getting help
 
